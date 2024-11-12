@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>California High Schools</title>
+    <style>
+        /* Style unchanged from your original code */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .search-container {
+            max-width: 600px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #007BFF;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            max-width: 600px;
+            margin: auto;
+            display: none;
+        }
+        li {
+            margin: 10px 0;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: box-shadow 0.3s;
+        }
+        li:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+            background-color: #e9f5ff;
+        }
+        .no-results {
+            color: red;
+            text-align: center;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Santa Clara Valley Athletic League</h1>
+    <div class="search-container">
+        <input type="text" id="searchBar" onkeyup="filterSchools()" placeholder="Search for a high school...">
+    </div>
+    <ul id="schoolList">
+        <li><a href="/team/palo-alto">Palo Alto High School</a></li>
+        <li><a href="/team/gunn">Henry M. Gunn High School</a></li>
+        <li><a href="/team/harker">Harker High School</a></li>
+        <li><a href="/team/los-gatos">Los Gatos High School</a></li>
+        <li><a href="/team/los-altos">Los Altos High School</a></li>
+        <li><a href="/team/fremont">Fremont High School</a></li>
+        <li><a href="/team/mountain-view">Mountain View High School</a></li>
+    </ul>
+    <p id="noResults" class="no-results" style="display: none;">No results found.</p>
+
+    <script>
+        const maxVisibleResults = 5;
+
+        function filterSchools() {
+            const input = document.getElementById('searchBar').value.toLowerCase();
+            const schoolList = document.getElementById('schoolList');
+            const schools = schoolList.getElementsByTagName('li');
+            const noResultsMessage = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            // Initially hide "No results found" message
+            noResultsMessage.style.display = "none";
+
+            // Loop through schools and filter
+            for (let i = 0; i < schools.length; i++) {
+                const school = schools[i].getElementsByTagName("a")[0];
+                const txtValue = school.textContent || school.innerText;
+
+                if (txtValue.toLowerCase().includes(input)) {
+                    schools[i].style.display = ""; // Show matching school
+                    visibleCount++;
+                } else {
+                    schools[i].style.display = "none"; // Hide non-matching school
+                }
+            }
+
+            // Show or hide the list based on visible count
+            schoolList.style.display = visibleCount > 0 && visibleCount <= maxVisibleResults ? "block" : "none";
+
+            // Display "No results found" message if no schools match the search
+            if (visibleCount === 0) {
+                noResultsMessage.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>

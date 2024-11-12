@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous Water Polo Games</title>
+</head>
+<body>
+    <h1>Previous Water Polo Games</h1>
+
+    <!-- Button to navigate back to the current game page -->
+    <button id="backButton">Back</button>
+
+    <!-- Table to display previous game stats -->
+    <h2>Previous Games</h2>
+    <table border="1" id="previousGamesTable">
+        <thead>
+            <tr>
+                <th>Game</th>
+                <th>White Team Score</th>
+                <th>Black Team Score</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        // Fetch and display previous game data
+        function loadPreviousGames() {
+            fetch('/get_previous_games')
+            .then(response => response.json())
+            .then(data => {
+                const previousGamesTableBody = document.querySelector('#previousGamesTable tbody');
+                previousGamesTableBody.innerHTML = '';
+
+                // Iterate through each game and populate the table
+                data.games.forEach((game, index) => {
+                    const row = `<tr onclick="window.location.href='/game_details/${index}'">
+                        <td>Game ${index + 1}</td>
+                        <td>${game.white_score}</td>
+                        <td>${game.black_score}</td>
+                    </tr>`;
+                    previousGamesTableBody.innerHTML += row;
+                });
+            });
+        }
+
+        // Load previous games on page load
+        window.onload = loadPreviousGames;
+
+        // Handle navigation back to the current game page
+        document.getElementById('backButton').addEventListener('click', () => {
+            window.location.href = '/'; // Navigate back to current game page
+        });
+    </script>
+</body>
+</html>

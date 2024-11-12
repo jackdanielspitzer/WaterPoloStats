@@ -1,0 +1,25 @@
+{
+    "games": [
+        {
+            "home_away": "Home",
+            "opponent": "Harker High School",
+            "opponent_logo": "images/Harker High School.png",
+            "time": "12:30 AM",
+            "date": "2025-05-05",
+            "game_type": "League Game",
+            "am_pm": null,
+            "is_scored": false,
+            "formatted_date": "May 5th, 2025"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": "TBD None",
+            "date": "2025-05-04",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "May 4th, 2025"
+        }
+    ]
+}

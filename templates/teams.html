@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ school.name }}</title>
+    <style>
+        /* Existing CSS styles remain the same */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            background-color: {{ school.bg_color }};
+            color: {{ school.text_color }};
+        }
+        .school-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            max-width: 800px;
+            padding: 20px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 200px;
+            height: auto;
+            margin-right: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #000000;
+        }
+        .school-info {
+            text-align: left;
+        }
+        .game-schedule {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .game-schedule h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .game {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 15px;
+        }
+        .game-logo {
+            width: 100px;
+            height: 100px;
+        }
+        .game-info {
+            flex-grow: 1;
+            padding-left: 15px;
+            color: #000;
+        }
+        .game-info strong {
+            display: block;
+        }
+        .box-score-link {
+            color: {{ school.link_color }};
+            text-decoration: none;
+        }
+        .box-score-link:hover {
+            text-decoration: underline;
+        }
+        .add-game-form {
+            margin-top: 20px;
+            display: none;
+            text-align: left;
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .add-game-form select, .add-game-form input {
+            margin: 5px 0;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .button-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .tbd-button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .tbd-button:hover {
+            background-color: #0056b3;
+        }
+        .game-button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+        .action-button {
+            padding: 5px 10px;
+            font-size: 14px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            max-width: 100px;
+            text-align: center;
+            display: inline-block;
+        }
+        .action-button:hover {
+            background-color: #0056b3;
+        }
+        .delete-button {
+            background-color: #dc3545;
+        }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+    </style>
+    <script>
+        function toggleAddGameForm() {
+            var form = document.getElementById('addGameForm');
+            form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
+        }
+
+        function setTimeTBD() {
+            document.querySelector('select[name="time"]').value = 'TBD';
+        }
+    </script>
+</head>
+<body>
+    <div class="school-container">
+        <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }} Logo">
+        <div class="school-info">
+            <h1>{{ school.name }}</h1>
+            <a href="/search">Back to School List</a>
+        </div>
+    </div>
+
+    <div class="game-schedule">
+        <h2>Game Schedule</h2>
+
+        {% if team_data.games %}
+            {% set sorted_games = team_data.games | sort(attribute='date') %}
+            {% for game in sorted_games %}
+               <div class="game">
+                   <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
+                   <div class="game-info">
+                       <strong>{{ game.formatted_date }} - {{ game.time }}</strong>
+                       {{ game.home_away }} vs {{ game.opponent }}<br>
+                       {{ game.game_type }}
+                   </div>
+                   {% if game.box_score_url %}
+                       <a href="{{ game.box_score_url }}" class="box-score-link" target="_blank">Box Score</a>
+                   {% endif %}
+                   <div class="game-button-container">
+                       {% if not game.is_scored %}
+                           <a href="{{ url_for('start_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">Score Game</a>
+                       {% else %}
+                           <a href="{{ url_for('view_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">View Scoring</a>
+                       {% endif %}
+                       <form action="{{ url_for('delete_game', school_slug=school_slug, game_id=loop.index0) }}" method="POST" style="display:inline;">
+                           <button type="submit" class="action-button delete-button" onclick="return confirm('Are you sure you want to delete this game?');">Delete</button>
+                       </form>
+                   </div>
+               </div>
+           {% endfor %}
+        {% else %}
+            <p>No games scheduled.</p>
+        {% endif %}
+    </div>
+
+    <!-- Add New Game Button -->
+    <button class="add-game-button" id="toggleAddGameForm" onclick="toggleAddGameForm()">Add New Game</button>
+
+    <!-- Add Game Form -->
+    <div class="add-game-form" id="addGameForm">
+        <form method="POST" action="{{ url_for('team_page', school_slug=school_slug) }}">
+            <select name="home_away" required>
+                <option value="">Select Home/Away</option>
+                <option value="Home">Home</option>
+                <option value="Away">Away</option>
+            </select>
+            <select name="opponent" required>
+                <option value="">Select Opponent</option>
+                {% for slug, opponent in schools.items() %}
+                    {% if opponent.name != school.name %}
+                        <option value="{{ opponent.name }}">{{ opponent.name }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <div class="button-container">
+                <select name="time" required>
+                    <option value="TBD">TBD</option>
+                    {% for hour in range(12) %}
+                        {% for minute in [0, 15, 30, 45] %}
+                            <option value="{{ '%02d:%02d' | format(hour, minute) }} AM">{{ '%02d:%02d' | format(hour, minute) }} AM</option>
+                            <option value="{{ '%02d:%02d' | format(hour, minute) }} PM">{{ '%02d:%02d' | format(hour, minute) }} PM</option>
+                        {% endfor %}
+                    {% endfor %}
+                </select>
+                <button type="button" class="tbd-button" onclick="setTimeTBD()">Set to TBD</button>
+            </div>
+            <input type="date" name="date" required>
+            <select name="game_type" required>
+                <option value="">Select Game Type</option>
+                <option value="League Game">League Game</option>
+                <option value="Non-League Game">Non-League Game</option>
+                <option value="Tournament">Tournament</option>
+                <option value="SCVAL Tournament">SCVAL Tournament</option>
+                <option value="CCS Playoffs">CCS Playoffs</option>
+                <option value="CIF Playoffs">CIF Playoffs</option>
+            </select>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

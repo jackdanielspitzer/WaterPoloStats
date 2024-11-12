@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Details</title>
+</head>
+<body>
+    <h1>Game {{ game_id + 1 }} Details</h1>
+
+    <h2>{{ game['white_team_name'] }} Stats</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Shot</th>
+                <th>Blocks</th>
+                <th>Steals</th>
+                <th>Exclusions</th>
+                <th>Exclusions Drawn</th>
+                <th>Penalties</th>
+                <th>Turnovers</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(game['white_team']['Player']|length) %}
+            <tr>
+                <td><a href="/player_stats/{{ game['white_team']['Player'][i] }}/white">{{ game['white_team']['Player'][i] }}</a></td>
+                <td>{{ game['white_team']['Shot'][i] }}</td>
+                <td>{{ game['white_team']['Blocks'][i] }}</td>
+                <td>{{ game['white_team']['Steals'][i] }}</td>
+                <td>{{ game['white_team']['Exclusions'][i] }}</td>
+                <td>{{ game['white_team']['Exclusions Drawn'][i] }}</td>
+                <td>{{ game['white_team']['Penalties'][i] }}</td>
+                <td>{{ game['white_team']['Turnovers'][i] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>{{ game['black_team_name'] }} Stats</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Shot</th>
+                <th>Blocks</th>
+                <th>Steals</th>
+                <th>Exclusions</th>
+                <th>Exclusions Drawn</th>
+                <th>Penalties</th>
+                <th>Turnovers</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for i in range(game['black_team']['Player']|length) %}
+            <tr>
+                <td><a href="/player_stats/{{ game['black_team']['Player'][i] }}/black">{{ game['black_team']['Player'][i] }}</a></td>
+                <td>{{ game['black_team']['Shot'][i] }}</td>
+                <td>{{ game['black_team']['Blocks'][i] }}</td>
+                <td>{{ game['black_team']['Steals'][i] }}</td>
+                <td>{{ game['black_team']['Exclusions'][i] }}</td>
+                <td>{{ game['black_team']['Exclusions Drawn'][i] }}</td>
+                <td>{{ game['black_team']['Penalties'][i] }}</td>
+                <td>{{ game['black_team']['Turnovers'][i] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Button to navigate back to the previous games page -->
+    <button onclick="window.location.href='/previous_games'">Back to Previous Games</button>
+
+</body>
+</html>

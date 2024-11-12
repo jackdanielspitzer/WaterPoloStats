@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Polo Stats Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8ff; /* Light blue background */
+            color: #003366; /* Dark blue text */
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #ffcc00; /* Yellow text for the title */
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        nav {
+            margin: 20px 0;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav li {
+            margin: 0 15px;
+        }
+        nav a {
+            text-decoration: none;
+            color: #003366; /* Dark blue links */
+            padding: 10px 15px;
+            border: 2px solid #ffcc00; /* Yellow border */
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        nav a:hover {
+            background-color: #ffcc00; /* Yellow background on hover */
+            color: #003366; /* Dark blue text on hover */
+        }
+        p {
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+        #logo {
+            max-width: 200px; /* Adjust as needed */
+            height: auto; /* Maintain aspect ratio */
+        }
+    </style>
+</head>
+<body>
+    <img src="static/images/logo.png" alt="Water Polo Logo" id="logo">
+    <h1>Welcome to Water Polo Stats Tracker</h1>
+
+    <!-- Navigation Tabs -->
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/scoring">Scoring</a></li>
+            <li><a href="/previous_games">Previous Games</a></li>
+            <li><a href="/search">Teams</a></li>
+        </ul>
+    </nav>
+
+    <p>Select one of the tabs above to navigate to the desired section.</p>
+</body>
+</html>

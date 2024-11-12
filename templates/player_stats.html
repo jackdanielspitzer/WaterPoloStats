@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ player }} Stats</title>
+</head>
+<body>
+    <h1>Stats for {{ player }}</h1>
+
+    <table border="1">
+        <tr>
+            <th>Shot</th>
+            <td>{{ stats.Shot }}</td>
+        </tr>
+        <tr>
+            <th>Blocks</th>
+            <td>{{ stats.Blocks }}</td>
+        </tr>
+        <tr>
+            <th>Steals</th>
+            <td>{{ stats.Steals }}</td>
+        </tr>
+        <tr>
+            <th>Exclusions</th>
+            <td>{{ stats.Exclusions }}</td>
+        </tr>
+        <tr>
+            <th>Exclusions Drawn</th>
+            <td>{{ stats['Exclusions Drawn'] }}</td>
+        </tr>
+        <tr>
+            <th>Penalties</th>
+            <td>{{ stats.Penalties }}</td>
+        </tr>
+        <tr>
+            <th>Turnovers</th>
+            <td>{{ stats.Turnovers }}</td>
+        </tr>
+    </table>
+
+    <a href="/">Go Back</a>
+</body>
+</html>
