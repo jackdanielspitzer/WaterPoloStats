@@ -1,3 +1,14 @@
 {
-    "games": []
+    "games": [
+        {
+            "home_away": "Home",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": "01:45 AM None",
+            "date": "2025-05-05",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "May 5th, 2025"
+        }
+    ]
 }

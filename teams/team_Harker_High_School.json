@@ -7,8 +7,17 @@
             "time": "12:30 AM",
             "date": "2025-05-05",
             "game_type": "League Game",
-            "am_pm": null,
-            "is_scored": false,
+            "is_scored": true,
+            "formatted_date": "May 5th, 2025"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": "02:00 AM",
+            "date": "2025-05-05",
+            "game_type": "Non-League Game",
+            "is_scored": true,
             "formatted_date": "May 5th, 2025"
         }
     ]

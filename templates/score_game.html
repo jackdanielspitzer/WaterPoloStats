@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Polo Stats Tracker</title>
+</head>
+<body>
+    <h1>Water Polo Statistics Tracker</h1>
+
+    <!-- Form for inputting text or speech -->
+    <form id="form">
+        <textarea id="inputText" rows="4" cols="50" placeholder="Enter or speak your stats..."></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <p><strong>Result:</strong> <span id="result"></span></p>
+
+    <button id="startButton">Start Speech Recognition</button>
+
+    <!-- Display the two tables -->
+    <h2>Away Team ({{ away_team }})</h2>
+    <table border="1" id="awayTeamTable">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Shot</th>
+                <th>Blocks</th>
+                <th>Steals</th>
+                <th>Exclusions</th>
+                <th>Exclusions Drawn</th>
+                <th>Penalties</th>
+                <th>Turnovers</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Home Team ({{ home_team }})</h2>
+    <table border="1" id="homeTeamTable">
+        <thead>
+            <tr>
+                <th>Player</th>
+                <th>Shot</th>
+                <th>Blocks</th>
+                <th>Steals</th>
+                <th>Exclusions</th>
+                <th>Exclusions Drawn</th>
+                <th>Penalties</th>
+                <th>Turnovers</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Finish Game Button -->
+    <button id="finishGameButton">Finish Game</button>
+
+    <script>
+        document.getElementById('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const inputText = document.getElementById('inputText').value;
+            const response = await fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `text=${encodeURIComponent(inputText)}`
+            });
+            const data = await response.json();
+            document.getElementById('result').innerText = data.response;
+            document.getElementById('inputText').value = '';
+        });
+
+        const startButton = document.getElementById('startButton');
+        const inputText = document.getElementById('inputText');
+
+        startButton.addEventListener('click', () => {
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.onresult = function(event) {
+                inputText.value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        });
+
+        function updateTables() {
+            fetch('/get_data')
+                .then(response => response.json())
+                .then(data => {
+                    const awayTableBody = document.querySelector('#awayTeamTable tbody');
+                    const homeTableBody = document.querySelector('#homeTeamTable tbody');
+                    awayTableBody.innerHTML = '';
+                    homeTableBody.innerHTML = '';
+
+                    data.dataWhite.Player.forEach((player, index) => {
+                        const row = `<tr>
+                            <td>${player}</td>
+                            <td>${data.dataWhite.Shot[index]}</td>
+                            <td>${data.dataWhite.Blocks[index]}</td>
+                            <td>${data.dataWhite.Steals[index]}</td>
+                            <td>${data.dataWhite.Exclusions[index]}</td>
+                            <td>${data.dataWhite['Exclusions Drawn'][index]}</td>
+                            <td>${data.dataWhite.Penalties[index]}</td>
+                            <td>${data.dataWhite.Turnovers[index]}</td>
+                        </tr>`;
+                        awayTableBody.innerHTML += row;
+                    });
+
+                    data.dataBlack.Player.forEach((player, index) => {
+                        const row = `<tr>
+                            <td>${player}</td>
+                            <td>${data.dataBlack.Shot[index]}</td>
+                            <td>${data.dataBlack.Blocks[index]}</td>
+                            <td>${data.dataBlack.Steals[index]}</td>
+                            <td>${data.dataBlack.Exclusions[index]}</td>
+                            <td>${data.dataBlack['Exclusions Drawn'][index]}</td>
+                            <td>${data.dataBlack.Penalties[index]}</td>
+                            <td>${data.dataBlack.Turnovers[index]}</td>
+                        </tr>`;
+                        homeTableBody.innerHTML += row;
+                    });
+                });
+        }
+
+        setInterval(updateTables, 3000);
+
+        document.getElementById('finishGameButton').addEventListener('click', async function() {
+            if (!confirm('Are you sure you want to finish the game?')) {
+                return;
+            }
+            
+            const whiteTeamName = '{{ away_team }}';
+            const blackTeamName = '{{ home_team }}';
+            const response = await fetch('/end_game', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `white_team_name=${encodeURIComponent(whiteTeamName)}&black_team_name=${encodeURIComponent(blackTeamName)}`
+            });
+            const data = await response.json();
+            alert(data.response);
+            window.location.href = '/team/{{ school_slug }}';
+        });
+    </script>
+</body>
+</html>

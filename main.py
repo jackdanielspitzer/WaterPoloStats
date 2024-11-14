@@ -6,6 +6,7 @@ import json
 import os
 from datetime import datetime
 
+
 # Helper function to get team file path
 def get_team_file_path(team_name):
     return os.path.join('teams', f"team_{team_name.replace(' ', '_')}.json")
@@ -14,11 +15,14 @@ def get_team_file_path(team_name):
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
 def start_scoring(school_slug, game_index):
+    print(1)
     # Load team data for the specified school
     team_data = load_team_data(school_slug)
+    print(team_data,game_index)
     if not team_data or game_index >= len(team_data["games"]):
         return "Game not found", 404
 
+    print(game_index)
     game = team_data["games"][game_index]
 
     # Pass necessary game data to scoring.html
@@ -26,6 +30,7 @@ def start_scoring(school_slug, game_index):
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
 def view_scoring(school_slug, game_index):
+    print(2)
     # Load team data for the specified school
     team_data = load_team_data(school_slug)
     if not team_data or game_index >= len(team_data["games"]):
@@ -54,10 +59,40 @@ def initialize_team_file(team_name):
 def load_team_data(team_name):
     team_file_path = get_team_file_path(team_name)
     if os.path.exists(team_file_path):
-        with open(team_file_path, 'r') as file:
-            return json.load(file)
+        try:
+            with open(team_file_path, 'r') as file:
+                # Check if file is empty
+                if os.path.getsize(team_file_path) == 0:
+                    return {"games": []}  # Return an empty "games" list if file is empty
+                return json.load(file)
+        except json.JSONDecodeError:
+            print(f"Error: {team_file_path} contains invalid JSON.")
+            return {"games": []}  # Return empty "games" list if JSON is invalid
     else:
         return {"games": []}
+
+# Function to open a game based on team_name and game_index
+def open_game(team_name, game_index):
+    # Get the file path for the team's data
+    team_file_path = get_team_file_path(team_name)
+    print(team_file_path)
+    # Check if the team file exists
+    if os.path.exists(team_file_path):
+        try:
+            with open(team_file_path, 'r') as file:
+                # Load the team data from the JSON file
+                team_data = json.load(file)
+                # Validate the game_index
+                if game_index < 0 or game_index >= len(team_data["games"]):
+                    return "out of bounds"  # Return None if the game_index is out of bounds
+                # Return the requested game
+                return team_data["games"][game_index]
+        except json.JSONDecodeError:
+            print(f"Error: {team_file_path} contains invalid JSON.")
+            return "is invalid"  # Return None if JSON is invalid
+    # Return None if the file does not exist
+    return "doesn't exist"
+
 
 # Helper function to save a team's JSON data
 def save_team_data(team_name, data):
@@ -501,6 +536,11 @@ def home():
 def index():
     return render_template('scoring.html')
 
+@app.route('/score_game', methods=['GET'])
+def score_game(school_name, game_index):
+    # load your team data here
+    return render_template("score_game.html", home_team=home_team, away_team=away_team, game_index=game_index)
+
 @app.route('/teams')
 def teams():
     return render_template('teams.html')
@@ -634,15 +674,19 @@ schools = {
 
 @app.route('/team/<school_slug>', methods=['GET', 'POST'])
 def team_page(school_slug):
+    print(4)
     school = schools.get(school_slug)
     if not school:
         return "Team not found", 404
 
     # Ensure the main team file exists
     initialize_team_file(school['name'])
+    print("calling load data")
     team_data = load_team_data(school['name'])
-
+    print(team_data)
+    print(request.method)
     if request.method == 'POST':
+        print("post")
         # Retrieve form data for adding a new game
         home_away = request.form.get('home_away')
         opponent_name = request.form.get('opponent')
@@ -701,6 +745,10 @@ def team_page(school_slug):
         return redirect(url_for('team_page', school_slug=school_slug))  # Redirect after POST
 
     # Render the template with team data
+
+
+    # return render_template('teams.html', school=school, schools=schools, team_date=0, school_slug=school_slug)
+    print(team_data)
     return render_template('teams.html', school=school, schools=schools, team_data=team_data, school_slug=school_slug)
 
 
@@ -733,20 +781,51 @@ def delete_game(school_slug, game_id):
 
 
 
-@app.route('/score/<school_slug>', methods=['GET'])
-def scoring_page(school_slug):
-    # Pass the school_slug to get_school() to fetch the relevant school data
-    school = get_school(school_slug)
+# @app.route('/score/<school_slug>', methods=['GET'])
+# def scoring_page(school_slug):
+#     # Pass the school_slug to get_school() to fetch the relevant school data
+#     school = get_school(school_slug)
 
-    if not school:
-        return "School not found", 404
+#     if not school:
+#         return "School not found", 404
 
-    # Fetch game data or other relevant information
-    game = get_game(school_slug)  # Example function to get a game
+#     # Fetch game data or other relevant information
+#     game = get_game(school_slug)  # Example function to get a game
 
-    return render_template('scoring_page.html', school=school, game=game)
+#     return render_template('scoring_page.html', school=school, game=game)
 
+@app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
+def scoring_page(school_slug, game_index):
+    global schools  # Declare that we are using the global variable schools
 
+    # Fetch the school dictionary using the slug
+    school = schools.get(school_slug)
+
+    if school:
+        # Access the name from the fetched school dictionary
+        school_name = school['name']
+        print(school_name)  # For debugging purposes
+    else:
+        print("School not found.")
+    # Load team data for the specified school
+    print("END OF DEBUG")
+    team_data = open_game(school_name, game_index)
+    print("team data: ", team_data)
+    if not team_data or game_index >= len(school):
+        return "Game not found", 404
+
+    # game = team_data["games"][game_index]
+
+    # home_away = team_data["home_away"]
+    # print(home_away)
+    # opponent_name = team_data["opponent"]
+    # print(opponent_name)
+
+    home_team = school['name'] if team_data['home_away'] == 'Home' else team_data['opponent']
+    away_team = team_data['opponent'] if team_data['home_away'] == 'Home' else school['name']
+    # Render the score_game template
+    return render_template("score_game.html", home_team=home_team, away_team=away_team, game_index=game_index)
 
 if __name__ == '__main__':
+    print("calling app.run")
     app.run(host='0.0.0.0', port=8080, debug=True)

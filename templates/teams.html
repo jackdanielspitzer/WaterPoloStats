@@ -165,29 +165,25 @@
 
         {% if team_data.games %}
             {% set sorted_games = team_data.games | sort(attribute='date') %}
-            {% for game in sorted_games %}
-               <div class="game">
-                   <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
-                   <div class="game-info">
-                       <strong>{{ game.formatted_date }} - {{ game.time }}</strong>
-                       {{ game.home_away }} vs {{ game.opponent }}<br>
-                       {{ game.game_type }}
-                   </div>
-                   {% if game.box_score_url %}
-                       <a href="{{ game.box_score_url }}" class="box-score-link" target="_blank">Box Score</a>
-                   {% endif %}
-                   <div class="game-button-container">
-                       {% if not game.is_scored %}
-                           <a href="{{ url_for('start_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">Score Game</a>
-                       {% else %}
-                           <a href="{{ url_for('view_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">View Scoring</a>
-                       {% endif %}
-                       <form action="{{ url_for('delete_game', school_slug=school_slug, game_id=loop.index0) }}" method="POST" style="display:inline;">
-                           <button type="submit" class="action-button delete-button" onclick="return confirm('Are you sure you want to delete this game?');">Delete</button>
-                       </form>
-                   </div>
-               </div>
-           {% endfor %}
+        {% for game in sorted_games %}
+            <div class="game">
+                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
+                <div class="game-info">
+                    <strong>{{ game.formatted_date }} - {{ game.time }}</strong>
+                    {{ game.home_away }} vs {{ game.opponent }}<br>
+                    {{ game.game_type }}
+                </div>
+                {% if not game.is_scored %}
+                    <a href="{{ url_for('scoring_page', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">Score Game</a>
+                {% else %}
+                    <a href="{{ url_for('view_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">View Scoring</a>
+                {% endif %}
+                <form action="{{ url_for('delete_game', school_slug=school_slug, game_id=loop.index0) }}" method="POST" style="display:inline;">
+                    <button type="submit" class="action-button delete-button" onclick="return confirm('Are you sure you want to delete this game?');">Delete</button>
+                </form>
+            </div>
+        {% endfor %}
+
         {% else %}
             <p>No games scheduled.</p>
         {% endif %}
