@@ -53,42 +53,63 @@
         <tbody></tbody>
     </table>
 
-    <!-- Finish Game Button -->
-    <button id="finishGameButton">Finish Game</button>
+    <!-- Form to end the game -->
+    <form id="endGameForm" action="/end_game" method="post">
+        <input type="hidden" name="white_team_name" value="{{ home_team }}">
+        <input type="hidden" name="black_team_name" value="{{ away_team }}">
+        <input type="hidden" name="game_index" value="{{ game_index }}">
+        <button type="submit">Finish Game</button>
+    </form>
 
     <script>
+        // Process form submission for text input
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value;
-            const response = await fetch('/process', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `text=${encodeURIComponent(inputText)}`
-            });
-            const data = await response.json();
-            document.getElementById('result').innerText = data.response;
-            document.getElementById('inputText').value = '';
+            console.log("Submitting text:", inputText);
+            
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `text=${encodeURIComponent(inputText)}`
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').innerText = data.response || 'Success';
+                } else {
+                    console.error("Error in response:", response.status);
+                    document.getElementById('result').innerText = 'Error processing text.';
+                }
+                document.getElementById('inputText').value = '';
+            } catch (error) {
+                console.error("Error processing text:", error);
+                document.getElementById('result').innerText = 'Error processing text.';
+            }
         });
 
+        // Start speech recognition
         const startButton = document.getElementById('startButton');
-        const inputText = document.getElementById('inputText');
-
         startButton.addEventListener('click', () => {
-            const recognition = new webkitSpeechRecognition();
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
             recognition.interimResults = false;
             recognition.onresult = function(event) {
-                inputText.value = event.results[0][0].transcript;
+                document.getElementById('inputText').value = event.results[0][0].transcript;
             };
             recognition.start();
         });
 
-        function updateTables() {
-            fetch('/get_data')
-                .then(response => response.json())
-                .then(data => {
+        // Update tables with data
+        async function updateTables() {
+            try {
+                const response = await fetch('/get_data');
+                if (response.ok) {
+                    const data = await response.json();
+
                     const awayTableBody = document.querySelector('#awayTeamTable tbody');
                     const homeTableBody = document.querySelector('#homeTeamTable tbody');
                     awayTableBody.innerHTML = '';
@@ -121,29 +142,16 @@
                         </tr>`;
                         homeTableBody.innerHTML += row;
                     });
-                });
+                } else {
+                    console.error("Error in response for table update:", response.status);
+                }
+            } catch (error) {
+                console.error("Error updating tables:", error);
+            }
         }
 
+        // Set interval to refresh table data every 3 seconds
         setInterval(updateTables, 3000);
-
-        document.getElementById('finishGameButton').addEventListener('click', async function() {
-            if (!confirm('Are you sure you want to finish the game?')) {
-                return;
-            }
-            
-            const whiteTeamName = '{{ away_team }}';
-            const blackTeamName = '{{ home_team }}';
-            const response = await fetch('/end_game', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `white_team_name=${encodeURIComponent(whiteTeamName)}&black_team_name=${encodeURIComponent(blackTeamName)}`
-            });
-            const data = await response.json();
-            alert(data.response);
-            window.location.href = '/team/{{ school_slug }}';
-        });
     </script>
 </body>
 </html>

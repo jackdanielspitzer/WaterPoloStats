@@ -28,18 +28,7 @@ def start_scoring(school_slug, game_index):
     # Pass necessary game data to scoring.html
     return render_template("scoring.html", game=game, school_slug=school_slug, game_index=game_index)
 
-@app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
-def view_scoring(school_slug, game_index):
-    print(2)
-    # Load team data for the specified school
-    team_data = load_team_data(school_slug)
-    if not team_data or game_index >= len(team_data["games"]):
-        return "Game not found", 404
 
-    game = team_data["games"][game_index]
-
-    # Pass necessary game data to view_game.html for viewing purposes
-    return render_template("view_game.html", game=game, school_slug=school_slug, game_index=game_index)
 
 
 
@@ -100,65 +89,21 @@ def save_team_data(team_name, data):
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
-@app.route('/end_game', methods=['POST'])
-def end_game():
-    global dataWhite, dataBlack
+from flask import request, jsonify
 
-    # Retrieve team names from the POST request
-    white_team_name = request.form.get('white_team_name', 'White Team')
-    black_team_name = request.form.get('black_team_name', 'Black Team')
 
-    initialize_team_file(white_team_name)
-    initialize_team_file(black_team_name)
-    
-    # Calculate the scores for each team
-    white_team_score = sum(dataWhite['Shot'])
-    black_team_score = sum(dataBlack['Shot'])
 
-    # Load team data from each team's file
-    white_team_data = load_team_data(white_team_name)
-    black_team_data = load_team_data(black_team_name)
 
-    # Define the game entry with detailed stats
-    game_entry = {
-        "date": request.form.get('date'),  # You may need to pass date/time from the form
-        "time": request.form.get('time'),
-        "opponent": black_team_name,
-        "home_away": "Home",
-        "game_type": "League Game",
-        "is_scored": True,
-        "score": {
-            "white_team_score": white_team_score,
-            "black_team_score": black_team_score
-        },
-        "white_team_stats": dataWhite,
-        "black_team_stats": dataBlack
-    }
 
-    # Add the game entry to the white team's JSON file
-    white_team_data["games"].append(game_entry)
-    save_team_data(white_team_name, white_team_data)
 
-    # For the black team, we reverse the home/away and opponent fields
-    game_entry_opponent = {
-        "date": request.form.get('date'),
-        "time": request.form.get('time'),
-        "opponent": white_team_name,
-        "home_away": "Away",
-        "game_type": "League Game",
-        "is_scored": True,
-        "score": {
-            "white_team_score": white_team_score,
-            "black_team_score": black_team_score
-        },
-        "white_team_stats": dataWhite,
-        "black_team_stats": dataBlack
-    }
 
-    # Add the game entry to the black team's JSON file
-    black_team_data["games"].append(game_entry_opponent)
-    save_team_data(black_team_name, black_team_data)
 
+
+
+
+
+
+def reset_team_stats():
     # Reset stats for the next game
     dataWhite = {
         'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
@@ -181,9 +126,6 @@ def end_game():
         'Penalties': [0] * 10,
         'Turnovers': [0] * 10
     }
-
-    return jsonify({'response': 'Game ended and data saved successfully!'})
-
 
 
 #training model
@@ -335,56 +277,6 @@ def save_previous_games():
 
 
 
-# # Route to end the game, store the current game data and reset the current game
-# @app.route('/end_game', methods=['POST'])
-# def end_game():
-#     global dataWhite, dataBlack
-
-
-#     # Retrieve team names from the POST request
-#     white_team_name = request.form.get('white_team_name', 'White Team')  # Default name if not provided
-#     black_team_name = request.form.get('black_team_name', 'Black Team')  # Default name if not provided
-
-
-#     white_team_score = sum(dataWhite['Shot'])
-#     black_team_score = sum(dataBlack['Shot'])
-
-#     previous_games.append({
-#         'white_team_name': white_team_name,
-#         'black_team_name': black_team_name,
-#         'white_score': white_team_score,
-#         'black_score': black_team_score,
-#         'white_team': dataWhite,
-#         'black_team': dataBlack
-#     })
-
-#     # Save the games to a JSON file
-#     save_previous_games()
-
-#     dataWhite = {
-#         'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
-#         'Shot': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Blocks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Steals': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Exclusions': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Exclusions Drawn': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Penalties': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Turnovers': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-#     }
-
-#     dataBlack = {
-#         'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
-#         'Shot': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Blocks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Steals': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Exclusions': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Exclusions Drawn': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Penalties': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-#         'Turnovers': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-#     }
-
-#     return jsonify({'response': 'Game ended and data saved successfully!'})
-
 # Route to get the previous games data
 @app.route('/get_previous_games', methods=['GET'])
 def get_previous_games():
@@ -442,7 +334,7 @@ def extract_key_phrases(text):
                 event = "Penalties"
                 i += 2  # Skip the next word since it's part of "five meter"
                 continue
-            else:
+            elif token != "point":
                 player = str(w2n.word_to_num(token))
         except Exception:
             pass
@@ -465,7 +357,7 @@ def extract_key_phrases(text):
             player = 1
 
         # Detect events
-        if token in shot_keywords:
+        if (token in shot_keywords and event != "Blocks"):
             event = "Shot"
         elif token in block_keywords:
             event = "Blocks"
@@ -479,7 +371,7 @@ def extract_key_phrases(text):
             event = "Penalties"
 
         i += 1
-
+    
     if event == "Exclusions" or event == "Penalties":
         predict_connotation(text)
         if predict_connotation(text) == "Negative":
@@ -488,6 +380,7 @@ def extract_key_phrases(text):
             event = "Penalties"
         elif predict_connotation(text) == "Positive" and event == "Exclusions":
             event = "Exclusions Drawn"
+
 
     return player, event, team
 
@@ -674,37 +567,24 @@ schools = {
 
 @app.route('/team/<school_slug>', methods=['GET', 'POST'])
 def team_page(school_slug):
-    print(4)
     school = schools.get(school_slug)
     if not school:
         return "Team not found", 404
 
     # Ensure the main team file exists
     initialize_team_file(school['name'])
-    print("calling load data")
     team_data = load_team_data(school['name'])
-    print(team_data)
-    print(request.method)
+
     if request.method == 'POST':
-        print("post")
         # Retrieve form data for adding a new game
         home_away = request.form.get('home_away')
         opponent_name = request.form.get('opponent')
         time = request.form.get('time')
         date = request.form.get('date')
         game_type = request.form.get('game_type')
-        am_pm = request.form.get('am_pm')  # Retrieve AM or PM
-
-        # Ensure the opponent team file exists
-        initialize_team_file(opponent_name)
-
-        # Load opponent data
-        opponent_data = load_team_data(opponent_name)
 
         # Find the opponent's slug and logo
-        opponent_slug = next(
-            (slug for slug, data in schools.items() if data['name'] == opponent_name), None
-        )
+        opponent_slug = next((slug for slug, data in schools.items() if data['name'] == opponent_name), None)
         opponent_logo = schools[opponent_slug]['logo'] if opponent_slug else ''
 
         # Create a new game entry
@@ -712,10 +592,10 @@ def team_page(school_slug):
             'home_away': home_away,
             'opponent': opponent_name,
             'opponent_logo': opponent_logo,
-            'time': f"{time} {am_pm}",
+            'time': time,
             'date': date,
             'game_type': game_type,
-            'is_scored': False  # Game is initially not scored
+            'is_scored': False
         }
 
         # Format the date for display
@@ -723,33 +603,38 @@ def team_page(school_slug):
         day_suffix = 'th' if 11 <= date_obj.day <= 13 else {1: 'st', 2: 'nd', 3: 'rd'}.get(date_obj.day % 10, 'th')
         new_game['formatted_date'] = date_obj.strftime(f"%B {date_obj.day}{day_suffix}, %Y")
 
-        # Add the game to the main team’s schedule
+        # Add the game to the main team’s schedule and sort by date
         team_data["games"].append(new_game)
+        team_data["games"].sort(key=lambda game: datetime.strptime(game["date"], '%Y-%m-%d'))
         save_team_data(school["name"], team_data)
 
-        # Also add it to the opponent's schedule, with home/away reversed
+        # Also add it to the opponent's schedule, with home/away reversed and sort
         if opponent_slug:
+            opponent_data = load_team_data(opponent_name)
             opponent_game = {
                 'home_away': 'Home' if home_away == 'Away' else 'Away',
                 'opponent': school['name'],
                 'opponent_logo': school['logo'],
-                'time': f"{time} {am_pm}",
+                'time': time,
                 'date': date,
                 'game_type': game_type,
                 'is_scored': False,
                 'formatted_date': new_game['formatted_date']
             }
             opponent_data["games"].append(opponent_game)
+            opponent_data["games"].sort(key=lambda game: datetime.strptime(game["date"], '%Y-%m-%d'))
             save_team_data(opponent_name, opponent_data)
 
-        return redirect(url_for('team_page', school_slug=school_slug))  # Redirect after POST
+        return redirect(url_for('team_page', school_slug=school_slug))
 
-    # Render the template with team data
+    # Ensure games are sorted by date in the backend data file
+    if team_data["games"]:
+        team_data["games"].sort(key=lambda game: datetime.strptime(game["date"], '%Y-%m-%d'))
+        save_team_data(school["name"], team_data)  # Save sorted data back to the file
 
-
-    # return render_template('teams.html', school=school, schools=schools, team_date=0, school_slug=school_slug)
-    print(team_data)
+    # Render the template with sorted team data
     return render_template('teams.html', school=school, schools=schools, team_data=team_data, school_slug=school_slug)
+
 
 
 
@@ -826,6 +711,112 @@ def scoring_page(school_slug, game_index):
     # Render the score_game template
     return render_template("score_game.html", home_team=home_team, away_team=away_team, game_index=game_index)
 
+from flask import render_template
+
+@app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
+def view_scoring(school_slug, game_index):
+    global schools
+
+    school = schools.get(school_slug)
+    if not school:
+        return "School not found", 404
+
+    school_name = school['name']
+    game = open_game(school_name, game_index)
+
+    if not game or game_index >= len(school):
+        return "Game not found", 404
+
+    # Ensure the game has white_team_stats and black_team_stats
+    white_team_stats = game.get('home_box', {})
+    black_team_stats = game.get('away_box', {})
+    if not white_team_stats or 'Player' not in white_team_stats:
+        white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
+    if not black_team_stats or 'Player' not in black_team_stats:
+        black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
+    # Use indexed_white_players and indexed_black_players as before
+
+    # Pre-process players with indices for Jinja2 template
+    indexed_white_players = list(enumerate(white_team_stats.get('Player', [])))
+    indexed_black_players = list(enumerate(black_team_stats.get('Player', [])))
+
+    home_team = school['name'] if game['home_away'] == 'Home' else game['opponent']
+    away_team = game['opponent'] if game['home_away'] == 'Home' else school['name']
+
+    # Calculate scores
+    game['score'] = {
+        'white_team_score': sum(white_team_stats.get('Shot', [])),
+        'black_team_score': sum(black_team_stats.get('Shot', []))
+    }
+
+    return render_template(
+        "view_game.html",
+        game=game,
+        indexed_white_players=indexed_white_players,
+        indexed_black_players=indexed_black_players,
+        home_team=home_team,
+        away_team=away_team,
+        school_slug=school_slug,
+        game_index=game_index
+    )
+
+
+@app.route('/end_game', methods=['POST'])
+def end_game():
+    print("Received request to /end_game")
+
+    try:
+        white_team_name = request.form.get('white_team_name')
+        black_team_name = request.form.get('black_team_name')
+        game_index = int(request.form.get('game_index'))  # Get the game index
+
+        print(f"White Team Name: {white_team_name}")
+        print(f"Black Team Name: {black_team_name}")
+
+        if not white_team_name or not black_team_name:
+            raise ValueError("Team names must be provided!")
+
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
+
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+
+        print("DataWhite Sample:", dataWhite)
+        print("DataBlack Sample:", dataBlack)
+
+        white_team_score = sum(dataWhite.get('Shot', []))
+        black_team_score = sum(dataBlack.get('Shot', []))
+
+        print(f"Calculated scores -> White: {white_team_score}, Black: {black_team_score}")
+
+        # Update a specific game entry using the provided game_index
+        def update_game(team_data, game_index):
+            if game_index < len(team_data["games"]):
+                game = team_data["games"][game_index]
+                game["is_scored"] = True
+                game["home_box"] = dataWhite if game["home_away"] == "Home" else dataBlack
+                game["away_box"] = dataBlack if game["home_away"] == "Home" else dataWhite
+
+        # Update game entries for both teams using the game_index
+        update_game(white_team_data, game_index)
+        save_team_data(white_team_name, white_team_data)
+
+        update_game(black_team_data, game_index)
+        save_team_data(black_team_name, black_team_data)
+
+        reset_team_stats()
+
+        return jsonify({'response': 'Game results updated successfully!'}), 200
+    except Exception as e:
+        print(f"Exception during end_game processing: {str(e)}")
+        return jsonify({'response': f'Error occurred during processing: {str(e)}'}), 500
+
+
+
 if __name__ == '__main__':
     print("calling app.run")
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+#blocks a shot and scores a point doesn't work properly

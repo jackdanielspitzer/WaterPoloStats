@@ -8,11 +8,14 @@
 <body>
     <h1>Water Polo Statistics Tracker</h1>
 
-    <!-- Pre-filled Team Names -->
+    <!-- Input fields for team names -->
     <div>
-        <h2>Teams</h2>
-        <p><strong>White Team:</strong> <span id="whiteTeamName">{{ light_team }}</span></p>
-        <p><strong>Black Team:</strong> <span id="blackTeamName">{{ dark_team }}</span></p>
+        <h2>Team Names</h2>
+        <label for="whiteTeamName">White Team Name: </label>
+        <input type="text" id="whiteTeamName" placeholder="Enter White Team Name"><br><br>
+
+        <label for="blackTeamName">Black Team Name: </label>
+        <input type="text" id="blackTeamName" placeholder="Enter Black Team Name"><br><br>
     </div>
 
     <!-- Form for inputting text or speech -->
@@ -105,12 +108,15 @@
 
         // Function to update the tables with team data
         function updateTables() {
+            // Fetch data and log the result
             fetch('/get_data')
             .then(response => response.json())
             .then(data => {
+                console.log(data); // Add this line to log the response data
                 const whiteTableBody = document.querySelector('#whiteTable tbody');
                 const blackTableBody = document.querySelector('#blackTable tbody');
 
+                // Clear current table rows
                 whiteTableBody.innerHTML = '';
                 blackTableBody.innerHTML = '';
 
@@ -144,6 +150,7 @@
                     blackTableBody.innerHTML += row;
                 });
             });
+
         }
 
         // Update the tables every 3 seconds
@@ -151,13 +158,14 @@
 
         // Handle navigation to previous games page
         document.getElementById('previousGamesButton').addEventListener('click', () => {
-            window.location.href = '/previous_games';
+            window.location.href = '/previous_games'; // Navigate to previous games page
         });
 
         // Handle the Finish Game button click
         document.getElementById('finishGameButton').addEventListener('click', async function() {
-            const whiteTeamName = document.getElementById('whiteTeamName').innerText;
-            const blackTeamName = document.getElementById('blackTeamName').innerText;
+            // Get team names from the input fields
+            const whiteTeamName = document.getElementById('whiteTeamName').value || 'White Team';
+            const blackTeamName = document.getElementById('blackTeamName').value || 'Black Team';
 
             const response = await fetch('/end_game', {
                 method: 'POST',
@@ -167,12 +175,16 @@
                 body: `white_team_name=${encodeURIComponent(whiteTeamName)}&black_team_name=${encodeURIComponent(blackTeamName)}`
             });
 
+            console.log(response)
+
             const data = await response.json();
-            alert(data.response);
+            alert(data.response);  // Notify the user that the game is finished
 
             // Optionally: Reset the tables in the frontend (clearing the HTML rows)
-            document.querySelector('#whiteTable tbody').innerHTML = '';
-            document.querySelector('#blackTable tbody').innerHTML = '';
+            const whiteTableBody = document.querySelector('#whiteTable tbody');
+            const blackTableBody = document.querySelector('#blackTable tbody');
+            whiteTableBody.innerHTML = '';
+            blackTableBody.innerHTML = '';
         });
     </script>
 </body>

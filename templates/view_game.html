@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game View</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { padding: 8px 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .container { max-width: 1200px; margin: auto; }
+        button { padding: 8px 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
+        button:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Game Box Score</h1>
+        <h2>{{ home_team }} vs {{ away_team }}</h2>
+        <p><strong>Date:</strong> {{ game.date }}</p>
+        <p><strong>Score:</strong> {{ game.score.white_team_score }} - {{ game.score.black_team_score }}</p>
+
+        <h2>{{ home_team }} Stats</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Shots</th>
+                    <th>Blocks</th>
+                    <th>Steals</th>
+                    <th>Exclusions</th>
+                    <th>Exclusions Drawn</th>
+                    <th>Penalties</th>
+                    <th>Turnovers</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, player in indexed_white_players %}
+                <tr>
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ player }}</td>
+                    <td>{{ game.home_box['Shot'][index] }}</td>
+                    <td>{{ game.home_box['Blocks'][index] }}</td>
+                    <td>{{ game.home_box['Steals'][index] }}</td>
+                    <td>{{ game.home_box['Exclusions'][index] }}</td>
+                    <td>{{ game.home_box['Exclusions Drawn'][index] }}</td>
+                    <td>{{ game.home_box['Penalties'][index] }}</td>
+                    <td>{{ game.home_box['Turnovers'][index] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>{{ away_team }} Stats</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Player</th>
+                    <th>Shots</th>
+                    <th>Blocks</th>
+                    <th>Steals</th>
+                    <th>Exclusions</th>
+                    <th>Exclusions Drawn</th>
+                    <th>Penalties</th>
+                    <th>Turnovers</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for index, player in indexed_black_players %}
+                <tr>
+                    <td>{{ index + 1 }}</td>
+                    <td>{{ player }}</td>
+                    <td>{{ game.away_box['Shot'][index] }}</td>
+                    <td>{{ game.away_box['Blocks'][index] }}</td>
+                    <td>{{ game.away_box['Steals'][index] }}</td>
+                    <td>{{ game.away_box['Exclusions'][index] }}</td>
+                    <td>{{ game.away_box['Exclusions Drawn'][index] }}</td>
+                    <td>{{ game.away_box['Penalties'][index] }}</td>
+                    <td>{{ game.away_box['Turnovers'][index] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button onclick="window.location.href='/previous_games'">Back to Previous Games</button>
+    </div>
+</body>
+</html>

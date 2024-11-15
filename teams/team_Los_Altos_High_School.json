@@ -1,3 +1,14 @@
 {
-    "games": []
+    "games": [
+        {
+            "home_away": "Away",
+            "opponent": "Los Gatos High School",
+            "opponent_logo": "images/Los Gatos High School.png",
+            "time": "00:45 AM None",
+            "date": "1111-11-11",
+            "game_type": "CCS Playoffs",
+            "is_scored": false,
+            "formatted_date": "November 11th, 1111"
+        }
+    ]
 }
