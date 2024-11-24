@@ -11,6 +11,60 @@ from datetime import datetime
 def get_team_file_path(team_name):
     return os.path.join('teams', f"team_{team_name.replace(' ', '_')}.json")
 
+FILE_PATH = 'team_data.json'
+import json
+
+# Define file path for storage
+FILE_PATH = 'team_data.json'
+
+# Load data from the file
+def load_data():
+    try:
+        with open(FILE_PATH, 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        # Return an empty dictionary if the file doesn't exist
+        return {}
+
+# Save data to the file
+def save_data_to_file(data, filename='data.json'):
+    """Save the given data to a JSON file."""
+    print(f"Saving data to {filename}...")  # Debugging print
+
+    os.makedirs(os.path.dirname(filename), exist_ok=True)  # Ensure directory exists
+
+    with open(filename, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    print("Data saved successfully!")
+
+# Add player to the team's roster
+def add_player_to_roster(school, cap_number, player_name, grade, position):
+    # Load the existing data from the file
+    data = load_data()
+
+    # If the school doesn't exist in the data, initialize it
+    if school['slug'] not in data:
+        data[school['slug']] = {'players': []}
+
+    # Create a player dictionary
+    new_player = {
+        'cap_number': cap_number,
+        'name': player_name,
+        'grade': int(grade),
+        'position': position
+    }
+
+    # Add the new player to the roster
+    data[school['slug']]['players'].append(new_player)
+
+    # Save the updated data back to the file
+    save_data(data)
+
+
+# Load the data from a file
+
+
 # Assuming you have helper functions to load team data and game data
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
@@ -35,7 +89,7 @@ def start_scoring(school_slug, game_index):
 def initialize_team_file(team_name):
     # Ensure the 'teams' directory exists
     if not os.path.exists('teams'):
-        os.makedirs('teams')  # Create the directory if it doesn't exist
+        os.makedirs('teams')  # Create the directory if it doesn't existzz
 
     team_file_path = get_team_file_path(team_name)
     if not os.path.exists(team_file_path):
@@ -429,10 +483,61 @@ def home():
 def index():
     return render_template('scoring.html')
 
-@app.route('/score_game', methods=['GET'])
-def score_game(school_name, game_index):
-    # load your team data here
-    return render_template("score_game.html", home_team=home_team, away_team=away_team, game_index=game_index)
+@app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
+def score_game(school_slug, game_index):
+    school = get_school_by_slug(school_slug)
+    if not school:
+        return "School not found", 404
+
+    team_name = school['name']
+    game = open_game(team_name, game_index)
+    if not game:
+        return "Game not found", 404
+
+    # Load rosters for both teams
+    home_team = team_name if game['home_away'] == 'Home' else game['opponent']
+    away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
+
+    home_roster = get_team_roster(home_team)
+    away_roster = get_team_roster(away_team)
+
+    # Extract player cap numbers
+    home_players = [player['cap_number'] for player in home_roster]
+    away_players = [player['cap_number'] for player in away_roster]
+
+    # Initialize box scores for both teams
+    home_box = {
+        'Player': home_players,
+        'Shot': [0] * len(home_players),
+        'Blocks': [0] * len(home_players),
+        'Steals': [0] * len(home_players),
+        'Exclusions': [0] * len(home_players),
+        'Exclusions Drawn': [0] * len(home_players),
+        'Penalties': [0] * len(home_players),
+        'Turnovers': [0] * len(home_players)
+    }
+
+    away_box = {
+        'Player': away_players,
+        'Shot': [0] * len(away_players),
+        'Blocks': [0] * len(away_players),
+        'Steals': [0] * len(away_players),
+        'Exclusions': [0] * len(away_players),
+        'Exclusions Drawn': [0] * len(away_players),
+        'Penalties': [0] * len(away_players),
+        'Turnovers': [0] * len(away_players)
+    }
+
+    # Pass box scores and other game data to the template
+    return render_template(
+        "score_game.html",
+        home_team=home_team,
+        away_team=away_team,
+        game_index=game_index,
+        home_box=home_box,
+        away_box=away_box
+    )
+
 
 @app.route('/teams')
 def teams():
@@ -450,10 +555,60 @@ def process_text():
     response = run(text)
     return jsonify({'response': response})
 
-# Return the current team data as JSON (for updating tables)
+# Helper function to load team rosters
+def load_team_rosters():
+    with open('team_rosters.json', 'r') as file:
+        return json.load(file)
+
 @app.route('/get_data', methods=['GET'])
 def get_data():
-    return jsonify({'dataWhite': dataWhite, 'dataBlack': dataBlack})
+    try:
+        # Load team rosters
+        team_rosters = load_team_rosters()
+
+        # Retrieve the current game details
+        home_team_name = request.args.get('home_team')  # Pass 'home_team' as a query parameter
+        away_team_name = request.args.get('away_team')  # Pass 'away_team' as a query parameter
+
+        if not home_team_name or not away_team_name:
+            return jsonify({'error': 'Missing home or away team name'}), 400
+
+        # Get rosters for both teams
+        home_roster = team_rosters.get(home_team_name, [])
+        away_roster = team_rosters.get(away_team_name, [])
+
+        # Extract cap numbers for each team
+        home_players = [player['cap_number'] for player in home_roster]
+        away_players = [player['cap_number'] for player in away_roster]
+
+        # Initialize box scores with zeros
+        home_box = {
+            'Player': home_players,
+            'Shot': [0] * len(home_players),
+            'Blocks': [0] * len(home_players),
+            'Steals': [0] * len(home_players),
+            'Exclusions': [0] * len(home_players),
+            'Exclusions Drawn': [0] * len(home_players),
+            'Penalties': [0] * len(home_players),
+            'Turnovers': [0] * len(home_players)
+        }
+        away_box = {
+            'Player': away_players,
+            'Shot': [0] * len(away_players),
+            'Blocks': [0] * len(away_players),
+            'Steals': [0] * len(away_players),
+            'Exclusions': [0] * len(away_players),
+            'Exclusions Drawn': [0] * len(away_players),
+            'Penalties': [0] * len(away_players),
+            'Turnovers': [0] * len(away_players)
+        }
+
+        # Return the initialized box scores
+        return jsonify({'home_box': home_box, 'away_box': away_box})
+
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/game_details/<int:game_id>', methods=['GET'])
 def game_details(game_id):
@@ -513,7 +668,8 @@ schools = {
         "bg_color": "#004b23",
         "text_color": "#ffffff",
         "link_color": "#004b23",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "gunn": {
         "name": "Henry M. Gunn High School",
@@ -521,7 +677,8 @@ schools = {
         "bg_color": "#ff0000",
         "text_color": "#000000",
         "link_color": "#ff0000",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "harker": {
         "name": "Harker High School",
@@ -529,7 +686,8 @@ schools = {
         "bg_color": "#004b23",
         "text_color": "#ffffff",
         "link_color": "#004b23",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "los-gatos": {
         "name": "Los Gatos High School",
@@ -537,7 +695,8 @@ schools = {
         "bg_color": "#ffa500",
         "text_color": "#ffffff",
         "link_color": "#ffa500",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "los-altos": {
         "name": "Los Altos High School",
@@ -545,7 +704,8 @@ schools = {
         "bg_color": "#000080",
         "text_color": "#ffffff",
         "link_color": "#000080",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "fremont": {
         "name": "Fremont High School",
@@ -553,7 +713,8 @@ schools = {
         "bg_color": "#8B0000",
         "text_color": "#ffffff",
         "link_color": "#8B0000",
-        "games": []
+        "games": [],
+        "players":[]
     },
     "mountain-view": {
         "name": "Mountain View High School",
@@ -561,9 +722,35 @@ schools = {
         "bg_color": "#ffdb58",
         "text_color": "#000000",
         "link_color": "#ffdb58",
-        "games": []
+        "games": [],
+        "players":[]
     }
 }
+def get_school_by_slug(school_slug):
+    return schools.get(school_slug)
+def get_used_cap_numbers(school):
+    # Ensure 'players' exists and is a list
+    if "players" in school and isinstance(school["players"], list):
+        # Extract cap numbers, converting to strings
+        used_numbers = [str(player["cap_number"]) for player in school["players"] if "cap_number" in player]
+    else:
+        used_numbers = []  # Default to an empty list if no players
+    return used_numbers
+def add_player_to_roster(school, cap_number, player_name,grade, position):
+    new_player = {
+        'cap_number': cap_number,
+        'name': player_name,
+        'grade': grade,
+        'position': position
+    }
+    school["players"].append(new_player)
+
+
+
+
+
+
+
 
 @app.route('/team/<school_slug>', methods=['GET', 'POST'])
 def team_page(school_slug):
@@ -638,6 +825,8 @@ def team_page(school_slug):
 
 
 
+
+
 @app.route('/team/<school_slug>/delete/<int:game_id>', methods=['POST'])
 def delete_game(school_slug, game_id):
     school = schools.get(school_slug)
@@ -681,23 +870,21 @@ def delete_game(school_slug, game_id):
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
 def scoring_page(school_slug, game_index):
-    global schools  # Declare that we are using the global variable schools
-
-    # Fetch the school dictionary using the slug
     school = schools.get(school_slug)
+    if not school:
+        return "School not found", 404
 
-    if school:
-        # Access the name from the fetched school dictionary
-        school_name = school['name']
-        print(school_name)  # For debugging purposes
-    else:
-        print("School not found.")
-    # Load team data for the specified school
-    print("END OF DEBUG")
-    team_data = open_game(school_name, game_index)
-    print("team data: ", team_data)
-    if not team_data or game_index >= len(school):
+    team_name = school['name']
+    roster = get_team_roster(team_name)  # Fetch the roster for this team
+
+    # Load game data as before
+    game = open_game(team_name, game_index)
+    if not game:
         return "Game not found", 404
+
+    # Pass roster and game data to the scoring template
+    return render_template('score_game.html', game=game, roster=roster, school_slug=school_slug)
+
 
     # game = team_data["games"][game_index]
 
@@ -715,50 +902,63 @@ from flask import render_template
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
 def view_scoring(school_slug, game_index):
-    global schools
+    try:
+        # Load team rosters from team_rosters.json
+        with open('team_rosters.json', 'r') as file:
+            team_rosters = json.load(file)
 
-    school = schools.get(school_slug)
-    if not school:
-        return "School not found", 404
+        # Fetch school and game data
+        school = schools.get(school_slug)
+        if not school:
+            return "School not found", 404
 
-    school_name = school['name']
-    game = open_game(school_name, game_index)
+        school_name = school['name']
+        game = open_game(school_name, game_index)
+        if not game:
+            return "Game not found", 404
 
-    if not game or game_index >= len(school):
-        return "Game not found", 404
+        # Determine home and away teams
+        home_team_name = school_name if game['home_away'] == 'Home' else game['opponent']
+        away_team_name = game['opponent'] if game['home_away'] == 'Home' else school_name
 
-    # Ensure the game has white_team_stats and black_team_stats
-    white_team_stats = game.get('home_box', {})
-    black_team_stats = game.get('away_box', {})
-    if not white_team_stats or 'Player' not in white_team_stats:
-        white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
-    if not black_team_stats or 'Player' not in black_team_stats:
-        black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
-    # Use indexed_white_players and indexed_black_players as before
+        # Load rosters for home and away teams
+        home_roster = team_rosters.get(home_team_name, [])
+        away_roster = team_rosters.get(away_team_name, [])
 
-    # Pre-process players with indices for Jinja2 template
-    indexed_white_players = list(enumerate(white_team_stats.get('Player', [])))
-    indexed_black_players = list(enumerate(black_team_stats.get('Player', [])))
+        # Extract player names for both teams
+        indexed_white_players = list(enumerate(player['name'] for player in home_roster))
+        indexed_black_players = list(enumerate(player['name'] for player in away_roster))
 
-    home_team = school['name'] if game['home_away'] == 'Home' else game['opponent']
-    away_team = game['opponent'] if game['home_away'] == 'Home' else school['name']
+        # Ensure the game has white_team_stats and black_team_stats
+        white_team_stats = game.get('home_box', {})
+        black_team_stats = game.get('away_box', {})
 
-    # Calculate scores
-    game['score'] = {
-        'white_team_score': sum(white_team_stats.get('Shot', [])),
-        'black_team_score': sum(black_team_stats.get('Shot', []))
-    }
+        # Fill missing stats with empty lists
+        if not white_team_stats or 'Player' not in white_team_stats:
+            white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
+        if not black_team_stats or 'Player' not in black_team_stats:
+            black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
 
-    return render_template(
-        "view_game.html",
-        game=game,
-        indexed_white_players=indexed_white_players,
-        indexed_black_players=indexed_black_players,
-        home_team=home_team,
-        away_team=away_team,
-        school_slug=school_slug,
-        game_index=game_index
-    )
+        # Calculate scores
+        game['score'] = {
+            'white_team_score': sum(white_team_stats.get('Shot', [])),
+            'black_team_score': sum(black_team_stats.get('Shot', []))
+        }
+
+        return render_template(
+            "view_game.html",
+            game=game,
+            indexed_white_players=indexed_white_players,
+            indexed_black_players=indexed_black_players,
+            home_team=home_team_name,
+            away_team=away_team_name,
+            school_slug=school_slug,
+            game_index=game_index
+        )
+    except Exception as e:
+        return f"Error: {str(e)}", 500
+
+
 
 
 @app.route('/end_game', methods=['POST'])
@@ -811,6 +1011,102 @@ def end_game():
     except Exception as e:
         print(f"Exception during end_game processing: {str(e)}")
         return jsonify({'response': f'Error occurred during processing: {str(e)}'}), 500
+
+# File path for storing rosters
+ROSTER_FILE = 'team_rosters.json'
+
+# Load rosters from file
+def load_rosters():
+    if os.path.exists(ROSTER_FILE):
+        with open(ROSTER_FILE, 'r') as file:
+            return json.load(file)
+    else:
+        return {}
+
+# Save rosters to file
+def save_rosters(rosters):
+    with open(ROSTER_FILE, 'w') as file:
+        json.dump(rosters, file, indent=4)
+
+# Get the roster for a specific team
+def get_team_roster(team_name):
+    rosters = load_rosters()
+    return rosters.get(team_name, [])
+
+
+def save_roster(team_name, updated_roster):
+    rosters = load_rosters()
+    rosters[team_name] = updated_roster
+    save_rosters(rosters)
+
+
+@app.route('/team/<school_slug>/edit_roster', methods=['GET', 'POST'])
+def edit_roster(school_slug):
+    school = get_school_by_slug(school_slug)
+    if not school:
+        return "School not found", 404
+
+    team_name = school['name']  # Fetch team name
+    roster = get_team_roster(team_name)  # Load the team's roster
+    used_numbers = [player['cap_number'] for player in roster]  # Get used cap numbers
+
+    if request.method == 'POST':
+        if 'delete_cap_number' in request.form:  # Handle delete request
+            delete_cap_number = request.form.get('delete_cap_number')
+            roster = [player for player in roster if player['cap_number'] != delete_cap_number]
+            save_roster(team_name, sorted(roster, key=lambda x: sort_cap_number(x['cap_number'])))  # Save updated and sorted roster
+            return redirect(url_for('edit_roster', school_slug=school_slug))
+
+        else:  # Handle adding a player
+            cap_number = request.form.get('cap_number')
+            player_name = request.form.get('player_name')
+            grade = request.form.get('grade')
+            position = request.form.get('position')
+
+            # Check if the cap number is already taken
+            if cap_number in used_numbers:
+                error_message = f"Cap number {cap_number} is already taken. Please choose a different number."
+                return render_template('edit_roster.html', school_slug=school_slug, school=school, roster=roster, error=error_message)
+
+            # Add the player to the roster
+            new_player = {
+                'cap_number': cap_number,
+                'name': player_name,
+                'grade': grade,
+                'position': position
+            }
+            roster.append(new_player)  # Add to the local roster
+
+            # Sort the roster and save
+            roster = sorted(roster, key=lambda x: sort_cap_number(x['cap_number']))
+            save_roster(team_name, roster)  # Save the updated and sorted roster
+
+            # Redirect to the same page to refresh the roster
+            return redirect(url_for('edit_roster', school_slug=school_slug))
+
+    # Sort the roster before rendering
+    roster = sorted(roster, key=lambda x: sort_cap_number(x['cap_number']))
+    return render_template('edit_roster.html', school_slug=school_slug, school=school, roster=roster)
+
+# Helper function to sort cap numbers
+def sort_cap_number(cap_number):
+    """
+    Sort cap numbers by treating numeric and alphanumeric values appropriately.
+    Goalies (1, 1A, 1B, etc.) come first, then others in ascending order.
+    """
+    import re
+    match = re.match(r"(\d+)([A-Z]?)", cap_number)  # Match numbers followed by optional letters
+    if match:
+        number = int(match.group(1))  # Extract the numeric part
+        letter = match.group(2)  # Extract the optional letter
+        # Assign priority to goalies (1) and sort by letter (A, B, etc.)
+        return (number, letter or "")
+    return (float('inf'), "")  # Handle unexpected cap numbers by placing them at the end
+
+
+
+
+
 
 
 

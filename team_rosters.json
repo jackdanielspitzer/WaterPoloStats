@@ -1,0 +1,200 @@
+{
+    "Los Gatos High School": [
+        {
+            "cap_number": "1",
+            "name": "John",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "1A",
+            "name": "Jill",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Michael",
+            "grade": "10",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "3",
+            "name": "Alex",
+            "grade": "11",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "4",
+            "name": "Sam",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "5",
+            "name": "Chris",
+            "grade": "11",
+            "position": "Driver"
+        }
+    ],
+    "Los Altos High School": [
+        {
+            "cap_number": "1",
+            "name": "Dyll",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Ethan",
+            "grade": "10",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "3",
+            "name": "Logan",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "4",
+            "name": "Ryan",
+            "grade": "12",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "5",
+            "name": "Jake",
+            "grade": "10",
+            "position": "Driver"
+        }
+    ],
+    "Fremont High School": [
+        {
+            "cap_number": "1",
+            "name": "Connor",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Mason",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "3",
+            "name": "Liam",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "4",
+            "name": "Noah",
+            "grade": "10",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "5",
+            "name": "Owen",
+            "grade": "11",
+            "position": "Center Defender"
+        }
+    ],
+    "Mountain View High School": [
+        {
+            "cap_number": "1",
+            "name": "Jackson",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Caleb",
+            "grade": "10",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "3",
+            "name": "Lucas",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "4",
+            "name": "Eli",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "5",
+            "name": "Nathan",
+            "grade": "12",
+            "position": "Center Defender"
+        }
+    ],
+    "Palo Alto High School": [
+        {
+            "cap_number": "1",
+            "name": "David",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Matthew",
+            "grade": "10",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "3",
+            "name": "Benjamin",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "4",
+            "name": "James",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "5",
+            "name": "Henry",
+            "grade": "10",
+            "position": "Center Defender"
+        }
+    ],
+    "Gunn High School": [
+        {
+            "cap_number": "1",
+            "name": "William",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Oliver",
+            "grade": "10",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "3",
+            "name": "Jacob",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "4",
+            "name": "Nathaniel",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "5",
+            "name": "Andrew",
+            "grade": "10",
+            "position": "Center Defender"
+        }
+    ]
+}

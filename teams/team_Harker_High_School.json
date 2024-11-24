@@ -4,6 +4,16 @@
             "home_away": "Away",
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
+            "time": "TBD",
+            "date": "2024-11-05",
+            "game_type": "CIF Playoffs",
+            "is_scored": false,
+            "formatted_date": "November 5th, 2024"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
             "time": "03:00 PM",
             "date": "2025-01-01",
             "game_type": "League Game",
@@ -34,8 +44,8 @@
                 ],
                 "Shot": [
                     0,
-                    1,
-                    1,
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -131,19 +141,19 @@
                     "Player 10"
                 ],
                 "Shot": [
-                    1,
                     0,
                     0,
                     0,
                     0,
                     0,
-                    1,
+                    0,
+                    0,
                     0,
                     0,
                     0
                 ],
                 "Blocks": [
-                    1,
+                    0,
                     0,
                     0,
                     0,

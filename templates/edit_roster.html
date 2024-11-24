@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Roster - {{ school.name }}</title>
+    <style>
+        body {
+            background-color: {{ school.bg_color }};
+            color: {{ school.text_color }};
+        }
+        a {
+            color: {{ school.link_color }};
+        }
+        .error {
+            color: red;
+        }
+    </style>
+    <script>
+        function updatePosition() {
+            const capNumber = document.getElementById("cap_number").value;
+            const positionSelect = document.getElementById("position");
+            if (capNumber === "1" || capNumber === "1A" || capNumber === "1B") {
+                positionSelect.value = "Goalie";
+            }
+        }
+
+        function updateCapNumber() {
+            const position = document.getElementById("position").value;
+            const capNumberSelect = document.getElementById("cap_number");
+            if (position === "Goalie") {
+                const options = ["1", "1A", "1B", "13"];
+                for (let i = 0; i < capNumberSelect.options.length; i++) {
+                    const option = capNumberSelect.options[i];
+                    option.disabled = !options.includes(option.value);
+                }
+            } else {
+                for (let i = 0; i < capNumberSelect.options.length; i++) {
+                    capNumberSelect.options[i].disabled = false;
+                }
+            }
+        }
+
+        window.onload = function () {
+            updatePosition();
+            updateCapNumber();
+            document.getElementById("cap_number").addEventListener("change", updatePosition);
+            document.getElementById("position").addEventListener("change", updateCapNumber);
+        };
+
+        function validateForm(event) {
+            const capNumber = document.getElementById("cap_number").value;
+            const position = document.getElementById("position").value;
+            const errorMessage = document.getElementById("error_message");
+            errorMessage.textContent = "";
+
+            if ((capNumber === "1" || capNumber === "1A" || capNumber === "1B") && position !== "Goalie") {
+                errorMessage.textContent = "If you select cap number 1, 1A, or 1B, the position must be 'Goalie'.";
+                event.preventDefault();
+                return false;
+            }
+
+            if (position === "Goalie" && !["1", "1A", "1B", "13"].includes(capNumber)) {
+                errorMessage.textContent = "If you select 'Goalie' as the position, you must choose cap number 1, 1A, 1B, or 13.";
+                event.preventDefault();
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Edit Roster for {{ school['name'] }}</h1>
+    
+    <!-- Add Player Form -->
+    <form action="{{ url_for('edit_roster', school_slug=school_slug) }}" method="POST" onsubmit="return validateForm(event);">
+        <label for="player_name">Player Name:</label>
+        <input type="text" id="player_name" name="player_name" required><br><br>
+
+        <label for="grade">Grade:</label>
+        <select id="grade" name="grade" required>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+        </select><br><br>
+
+        <label for="cap_number">Cap Number:</label>
+        <select id="cap_number" name="cap_number" required>
+            <option value="1" {% if '1' in used_numbers %}disabled{% endif %}>1</option>
+            <option value="1A" {% if '1A' in used_numbers %}disabled{% endif %}>1A</option>
+            <option value="1B" {% if '1B' in used_numbers %}disabled{% endif %}>1B</option>
+            {% for i in range(2, 14) %}
+                <option value="{{ i }}" {% if i|string in used_numbers %}disabled{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="position">Position:</label>
+        <select id="position" name="position" required>
+            <option value="Goalie">Goalie</option>
+            <option value="Center">Center</option>
+            <option value="Center Defender">Center Defender</option>
+            <option value="Attacker">Attacker</option>
+            <option value="Driver">Driver</option>
+        </select><br><br>
+
+        <button type="submit">Add Player</button>
+        <p id="error_message" class="error"></p>
+    </form>
+
+    <hr>
+
+    <!-- Delete Player Form -->
+    <form action="{{ url_for('edit_roster', school_slug=school_slug) }}" method="POST">
+        <label for="delete_cap_number">Cap Number to Delete:</label>
+        <input type="text" id="delete_cap_number" name="delete_cap_number" required>
+        <button type="submit">Delete Player</button>
+    </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <h2>Current Players</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Cap #</th>
+                <th>Name</th>
+                <th>Grade</th>
+                <th>Position</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in roster %}
+                <tr>
+                    <td>{{ player.cap_number }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.grade }}</td>
+                    <td>{{ player.position }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br><br>
+    <a href="/">Back to Home</a>
+</body>
+</html>
