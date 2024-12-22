@@ -1042,8 +1042,14 @@ def end_game():
             if game_index < len(team_data["games"]):
                 game = team_data["games"][game_index]
                 game["is_scored"] = True
-                game["home_box"] = dataBlack if game["home_away"] == "Home" else dataWhite
-                game["away_box"] = dataWhite if game["home_away"] == "Home" else dataBlack
+                if game["home_away"] == "Home":
+                    # If team is home, they are dark/black
+                    game["home_box"] = dataBlack
+                    game["away_box"] = dataWhite
+                else:
+                    # If team is away, they are light/white
+                    game["home_box"] = dataWhite  
+                    game["away_box"] = dataBlack
 
         # Update game entries for both teams using the game_index
         update_game(white_team_data, game_index)
