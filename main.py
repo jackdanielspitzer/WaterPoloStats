@@ -442,13 +442,13 @@ def extract_key_phrases(text):
 
 
 # Update team data
-def sort_data(player, event, team):
+def sort_data(player, event, team, home_team_name, away_team_name):
     # Load team rosters
     with open('team_rosters.json', 'r') as file:
         team_rosters = json.load(file)
     # Get team rosters based on the current game teams
-    home_roster = team_rosters.get(home_team, [])
-    away_roster = team_rosters.get(away_team, [])
+    home_roster = team_rosters.get(home_team_name, [])
+    away_roster = team_rosters.get(away_team_name, [])
     
     if team == 'light':
         # Find the player in the home roster by cap number
@@ -487,7 +487,10 @@ def phrase(number, action, team):
 def run(text):
     player, event, team = extract_key_phrases(text)
     if player and event and team:
-        if sort_data(player, event, team):
+        # Get current game teams from the request
+    home_team_name = request.form.get('home_team')
+    away_team_name = request.form.get('away_team')
+    if sort_data(player, event, team, home_team_name, away_team_name):
             return phrase(player, event, team)
         return f"Player {player} not found in roster."
     return "Could not parse the input."
