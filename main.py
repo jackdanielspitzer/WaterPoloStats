@@ -443,6 +443,12 @@ def extract_key_phrases(text):
 
 # Update team data
 def sort_data(player, event, team, home_team_name, away_team_name):
+    print("\n=== Debug Info ===")
+    print(f"Looking for player: {player}")
+    print(f"Team: {team}")
+    print(f"Home team: {home_team_name}")
+    print(f"Away team: {away_team_name}")
+    
     # Load team rosters
     with open('team_rosters.json', 'r') as file:
         team_rosters = json.load(file)
@@ -450,23 +456,30 @@ def sort_data(player, event, team, home_team_name, away_team_name):
     home_roster = team_rosters.get(home_team_name, [])
     away_roster = team_rosters.get(away_team_name, [])
     
+    print(f"Home roster cap numbers: {[str(p['cap_number']).strip() for p in home_roster]}")
+    print(f"Away roster cap numbers: {[str(p['cap_number']).strip() for p in away_roster]}")
+    
     if team == 'light':
         # Find the player in the home roster by cap number
         try:
             player_str = str(player)
+            print(f"Searching home roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
+            print(f"Found player at index: {player_index}")
             dataWhite[event][player_index] += 1
         except (StopIteration, ValueError):
-            print(f"Player {player} not found in home roster: {[p['cap_number'] for p in home_roster]}")
+            print(f"ERROR: Player {player} not found in home roster")
             return False
     else:
         # Find the player in the away roster by cap number
         try:
             player_str = str(player)
+            print(f"Searching away roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
+            print(f"Found player at index: {player_index}")
             dataBlack[event][player_index] += 1
         except (StopIteration, ValueError):
-            print(f"Player {player} not found in away roster: {[p['cap_number'] for p in away_roster]}")
+            print(f"ERROR: Player {player} not found in away roster")
             return False
     return True
 
