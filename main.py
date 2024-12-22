@@ -445,18 +445,20 @@ def extract_key_phrases(text):
 def sort_data(player, event, team, home_team_name, away_team_name):
     print("\n=== Debug Info ===")
     print(f"Looking for player: {player}")
-    print(f"Team: {team}")
-    print(f"Home team: {home_team_name}")
-    print(f"Away team: {away_team_name}")
+    print(f"Team color: {team}")
+    print(f"Home team name: '{home_team_name}'")
+    print(f"Away team name: '{away_team_name}'")
+    if not home_team_name or not away_team_name:
+        print("ERROR: Team names are missing!")
     
     try:
         # Load team rosters
         with open('team_rosters.json', 'r') as file:
             team_rosters = json.load(file)
-            print(f"Loaded team_rosters: {team_rosters}")
+            print(f"Available teams in roster: {list(team_rosters.keys())}")
 
         if home_team_name not in team_rosters:
-            print(f"Error: {home_team_name} not found in rosters")
+            print(f"Error: '{home_team_name}' not found in rosters")
             return False
         if away_team_name not in team_rosters:
             print(f"Error: {away_team_name} not found in rosters")
