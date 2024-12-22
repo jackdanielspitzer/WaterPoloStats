@@ -115,7 +115,11 @@
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value;
+            const homeTeam = '{{ home_team }}';
+            const awayTeam = '{{ away_team }}';
             console.log("Submitting text:", inputText);
+            console.log("Home team:", homeTeam);
+            console.log("Away team:", awayTeam);
 
             try {
                 const response = await fetch('/process', {
