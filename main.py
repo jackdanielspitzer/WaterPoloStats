@@ -443,17 +443,23 @@ def extract_key_phrases(text):
 
 # Update team data
 def sort_data(player, event, team):
+    # Get team rosters based on the current game teams
+    home_roster = team_rosters.get(home_team, [])
+    away_roster = team_rosters.get(away_team, [])
+    
     if team == 'light':
+        # Find the player in the home roster by cap number
         try:
-            player_index = dataWhite['Player'].index(str(player))
+            player_index = next(i for i, p in enumerate(home_roster) if p['cap_number'] == str(player))
             dataWhite[event][player_index] += 1
-        except ValueError:
+        except (StopIteration, ValueError):
             return False
     else:
+        # Find the player in the away roster by cap number
         try:
-            player_index = dataBlack['Player'].index(str(player))
+            player_index = next(i for i, p in enumerate(away_roster) if p['cap_number'] == str(player))
             dataBlack[event][player_index] += 1
-        except ValueError:
+        except (StopIteration, ValueError):
             return False
     return True
 
