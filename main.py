@@ -486,7 +486,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             print(f"Found player at index: {player_index}")
             dataWhite[event][player_index] += 1  # Light team uses dataWhite
         except (StopIteration, ValueError):
-            print(f"ERROR: Player {player} not found in away roster")
+            print(f"ERROR: Player {player} not found in home roster")
             return False
     else:
         # Find the player in the home roster by cap number (dark team)
@@ -497,7 +497,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             print(f"Found player at index: {player_index}")
             dataBlack[event][player_index] += 1  # Dark team uses dataBlack
         except (StopIteration, ValueError):
-            print(f"ERROR: Player {player} not found in away roster")
+            print(f"ERROR: Player {player} not found in home roster")
             return False
     return True
 
