@@ -453,16 +453,20 @@ def sort_data(player, event, team, home_team_name, away_team_name):
     if team == 'light':
         # Find the player in the home roster by cap number
         try:
-            player_index = next(i for i, p in enumerate(home_roster) if p['cap_number'] == str(player))
+            player_str = str(player)
+            player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             dataWhite[event][player_index] += 1
         except (StopIteration, ValueError):
+            print(f"Player {player} not found in home roster: {[p['cap_number'] for p in home_roster]}")
             return False
     else:
         # Find the player in the away roster by cap number
         try:
-            player_index = next(i for i, p in enumerate(away_roster) if p['cap_number'] == str(player))
+            player_str = str(player)
+            player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             dataBlack[event][player_index] += 1
         except (StopIteration, ValueError):
+            print(f"Player {player} not found in away roster: {[p['cap_number'] for p in away_roster]}")
             return False
     return True
 
