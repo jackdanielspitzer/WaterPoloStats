@@ -485,11 +485,11 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataWhite[event][player_index] += 1  # Light team uses dataWhite
+            dataBlack[event][player_index] += 1  # Light team uses dataWhite
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in away roster")
             return False
-    else:
+    elif team == 'dark':
         # Find the player in the home roster by cap number (dark team)
         try:
             player_str = str(player)
@@ -497,10 +497,12 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataBlack[event][player_index] += 1  # Dark team uses dataBlack
+            dataWhite[event][player_index] += 1  # Dark team uses dataBlack
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in home roster")
             return False
+    else:
+        print("ERROR: Invalid team color")
     return True
 
 def phrase(number, action, team):
