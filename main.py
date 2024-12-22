@@ -563,49 +563,11 @@ def load_team_rosters():
 @app.route('/get_data', methods=['GET'])
 def get_data():
     try:
-        # Load team rosters
-        team_rosters = load_team_rosters()
-
-        # Retrieve the current game details
-        home_team_name = request.args.get('home_team')  # Pass 'home_team' as a query parameter
-        away_team_name = request.args.get('away_team')  # Pass 'away_team' as a query parameter
-
-        if not home_team_name or not away_team_name:
-            return jsonify({'error': 'Missing home or away team name'}), 400
-
-        # Get rosters for both teams
-        home_roster = team_rosters.get(home_team_name, [])
-        away_roster = team_rosters.get(away_team_name, [])
-
-        # Extract cap numbers for each team
-        home_players = [player['cap_number'] for player in home_roster]
-        away_players = [player['cap_number'] for player in away_roster]
-
-        # Initialize box scores with zeros
-        home_box = {
-            'Player': home_players,
-            'Shot': [0] * len(home_players),
-            'Blocks': [0] * len(home_players),
-            'Steals': [0] * len(home_players),
-            'Exclusions': [0] * len(home_players),
-            'Exclusions Drawn': [0] * len(home_players),
-            'Penalties': [0] * len(home_players),
-            'Turnovers': [0] * len(home_players)
-        }
-        away_box = {
-            'Player': away_players,
-            'Shot': [0] * len(away_players),
-            'Blocks': [0] * len(away_players),
-            'Steals': [0] * len(away_players),
-            'Exclusions': [0] * len(away_players),
-            'Exclusions Drawn': [0] * len(away_players),
-            'Penalties': [0] * len(away_players),
-            'Turnovers': [0] * len(away_players)
-        }
-
-        # Return the initialized box scores
-        return jsonify({'home_box': home_box, 'away_box': away_box})
-
+        # Return the current game data directly from dataWhite and dataBlack
+        return jsonify({
+            'home_box': dataWhite,
+            'away_box': dataBlack
+        })
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
