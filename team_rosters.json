@@ -7,34 +7,40 @@
             "position": "Goalie"
         },
         {
-            "cap_number": "1A",
+            "cap_number": "4",
             "name": "Jill",
             "grade": "9",
-            "position": "Goalie"
+            "position": "Driver"
         },
         {
-            "cap_number": "2",
+            "cap_number": "10",
             "name": "Michael",
             "grade": "10",
             "position": "Driver"
         },
         {
-            "cap_number": "3",
+            "cap_number": "12",
             "name": "Alex",
             "grade": "11",
             "position": "Center Defender"
         },
         {
-            "cap_number": "4",
+            "cap_number": "14",
             "name": "Sam",
             "grade": "12",
             "position": "Attacker"
         },
         {
-            "cap_number": "5",
+            "cap_number": "15",
             "name": "Chris",
             "grade": "11",
             "position": "Driver"
+        },
+        {
+            "cap_number": "16",
+            "name": "Jack",
+            "grade": "9",
+            "position": "Center"
         }
     ],
     "Los Altos High School": [
@@ -51,19 +57,19 @@
             "position": "Attacker"
         },
         {
-            "cap_number": "3",
+            "cap_number": "6",
             "name": "Logan",
             "grade": "11",
             "position": "Center"
         },
         {
-            "cap_number": "4",
+            "cap_number": "8",
             "name": "Ryan",
             "grade": "12",
             "position": "Center Defender"
         },
         {
-            "cap_number": "5",
+            "cap_number": "9",
             "name": "Jake",
             "grade": "10",
             "position": "Driver"
@@ -89,13 +95,13 @@
             "position": "Center"
         },
         {
-            "cap_number": "4",
+            "cap_number": "7",
             "name": "Noah",
             "grade": "10",
             "position": "Driver"
         },
         {
-            "cap_number": "5",
+            "cap_number": "8",
             "name": "Owen",
             "grade": "11",
             "position": "Center Defender"
@@ -109,25 +115,25 @@
             "position": "Goalie"
         },
         {
-            "cap_number": "2",
+            "cap_number": "3",
             "name": "Caleb",
             "grade": "10",
             "position": "Driver"
         },
         {
-            "cap_number": "3",
+            "cap_number": "4",
             "name": "Lucas",
             "grade": "11",
             "position": "Center"
         },
         {
-            "cap_number": "4",
+            "cap_number": "7",
             "name": "Eli",
             "grade": "12",
             "position": "Attacker"
         },
         {
-            "cap_number": "5",
+            "cap_number": "10",
             "name": "Nathan",
             "grade": "12",
             "position": "Center Defender"
@@ -141,25 +147,25 @@
             "position": "Goalie"
         },
         {
-            "cap_number": "2",
+            "cap_number": "5",
             "name": "Matthew",
             "grade": "10",
             "position": "Driver"
         },
         {
-            "cap_number": "3",
+            "cap_number": "6",
             "name": "Benjamin",
             "grade": "11",
             "position": "Center"
         },
         {
-            "cap_number": "4",
+            "cap_number": "8",
             "name": "James",
             "grade": "12",
             "position": "Attacker"
         },
         {
-            "cap_number": "5",
+            "cap_number": "10",
             "name": "Henry",
             "grade": "10",
             "position": "Center Defender"
@@ -173,25 +179,25 @@
             "position": "Goalie"
         },
         {
-            "cap_number": "2",
+            "cap_number": "4",
             "name": "Oliver",
             "grade": "10",
             "position": "Driver"
         },
         {
-            "cap_number": "3",
+            "cap_number": "5",
             "name": "Jacob",
             "grade": "11",
             "position": "Center"
         },
         {
-            "cap_number": "4",
+            "cap_number": "10",
             "name": "Nathaniel",
             "grade": "12",
             "position": "Attacker"
         },
         {
-            "cap_number": "5",
+            "cap_number": "11",
             "name": "Andrew",
             "grade": "10",
             "position": "Center Defender"

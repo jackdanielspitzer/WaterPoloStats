@@ -925,9 +925,9 @@ def view_scoring(school_slug, game_index):
         home_roster = team_rosters.get(home_team_name, [])
         away_roster = team_rosters.get(away_team_name, [])
 
-        # Extract player names for both teams
-        indexed_white_players = list(enumerate(player['name'] for player in home_roster))
-        indexed_black_players = list(enumerate(player['name'] for player in away_roster))
+        # Extract cap numbers and player names for both teams
+        home_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in home_roster]
+        away_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in away_roster]
 
         # Ensure the game has white_team_stats and black_team_stats
         white_team_stats = game.get('home_box', {})
@@ -948,8 +948,10 @@ def view_scoring(school_slug, game_index):
         return render_template(
             "view_game.html",
             game=game,
-            indexed_white_players=indexed_white_players,
-            indexed_black_players=indexed_black_players,
+            home_players=home_players,
+            away_players=away_players,
+            white_team_stats=white_team_stats,
+            black_team_stats=black_team_stats,
             home_team=home_team_name,
             away_team=away_team_name,
             school_slug=school_slug,
@@ -957,6 +959,7 @@ def view_scoring(school_slug, game_index):
         )
     except Exception as e:
         return f"Error: {str(e)}", 500
+
 
 
 

@@ -205,20 +205,27 @@
         });
 
         // Update tables with data from rosters
+        // Update tables with data from rosters
+        // Update tables with live data
         async function updateTables() {
             try {
+                // Fetch updated data from the server
                 const response = await fetch(`/get_data?home_team={{ home_team }}&away_team={{ away_team }}`);
-                if (response.ok) {
-                    const data = await response.json();
 
-                    const awayTableBody = document.querySelector('#awayTeamTable tbody');
-                    const homeTableBody = document.querySelector('#homeTeamTable tbody');
-                    awayTableBody.innerHTML = '';
-                    homeTableBody.innerHTML = '';
+                if (!response.ok) {
+                    console.error(`Error fetching data: ${response.status}`);
+                    return;
+                }
 
-                    // Update Away Team Table
-                    (data.away_box.Player || []).forEach((player, index) => {
-                        const row = `<tr>
+                const data = await response.json();
+
+                // Update the Away Team Table
+                const awayTableBody = document.querySelector('#awayTeamTable tbody');
+                awayTableBody.innerHTML = ''; // Clear the current rows
+
+                (data.away_box.Player || []).forEach((player, index) => {
+                    const row = `
+                        <tr>
                             <td>${player}</td>
                             <td>${data.away_box.Shot[index]}</td>
                             <td>${data.away_box.Blocks[index]}</td>
@@ -228,12 +235,16 @@
                             <td>${data.away_box.Penalties[index]}</td>
                             <td>${data.away_box.Turnovers[index]}</td>
                         </tr>`;
-                        awayTableBody.innerHTML += row;
-                    });
+                    awayTableBody.innerHTML += row;
+                });
 
-                    // Update Home Team Table
-                    (data.home_box.Player || []).forEach((player, index) => {
-                        const row = `<tr>
+                // Update the Home Team Table
+                const homeTableBody = document.querySelector('#homeTeamTable tbody');
+                homeTableBody.innerHTML = ''; // Clear the current rows
+
+                (data.home_box.Player || []).forEach((player, index) => {
+                    const row = `
+                        <tr>
                             <td>${player}</td>
                             <td>${data.home_box.Shot[index]}</td>
                             <td>${data.home_box.Blocks[index]}</td>
@@ -243,18 +254,20 @@
                             <td>${data.home_box.Penalties[index]}</td>
                             <td>${data.home_box.Turnovers[index]}</td>
                         </tr>`;
-                        homeTableBody.innerHTML += row;
-                    });
-                } else {
-                    console.error("Error in response for table update:", response.status);
-                }
+                    homeTableBody.innerHTML += row;
+                });
+
+                console.log("Tables updated successfully.");
+
             } catch (error) {
                 console.error("Error updating tables:", error);
             }
         }
 
-        // Set interval to refresh table data every 3 seconds
+        // Call updateTables every 3 seconds for live updates
         setInterval(updateTables, 3000);
+
+
     </script>
 </body>
 </html>
