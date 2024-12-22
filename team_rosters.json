@@ -202,5 +202,13 @@
             "grade": "10",
             "position": "Center Defender"
         }
+    ],
+    "Henry M. Gunn High School": [
+        {
+            "cap_number": "1",
+            "name": "Jack",
+            "grade": "9",
+            "position": "Goalie"
+        }
     ]
 }
