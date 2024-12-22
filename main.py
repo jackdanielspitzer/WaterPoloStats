@@ -488,9 +488,9 @@ def run(text):
     player, event, team = extract_key_phrases(text)
     if player and event and team:
         # Get current game teams from the request
-    home_team_name = request.form.get('home_team')
-    away_team_name = request.form.get('away_team')
-    if sort_data(player, event, team, home_team_name, away_team_name):
+        home_team_name = request.form.get('home_team')
+        away_team_name = request.form.get('away_team')
+        if sort_data(player, event, team, home_team_name, away_team_name):
             return phrase(player, event, team)
         return f"Player {player} not found in roster."
     return "Could not parse the input."
