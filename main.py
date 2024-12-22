@@ -468,9 +468,12 @@ def sort_data(player, event, team, home_team_name, away_team_name):
 
         print(f"Home roster: {home_roster}")
         print(f"Away roster: {away_roster}")
-    
-    print(f"Home roster cap numbers: {[str(p['cap_number']).strip() for p in home_roster]}")
-    print(f"Away roster cap numbers: {[str(p['cap_number']).strip() for p in away_roster]}")
+        
+        print(f"Home roster cap numbers: {[str(p['cap_number']).strip() for p in home_roster]}")
+        print(f"Away roster cap numbers: {[str(p['cap_number']).strip() for p in away_roster]}")
+    except Exception as e:
+        print(f"Error loading rosters: {str(e)}")
+        return False
     
     if team == 'light':
         # Find the player in the home roster by cap number
