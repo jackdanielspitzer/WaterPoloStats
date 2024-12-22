@@ -437,7 +437,7 @@
                 "Shot": [
                     0,
                     0,
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -447,7 +447,7 @@
                     0
                 ],
                 "Blocks": [
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -833,6 +833,16 @@
             "game_type": "League Game",
             "is_scored": false,
             "formatted_date": "March 31st, 2222"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": "00:00 PM",
+            "date": "2323-03-31",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "March 31st, 2323"
         }
     ]
 }
