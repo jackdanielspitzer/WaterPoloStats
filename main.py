@@ -485,7 +485,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataBlack[event][player_index] += 1  # Light team uses dataWhite
+            dataWhite[event][player_index] += 1  # Light/away team uses dataWhite
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in away roster")
             return False
@@ -497,7 +497,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataWhite[event][player_index] += 1  # Dark team uses dataBlack
+            dataBlack[event][player_index] += 1  # Dark/home team uses dataBlack
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in home roster")
             return False
@@ -638,8 +638,8 @@ def get_data():
         away_roster = team_rosters.get(away_team_name, [])
 
         # Create copies of the current game data
-        home_box = dataWhite.copy()
-        away_box = dataBlack.copy()
+        home_box = dataBlack.copy()  # Home team uses dataBlack
+        away_box = dataWhite.copy()  # Away team uses dataWhite
         
         # Update player lists with cap numbers from rosters
         home_box['Player'] = [player['cap_number'] for player in home_roster]
@@ -1042,8 +1042,8 @@ def end_game():
             if game_index < len(team_data["games"]):
                 game = team_data["games"][game_index]
                 game["is_scored"] = True
-                game["home_box"] = dataWhite if game["home_away"] == "Home" else dataBlack
-                game["away_box"] = dataBlack if game["home_away"] == "Home" else dataWhite
+                game["home_box"] = dataBlack if game["home_away"] == "Home" else dataWhite
+                game["away_box"] = dataWhite if game["home_away"] == "Home" else dataBlack
 
         # Update game entries for both teams using the game_index
         update_game(white_team_data, game_index)
