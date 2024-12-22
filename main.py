@@ -443,11 +443,19 @@ def extract_key_phrases(text):
 
 # Update team data
 def sort_data(player, event, team):
-    player_index = int(player) - 1
     if team == 'light':
-        dataWhite[event][player_index] += 1
+        try:
+            player_index = dataWhite['Player'].index(str(player))
+            dataWhite[event][player_index] += 1
+        except ValueError:
+            return False
     else:
-        dataBlack[event][player_index] += 1
+        try:
+            player_index = dataBlack['Player'].index(str(player))
+            dataBlack[event][player_index] += 1
+        except ValueError:
+            return False
+    return True
 
 def phrase(number, action, team):
     if number == 1:
@@ -470,8 +478,9 @@ def phrase(number, action, team):
 def run(text):
     player, event, team = extract_key_phrases(text)
     if player and event and team:
-        sort_data(player, event, team)
-        return phrase(player, event, team)
+        if sort_data(player, event, team):
+            return phrase(player, event, team)
+        return f"Player {player} not found in roster."
     return "Could not parse the input."
 
 @app.route('/')
