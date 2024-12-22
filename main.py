@@ -449,12 +449,25 @@ def sort_data(player, event, team, home_team_name, away_team_name):
     print(f"Home team: {home_team_name}")
     print(f"Away team: {away_team_name}")
     
-    # Load team rosters
-    with open('team_rosters.json', 'r') as file:
-        team_rosters = json.load(file)
-    # Get team rosters based on the current game teams
-    home_roster = team_rosters.get(home_team_name, [])
-    away_roster = team_rosters.get(away_team_name, [])
+    try:
+        # Load team rosters
+        with open('team_rosters.json', 'r') as file:
+            team_rosters = json.load(file)
+            print(f"Loaded team_rosters: {team_rosters}")
+
+        if home_team_name not in team_rosters:
+            print(f"Error: {home_team_name} not found in rosters")
+            return False
+        if away_team_name not in team_rosters:
+            print(f"Error: {away_team_name} not found in rosters")
+            return False
+
+        # Get team rosters based on the current game teams
+        home_roster = team_rosters[home_team_name]
+        away_roster = team_rosters[away_team_name]
+
+        print(f"Home roster: {home_roster}")
+        print(f"Away roster: {away_roster}")
     
     print(f"Home roster cap numbers: {[str(p['cap_number']).strip() for p in home_roster]}")
     print(f"Away roster cap numbers: {[str(p['cap_number']).strip() for p in away_roster]}")
