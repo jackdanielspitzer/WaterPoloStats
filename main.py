@@ -484,7 +484,10 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             print(f"Searching away roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            dataWhite[event][player_index] += 1  # Light team uses dataWhite
+            # Update the player's stats in their own array based on found index
+            away_player_list = [p['cap_number'] for p in away_roster]
+            correct_index = away_player_list.index(player_str.strip())
+            dataWhite[event][correct_index] += 1  # Light team uses dataWhite
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in away roster")
             return False
@@ -495,7 +498,10 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             print(f"Searching home roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            dataBlack[event][player_index] += 1  # Dark team uses dataBlack
+            # Update the player's stats in their own array based on found index
+            home_player_list = [p['cap_number'] for p in home_roster]
+            correct_index = home_player_list.index(player_str.strip())
+            dataBlack[event][correct_index] += 1  # Dark team uses dataBlack
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in home roster")
             return False
