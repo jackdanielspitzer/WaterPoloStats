@@ -443,6 +443,9 @@ def extract_key_phrases(text):
 
 # Update team data
 def sort_data(player, event, team):
+    # Load team rosters
+    with open('team_rosters.json', 'r') as file:
+        team_rosters = json.load(file)
     # Get team rosters based on the current game teams
     home_roster = team_rosters.get(home_team, [])
     away_roster = team_rosters.get(away_team, [])
