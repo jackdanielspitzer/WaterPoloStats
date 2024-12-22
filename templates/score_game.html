@@ -52,6 +52,8 @@
 
     <!-- Form for inputting text or speech -->
     <form id="form">
+        <input type="hidden" name="home_team" value="{{ home_team }}">
+        <input type="hidden" name="away_team" value="{{ away_team }}">
         <textarea id="inputText" rows="4" cols="50" placeholder="Enter or speak your stats..."></textarea><br>
         <!-- Microphone button placed between the text area and submit button -->
         <button type="button" id="microphoneButton" style="background: none; border: none; padding: 0; cursor: pointer;">
@@ -115,8 +117,8 @@
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value;
-            const homeTeam = '{{ home_team }}';
-            const awayTeam = '{{ away_team }}';
+            const homeTeam = document.querySelector('input[name="home_team"]').value;
+            const awayTeam = document.querySelector('input[name="away_team"]').value;
             console.log("Submitting text:", inputText);
             console.log("Home team:", homeTeam);
             console.log("Away team:", awayTeam);
@@ -127,7 +129,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(inputText)}`
+                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}`
                 });
 
                 if (response.ok) {
@@ -179,7 +181,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(transcript)}`
+                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}`
                 });
 
                 if (response.ok) {
