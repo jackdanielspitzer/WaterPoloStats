@@ -229,8 +229,8 @@
                     "Player 10"
                 ],
                 "Shot": [
-                    1,
-                    1,
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -241,7 +241,7 @@
                     0
                 ],
                 "Blocks": [
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -328,7 +328,7 @@
                 ],
                 "Shot": [
                     0,
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -339,7 +339,7 @@
                     0
                 ],
                 "Blocks": [
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -823,6 +823,16 @@
                     0
                 ]
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": "00:30 AM",
+            "date": "2222-03-31",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 31st, 2222"
         }
     ]
 }
