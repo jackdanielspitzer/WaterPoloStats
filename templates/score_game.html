@@ -113,6 +113,18 @@
     </form>
 
     <script>
+        // Reset stats when page loads
+        window.onload = async function() {
+            try {
+                await fetch('/reset_stats', {
+                    method: 'POST'
+                });
+                updateTables();  // Refresh the display
+            } catch (error) {
+                console.error("Error resetting stats:", error);
+            }
+        }
+
         // Process form submission for text input
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();

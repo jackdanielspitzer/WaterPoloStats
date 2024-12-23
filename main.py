@@ -158,6 +158,7 @@ from flask import request, jsonify
 
 
 def reset_team_stats():
+    global dataWhite, dataBlack
     # Reset stats for the next game
     dataWhite = {
         'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
@@ -180,6 +181,11 @@ def reset_team_stats():
         'Penalties': [0] * 10,
         'Turnovers': [0] * 10
     }
+
+@app.route('/reset_stats', methods=['POST'])
+def reset_stats():
+    reset_team_stats()
+    return jsonify({'status': 'success'})
 
 
 #training model
