@@ -980,14 +980,14 @@ def view_scoring(school_slug, game_index):
         away_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in away_roster]
 
         # Determine which box scores to use based on home/away status
-        if game['home_away'] == 'Away':
-            # If away, use white_team stats for this team
+        if game['home_away'] == 'Home':
+            # If home team viewing, use home_box for black team stats
+            black_team_stats = game.get('home_box', {})
+            white_team_stats = game.get('away_box', {})
+        else:
+            # If away team viewing, use away_box for white team stats
             white_team_stats = game.get('away_box', {})
             black_team_stats = game.get('home_box', {})
-        else:
-            # If home, use black_team stats for this team
-            white_team_stats = game.get('home_box', {})
-            black_team_stats = game.get('away_box', {})
 
         # Fill missing stats with empty lists
         if not white_team_stats or 'Player' not in white_team_stats:
