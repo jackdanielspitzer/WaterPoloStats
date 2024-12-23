@@ -980,9 +980,11 @@ def view_scoring(school_slug, game_index):
         away_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in away_roster]
 
         # Ensure the game has white_team_stats and black_team_stats
-        white_team_stats = game.get('home_box', {})
-        black_team_stats = game.get('away_box', {})
+        white_team_stats = game.get('away_box', {})
+        black_team_stats = game.get('home_box', {})
 
+        print(white_team_stats)
+        print(black_team_stats)
         # Fill missing stats with empty lists
         if not white_team_stats or 'Player' not in white_team_stats:
             white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
