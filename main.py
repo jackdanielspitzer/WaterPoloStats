@@ -1021,7 +1021,7 @@ def end_game():
     try:
         white_team_name = request.form.get('white_team_name')
         black_team_name = request.form.get('black_team_name')
-        game_index = int(request.form.get('game_index'))  # Get the game index
+        game_index = int(request.form.get('game_index'))
 
         print(f"White Team Name: {white_team_name}")
         print(f"Black Team Name: {black_team_name}")
@@ -1029,54 +1029,75 @@ def end_game():
         if not white_team_name or not black_team_name:
             raise ValueError("Team names must be provided!")
 
+        # Initialize team files if they don't exist
         initialize_team_file(white_team_name)
         initialize_team_file(black_team_name)
 
+        # Load both teams' data
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
 
-        print("DataWhite Sample:", dataWhite)
-        print("DataBlack Sample:", dataBlack)
-
+        # Calculate scores
         white_team_score = sum(dataWhite.get('Shot', []))
         black_team_score = sum(dataBlack.get('Shot', []))
-
         print(f"Calculated scores -> White: {white_team_score}, Black: {black_team_score}")
 
-        # Find matching game in opponent's data
-        def find_matching_game(team_data, opponent_name, game_date):
-            for idx, game in enumerate(team_data["games"]):
-                if game["opponent"] == opponent_name and game["date"] == game_date:
+        # Function to find corresponding game in other team's data
+        def find_matching_game(games, opponent, date):
+            for idx, game in enumerate(games):
+                if game["opponent"] == opponent and game["date"] == date:
                     return idx
             return None
 
-        # Update game entries for both teams
+        # Update white team's game
         if game_index < len(white_team_data["games"]):
             white_game = white_team_data["games"][game_index]
-            white_game["is_scored"] = True
+            white_game_date = white_game["date"]
             
             # Find corresponding game in black team's data
-            black_game_index = find_matching_game(black_team_data, white_team_name, white_game["date"])
+            black_game_index = find_matching_game(black_team_data["games"], white_team_name, white_game_date)
+            
             if black_game_index is not None:
+                # Get both games
                 black_game = black_team_data["games"][black_game_index]
+                
+                # Mark both games as scored
+                white_game["is_scored"] = True
                 black_game["is_scored"] = True
 
-                # Update stats based on home/away status
+                # Determine which team is home/away and set box scores accordingly
                 if white_game["home_away"] == "Home":
+                    # White team is home
                     white_game["home_box"] = dataWhite
                     white_game["away_box"] = dataBlack
                     black_game["home_box"] = dataBlack
                     black_game["away_box"] = dataWhite
                 else:
+                    # Black team is home
                     white_game["home_box"] = dataBlack
                     white_game["away_box"] = dataWhite
                     black_game["home_box"] = dataWhite
                     black_game["away_box"] = dataBlack
 
+                # Add scores to both games
+                white_game["score"] = {
+                    "white_team_score": white_team_score,
+                    "black_team_score": black_team_score
+                }
+                black_game["score"] = {
+                    "white_team_score": white_team_score,
+                    "black_team_score": black_team_score
+                }
+
                 # Save both teams' data
                 save_team_data(white_team_name, white_team_data)
                 save_team_data(black_team_name, black_team_data)
 
+                print(f"Successfully updated game data for both {white_team_name} and {black_team_name}")
+            else:
+                print(f"Could not find matching game for {black_team_name}")
+
+        # Reset stats for next game
         reset_team_stats()
 
         return jsonify({'response': 'Game results updated successfully!'}), 200
