@@ -979,19 +979,23 @@ def view_scoring(school_slug, game_index):
         home_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in home_roster]
         away_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in away_roster]
 
-        # Ensure the game has white_team_stats and black_team_stats
-        white_team_stats = game.get('away_box', {})
-        black_team_stats = game.get('home_box', {})
+        # Determine which box scores to use based on home/away status
+        if game['home_away'] == 'Away':
+            # If away, use white_team stats for this team
+            white_team_stats = game.get('away_box', {})
+            black_team_stats = game.get('home_box', {})
+        else:
+            # If home, use black_team stats for this team
+            white_team_stats = game.get('home_box', {})
+            black_team_stats = game.get('away_box', {})
 
-        print(white_team_stats)
-        print(black_team_stats)
         # Fill missing stats with empty lists
         if not white_team_stats or 'Player' not in white_team_stats:
             white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
         if not black_team_stats or 'Player' not in black_team_stats:
             black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
 
-        # Calculate scores
+        # Calculate scores based on correct home/away assignment
         game['score'] = {
             'white_team_score': sum(white_team_stats.get('Shot', [])),
             'black_team_score': sum(black_team_stats.get('Shot', []))
