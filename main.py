@@ -1043,26 +1043,39 @@ def end_game():
 
         print(f"Calculated scores -> White: {white_team_score}, Black: {black_team_score}")
 
-        # Update a specific game entry using the provided game_index
-        def update_game(team_data, game_index):
-            if game_index < len(team_data["games"]):
-                game = team_data["games"][game_index]
-                game["is_scored"] = True
-                if game["home_away"] == "Home":
-                    # If team is home, they are dark/black
-                    game["home_box"] = dataBlack
-                    game["away_box"] = dataWhite
+        # Find matching game in opponent's data
+        def find_matching_game(team_data, opponent_name, game_date):
+            for idx, game in enumerate(team_data["games"]):
+                if game["opponent"] == opponent_name and game["date"] == game_date:
+                    return idx
+            return None
+
+        # Update game entries for both teams
+        if game_index < len(white_team_data["games"]):
+            white_game = white_team_data["games"][game_index]
+            white_game["is_scored"] = True
+            
+            # Find corresponding game in black team's data
+            black_game_index = find_matching_game(black_team_data, white_team_name, white_game["date"])
+            if black_game_index is not None:
+                black_game = black_team_data["games"][black_game_index]
+                black_game["is_scored"] = True
+
+                # Update stats based on home/away status
+                if white_game["home_away"] == "Home":
+                    white_game["home_box"] = dataWhite
+                    white_game["away_box"] = dataBlack
+                    black_game["home_box"] = dataBlack
+                    black_game["away_box"] = dataWhite
                 else:
-                    # If team is away, they are light/white
-                    game["home_box"] = dataWhite  
-                    game["away_box"] = dataBlack
+                    white_game["home_box"] = dataBlack
+                    white_game["away_box"] = dataWhite
+                    black_game["home_box"] = dataWhite
+                    black_game["away_box"] = dataBlack
 
-        # Update game entries for both teams using the game_index
-        update_game(white_team_data, game_index)
-        save_team_data(white_team_name, white_team_data)
-
-        update_game(black_team_data, game_index)
-        save_team_data(black_team_name, black_team_data)
+                # Save both teams' data
+                save_team_data(white_team_name, white_team_data)
+                save_team_data(black_team_name, black_team_data)
 
         reset_team_stats()
 
