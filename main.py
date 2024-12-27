@@ -984,10 +984,16 @@ def view_scoring(school_slug, game_index):
             # If home team viewing, use home_box for black team stats
             black_team_stats = game.get('home_box', {})
             white_team_stats = game.get('away_box', {})
+            print("viewed from home")
+            print(black_team_stats)
+            print(white_team_stats)
         else:
             # If away team viewing, use away_box for white team stats
             white_team_stats = game.get('away_box', {})
             black_team_stats = game.get('home_box', {})
+            print("view from away")
+            print(black_team_stats)
+            print(white_team_stats)
 
         # Fill missing stats with empty lists
         if not white_team_stats or 'Player' not in white_team_stats:
