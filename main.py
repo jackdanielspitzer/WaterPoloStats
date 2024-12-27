@@ -1077,19 +1077,12 @@ def end_game():
                 white_game["is_scored"] = True
                 black_game["is_scored"] = True
 
-                # Determine which team is home/away and set box scores accordingly
-                if white_game["home_away"] == "Home":
-                    # White team is home
-                    white_game["home_box"] = dataWhite
-                    white_game["away_box"] = dataBlack
-                    black_game["home_box"] = dataBlack
-                    black_game["away_box"] = dataWhite
-                else:
-                    # Black team is home
-                    white_game["home_box"] = dataBlack
-                    white_game["away_box"] = dataWhite
-                    black_game["home_box"] = dataWhite
-                    black_game["away_box"] = dataBlack
+                # Always put dataWhite in the away_box for white team's game
+                # and dataBlack in the home_box for black team's game
+                white_game["away_box"] = dataWhite
+                white_game["home_box"] = dataBlack
+                black_game["home_box"] = dataBlack
+                black_game["away_box"] = dataWhite
 
                 # Add scores to both games
                 white_game["score"] = {
