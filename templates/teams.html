@@ -139,9 +139,32 @@
         .delete-button:hover {
             background-color: #c82333;
         }
-    </style>
-    <script>
-        function toggleAddGameForm() {
+        x;
+            }
+            .action-button {
+                padding: 5px 10px;
+                font-size: 14px;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                max-width: 100px;
+                text-align: center;
+                display: inline-block;
+            }
+            .action-button:hover {
+                background-color: #0056b3;
+            }
+            .delete-button {
+                background-color: #dc3545;
+            }
+            .delete-button:hover {
+                background-color: #c82333;
+            }
+        </style>
+        <script>
+            function toggleAddGameForm() {
             var form = document.getElementById('addGameForm');
             form.style.display = (form.style.display === 'none' || form.style.display === '') ? 'block' : 'none';
         }
@@ -163,6 +186,35 @@
     <!-- Edit Roster Button -->
     <div class="edit-roster">
         <a href="{{ url_for('edit_roster', school_slug=school_slug) }}" class="action-button">Edit Roster</a>
+    </div>
+    <!-- Team Roster -->
+    <div class="team-roster">
+        <h2>Team Roster</h2>
+        {% set roster = get_team_roster(school.name) %}
+        {% if roster %}
+            <table class="roster-table">
+                <thead>
+                    <tr>
+                        <th>Cap #</th>
+                        <th>Name</th>
+                        <th>Grade</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in roster|sort(attribute='cap_number') %}
+                        <tr>
+                            <td>{{ player.cap_number }}</td>
+                            <td>{{ player.name }}</td>
+                            <td>{{ player.grade }}</td>
+                            <td>{{ player.position }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No players in roster.</p>
+        {% endif %}
     </div>
 
     <div class="game-schedule">

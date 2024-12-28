@@ -1,0 +1,62 @@
+[2024-12-28 02:40:34 +0000] [103] [INFO] Starting gunicorn 21.2.0
+[2024-12-28 02:40:34 +0000] [103] [INFO] Listening at: http://0.0.0.0:5000 (103)
+[2024-12-28 02:40:34 +0000] [103] [INFO] Using worker: sync
+[2024-12-28 02:40:34 +0000] [110] [INFO] Booting worker with pid: 110
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:34 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:35 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:35 +0000] [103] [INFO] Handling signal: winch
+[2024-12-28 02:40:35 +0000] [103] [INFO] Handling signal: winch
+              precision    recall  f1-score   support
+
+           0       1.00      0.83      0.91         6
+           1       0.86      1.00      0.92         6
+
+    accuracy                           0.92        12
+   macro avg       0.93      0.92      0.92        12
+weighted avg       0.93      0.92      0.92        12
+
+[2024-12-28 02:40:39,463] ERROR in app: Exception on /team/palo-alto [GET]
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/main.py", line 873, in team_page
+    return render_template('teams.html', school=school, schools=schools, team_data=team_data, school_slug=school_slug)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 152, in render_template
+    return _render(app, template, context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/templating.py", line 133, in _render
+    rv = template.render(context)
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 1301, in render
+    self.environment.handle_exception()
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/jinja2/environment.py", line 936, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/home/runner/Final-Project-112424/templates/teams.html", line 193, in top-level template code
+    {% set roster = get_team_roster(school.name) %}
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/jinja2/utils.py", line 83, in from_obj
+    if hasattr(obj, "jinja_pass_arg"):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+jinja2.exceptions.UndefinedError: 'get_team_roster' is undefined
