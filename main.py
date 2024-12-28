@@ -1026,6 +1026,8 @@ def view_scoring(school_slug, game_index):
 
 
 
+
+
 @app.route('/end_game', methods=['POST'])
 def end_game():
     print("Received request to /end_game")
@@ -1065,14 +1067,14 @@ def end_game():
         if game_index < len(white_team_data["games"]):
             white_game = white_team_data["games"][game_index]
             white_game_date = white_game["date"]
-            
+
             # Find corresponding game in black team's data
             black_game_index = find_matching_game(black_team_data["games"], white_team_name, white_game_date)
-            
+
             if black_game_index is not None:
                 # Get both games
                 black_game = black_team_data["games"][black_game_index]
-                
+
                 # Mark both games as scored
                 white_game["is_scored"] = True
                 black_game["is_scored"] = True
@@ -1105,13 +1107,16 @@ def end_game():
         # Reset stats for next game
         reset_team_stats()
 
-        return jsonify({'response': 'Game results updated successfully!'}), 200
+        # Redirect to /home after processing
+        return redirect('/team/{white_team_name}')
+
     except Exception as e:
         print(f"Exception during end_game processing: {str(e)}")
         return jsonify({'response': f'Error occurred during processing: {str(e)}'}), 500
 
 # File path for storing rosters
 ROSTER_FILE = 'team_rosters.json'
+
 
 # Load rosters from file
 def load_rosters():
