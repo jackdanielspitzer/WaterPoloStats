@@ -1110,8 +1110,14 @@ def end_game():
         # Redirect to /home after processing
         school_slug = request.form.get('school_slug')
 
+        if not school_slug:
+            for slug, school in schools.items():
+                if school['name'] == white_team_name:
+                    school_slug = slug
+                    break
+
         # Redirect to the original team's page
-        return redirect(url_for('team_page',         school_slug=school_slug))
+        return redirect(url_for('team_page', school_slug=school_slug))
 
     except Exception as e:
         print(f"Exception during end_game processing: {str(e)}")
