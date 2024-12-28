@@ -1108,7 +1108,10 @@ def end_game():
         reset_team_stats()
 
         # Redirect to /home after processing
-        return redirect('/team/{white_team_name}')
+        school_slug = request.form.get('school_slug')
+
+        # Redirect to the original team's page
+        return redirect(url_for('team_page',         school_slug=school_slug))
 
     except Exception as e:
         print(f"Exception during end_game processing: {str(e)}")
