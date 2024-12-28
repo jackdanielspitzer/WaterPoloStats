@@ -1112,7 +1112,7 @@ def end_game():
 
         if not school_slug:
             for slug, school in schools.items():
-                if school['name'] == black_team_name:
+                if school['name'] == white_team_name:
                     school_slug = slug
                     break
 

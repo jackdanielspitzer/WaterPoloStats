@@ -5,10 +5,10 @@
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
             "time": "TBD",
-            "date": "2024-12-06",
-            "game_type": "League Game",
+            "date": "2024-12-11",
+            "game_type": "Tournament",
             "is_scored": true,
-            "formatted_date": "December 6th, 2024",
+            "formatted_date": "December 11th, 2024",
             "home_box": {
                 "Player": [
                     "Player 1",
@@ -209,16 +209,6 @@
                 "white_team_score": 0,
                 "black_team_score": 0
             }
-        },
-        {
-            "home_away": "Home",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": "TBD",
-            "date": "2024-12-10",
-            "game_type": "CIF Playoffs",
-            "is_scored": false,
-            "formatted_date": "December 10th, 2024"
         }
     ]
 }
