@@ -559,6 +559,194 @@ def sort_data(player, event, team, home_team_name, away_team_name):
         print("ERROR: Invalid team color")
     return True
 
+
+# Load spacy model
+nlp = spacy.load('en_core_web_sm')
+
+def extract_numbers(text):
+    """Extract all player numbers from text."""
+    doc = nlp(text.lower())
+    numbers = []
+
+    for token in doc:
+        try:
+            if token.text != "five":  # Avoid "five meter" being counted
+                num = w2n.word_to_num(token.text)
+                if 1 <= num <= 13:  # Valid water polo numbers
+                    numbers.append(str(num))
+        except ValueError:
+            continue
+
+    return numbers
+
+def identify_team(token, next_tokens):
+    """Identify team from tokens."""
+    dark_keywords = ['dark', 'black', 'blue']
+    light_keywords = ['light', 'white']
+
+    for i in range(3):  # Look ahead up to 3 tokens
+        if i < len(next_tokens):
+            if next_tokens[i] in dark_keywords:
+                return 'dark'
+            if next_tokens[i] in light_keywords:
+                return 'light'
+    return None
+
+def extract_events(text):
+    """Extract multiple events from a single sentence."""
+    doc = nlp(text.lower())
+    tokens = [token.text for token in doc]
+    events = []
+
+    # Event keywords
+    shot_keywords = ['shot', 'shoot', 'shooting', 'scored', 'attempt']
+    block_keywords = ['block', 'blocked', 'blocks', 'save', 'saved']
+    steal_keywords = ['steal', 'stole', 'took', 'steals']
+    assist_keywords = ['assist', 'assisted', 'helps', 'helped']
+    exclusion_keywords = ['exclusion', 'kickout', 'excluded']
+    penalty_keywords = ['penalty', 'five meter']
+
+    numbers = extract_numbers(text)
+
+    # Process tokens
+    for i, token in enumerate(tokens):
+        next_tokens = tokens[i+1:] if i < len(tokens) else []
+        team = identify_team(token, next_tokens)
+
+        # Handle shots and blocks
+        if token in shot_keywords:
+            if numbers:
+                shooter = numbers[0]
+                # Check for team mentions before the shot
+                team = identify_team(token, next_tokens)
+                if not team:
+                    for prev_token in tokens[:i]:
+                        if prev_token in ['dark', 'light']:
+                            team = prev_token
+                            break
+
+                # Determine if shot was unsuccessful
+                was_blocked = any(word in tokens for word in block_keywords)
+                missed_keywords = ['missed', 'miss', 'wide', 'over', 'post', 'attempted', 'attempt']
+                was_missed = any(word in tokens for word in missed_keywords)
+
+                # Get connotation to determine if shot was successful
+                shot_connotation = predict_connotation(text)
+                is_shot_attempt = was_blocked or was_missed or shot_connotation == 'Negative' or 'attempt' in tokens
+
+                events.append({
+                    'player': shooter,
+                    'event': 'Shot Attempt' if is_shot_attempt else 'Shot',
+                    'team': team
+                })
+
+                if was_blocked:
+                    # If 'goalie' is mentioned or no blocker number is given, assign to goalie (1)
+                    blocker = '1' if 'goalie' in tokens or len(numbers) == 1 else numbers[1]
+                    events.append({
+                        'player': blocker,
+                        'event': 'Blocks',
+                        'team': 'dark' if team == 'light' else 'light'
+                    })
+
+        # Handle steals and turnovers
+        if token in steal_keywords and len(numbers) >= 2:
+            # Check for team mentions if not already set
+            if not team:
+                for t in tokens:
+                    if t in ['dark', 'light']:
+                        team = t
+                        break
+
+            events.append({
+                'player': numbers[0],
+                'event': 'Steals',
+                'team': team
+            })
+            events.append({
+                'player': numbers[1],
+                'event': 'Turnovers',
+                'team': 'dark' if team == 'light' else 'light'
+            })
+
+        # Handle assists and goals
+        if token in assist_keywords and len(numbers) >= 2:
+            # Check for team before processing assist
+            if not team:
+                for t in tokens:
+                    if t in ['dark', 'light']:
+                        team = t
+                        break
+
+            # Only append Shot if it hasn't been recorded yet
+            if not any(e['player'] == numbers[0] and e['event'] == 'Shot' for e in events):
+                events.append({
+                    'player': numbers[0],
+                    'event': 'Shot',
+                    'team': team
+                })
+            # Both players are from the same team in an assist
+            events.append({
+                'player': numbers[1],
+                'event': 'Assists',
+                'team': team  # Use the same team as the shooter
+            })
+
+        # Handle exclusions and penalties
+        if token in exclusion_keywords:
+            connotation = predict_connotation(text)
+            if connotation == 'Positive' and len(numbers) >= 2:
+                events.append({
+                    'player': numbers[0],
+                    'event': 'Exclusions Drawn',
+                    'team': team
+                })
+                events.append({
+                    'player': numbers[1],
+                    'event': 'Exclusions',
+                    'team': 'dark' if team == 'light' else 'light'
+                })
+
+        if any(word in tokens[i:i+2] for word in penalty_keywords):
+            if len(numbers) >= 2:
+                events.append({
+                    'player': numbers[0],
+                    'event': 'Penalties',
+                    'team': team
+                })
+
+    return events
+
+def process_input(text):
+    """Process input text and return all events."""
+    return extract_events(text)
+
+# Load training data from sentence.txt
+sentences = []
+labels = []
+
+with open('sentence.txt', 'r') as file:
+    for line in file:
+        line = line.strip()
+        if line and not line.startswith('#'):
+            sentence = line[:-4]  # Remove the (+) or (-) indicator
+            label = 1 if line.endswith('(+)') else 0
+            sentences.append(sentence)
+            labels.append(label)
+
+df = pd.DataFrame({'Sentence': sentences, 'Label': labels})
+X_train, X_test, y_train, y_test = train_test_split(df['Sentence'], df['Label'], test_size=0.2, random_state=42)
+vectorizer = CountVectorizer()
+X_train_vec = vectorizer.fit_transform(X_train)
+model = LogisticRegression()
+model.fit(X_train_vec, y_train)
+
+def predict_connotation(sentence):
+    vec_sentence = vectorizer.transform([sentence])
+    prediction = model.predict(vec_sentence)
+    return 'Positive' if prediction == 1 else 'Negative'
+
+
 def phrase(number, action, team):
     if number == 1:
         number = "goalie"
