@@ -441,10 +441,12 @@ def extract_key_phrases(text):
                 if 'drew' in doc_text:
                     first_event['event'] = 'Exclusions Drawn'
                     second_event['event'] = 'Exclusions'
+                    first_event['team'] = current_team
                     second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
                 else:
                     first_event['event'] = 'Exclusions'
                     second_event['event'] = 'Exclusions Drawn'
+                    first_event['team'] = current_team
                     second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
                 break
                 
