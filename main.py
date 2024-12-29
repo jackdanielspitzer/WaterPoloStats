@@ -438,7 +438,7 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 second_event['player'] = all_numbers[1]
                 
-                if 'drew' in doc_text:
+                if 'drew' in doc_text or 'kicked out' in doc_text or 'got a kickout' in doc_text:
                     first_event['event'] = 'Exclusions Drawn'
                     second_event['event'] = 'Exclusions'
                     first_event['team'] = current_team
