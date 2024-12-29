@@ -350,6 +350,7 @@ def previous_games_page():
 dataWhite = {
     'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
     'Shot': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'Shot Attempt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Blocks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Steals': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Exclusions': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -361,6 +362,7 @@ dataWhite = {
 dataBlack = {
     'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
     'Shot': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'Shot Attempt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Blocks': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Steals': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Exclusions': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
