@@ -209,7 +209,7 @@
             </thead>
             <tbody>
                 {% set roster = get_team_roster(school.name) %}
-                {% for player in roster|sort(attribute='cap_number') %}
+                {% for player in roster|sort(attribute='cap_number', key=lambda x: '0' + x if x == '1' else ('1A' if x == '1A' else ('1B' if x == '1B' else x))) %}
                 <tr>
                     <td>{{ player.cap_number }}</td>
                     <td>{{ player.name }}</td>
