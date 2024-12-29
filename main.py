@@ -391,22 +391,27 @@ def extract_key_phrases(text):
     first_event = {'team': None, 'player': None, 'event': None}
     second_event = {'team': None, 'player': None, 'event': None}
     
-    # Find teams and players in first part
+    # First pass - find the team
+    current_team = None
+    for i, token in enumerate(tokens):
+        if token in dark_keywords:
+            current_team = 'dark'
+            break
+        elif token in light_keywords:
+            current_team = 'light'
+            break
+
+    # Second pass - find player and event
     for i, token in enumerate(tokens):
         # Try to extract player number
         try:
             if token != "point" and token != "five":
                 num = w2n.word_to_num(token)
-                if 1 <= num <= 13:
+                if 1 <= num <= 13 and first_event['player'] is None:
                     first_event['player'] = str(num)
+                    first_event['team'] = current_team
         except ValueError:
             pass
-            
-        # Extract team
-        if token in dark_keywords:
-            first_event['team'] = 'dark'
-        elif token in light_keywords:
-            first_event['team'] = 'light'
             
         # Check for goalie
         if token == 'goalie':
