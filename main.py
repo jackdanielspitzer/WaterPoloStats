@@ -746,6 +746,8 @@ def phrase(number, action, team):
         number = "goalie"
     if action == 'Shot':
         return f"The {team} team {number} scored a goal"
+    elif action == 'Shot Attempt':
+        return f"The {team} team {number} attempted a shot"
     elif action == 'Blocks':
         return f"The {team} team {number} blocked the shot"
     elif action == 'Steals':
@@ -758,6 +760,8 @@ def phrase(number, action, team):
         return f"The {team} team {number} was turned over"
     elif action == 'Penalties':
         return f"The {team} team {number} got a 5-meter penalty"
+    else:
+        return f"The {team} team {number} performed {action}"
 
 def run(text):
     events = extract_key_phrases(text)
