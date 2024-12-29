@@ -82,10 +82,6 @@ def start_scoring(school_slug, game_index):
     # Pass necessary game data to scoring.html
     return render_template("scoring.html", game=game, school_slug=school_slug, game_index=game_index)
 
-
-
-
-
 def initialize_team_file(team_name):
     # Ensure the 'teams' directory exists
     if not os.path.exists('teams'):
