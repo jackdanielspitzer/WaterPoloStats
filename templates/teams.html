@@ -200,9 +200,9 @@
         <a href="{{ url_for('edit_roster', school_slug=school_slug) }}" class="action-button">Edit Roster</a>
     </div>
 
-    <!-- Team Roster Display -->
+    <!-- Team Roster and Stats Display -->
     <div class="team-roster" style="margin-top: 10px;">
-        <h2 style="color: #000000;">{{ school.name }}'s Roster</h2>
+        <h2 style="color: #000000;">{{ school.name }}'s Roster and Stats</h2>
         <table class="roster-table">
             <thead>
                 <tr>
@@ -210,6 +210,13 @@
                     <th>Name</th>
                     <th>Grade</th>
                     <th>Position</th>
+                    <th>Goals</th>
+                    <th>Blocks</th>
+                    <th>Steals</th>
+                    <th>Exclusions</th>
+                    <th>Exclusions Drawn</th>
+                    <th>Penalties</th>
+                    <th>Turnovers</th>
                 </tr>
             </thead>
             <tbody>
@@ -220,6 +227,14 @@
                     <td>{{ player.name }}</td>
                     <td>{{ player.grade }}</td>
                     <td>{{ player.position }}</td>
+                    {% set stats = calculate_player_stats(school.name, player.cap_number) %}
+                    <td>{{ stats.Shot }}</td>
+                    <td>{{ stats.Blocks }}</td>
+                    <td>{{ stats.Steals }}</td>
+                    <td>{{ stats.Exclusions }}</td>
+                    <td>{{ stats.Exclusions_Drawn }}</td>
+                    <td>{{ stats.Penalties }}</td>
+                    <td>{{ stats.Turnovers }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1388,6 +1388,45 @@ def get_team_roster(team_name):
     rosters = load_rosters()
     return rosters.get(team_name, [])
 
+def calculate_player_stats(team_name, cap_number):
+    stats = {
+        'Shot': 0,
+        'Blocks': 0,
+        'Steals': 0,
+        'Exclusions': 0,
+        'Exclusions_Drawn': 0,
+        'Penalties': 0,
+        'Turnovers': 0
+    }
+    
+    # Load team data
+    team_data = load_team_data(team_name)
+    
+    # Go through each game
+    for game in team_data.get('games', []):
+        if not game.get('is_scored'):
+            continue
+            
+        # Determine which box to use based on home/away
+        box = game.get('home_box' if game['home_away'] == 'Home' else 'away_box', {})
+        if not box:
+            continue
+            
+        # Find player index in the box
+        try:
+            player_idx = box['Player'].index(cap_number)
+            # Add up all stats for this player
+            stats['Shot'] += box.get('Shot', [0]*20)[player_idx]
+            stats['Blocks'] += box.get('Blocks', [0]*20)[player_idx]
+            stats['Steals'] += box.get('Steals', [0]*20)[player_idx]
+            stats['Exclusions'] += box.get('Exclusions', [0]*20)[player_idx]
+            stats['Exclusions_Drawn'] += box.get('Exclusions Drawn', [0]*20)[player_idx]
+            stats['Penalties'] += box.get('Penalties', [0]*20)[player_idx]
+            stats['Turnovers'] += box.get('Turnovers', [0]*20)[player_idx]
+        except (ValueError, IndexError):
+            continue
+            
+    return stats
 
 def save_roster(team_name, updated_roster):
     rosters = load_rosters()
