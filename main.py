@@ -383,9 +383,20 @@ def extract_key_phrases(text):
     shot_keywords = ['goal', 'shot', 'score', 'point','scored','scores']
     block_keywords = ['block', 'blocked','blocks']
     steal_keywords = ['steal','stole','took','steals']
-    exclusion_keywords = ['exclusion', 'kickout','excluded']
+    exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
     turnover_keywords = ['turnover', 'foul','lost','loses']
     penalty_keywords = ['penalty', 'five meter']
+
+    # Extract all numbers first
+    all_numbers = []
+    for token in doc:
+        try:
+            if token.text != "five":
+                num = w2n.word_to_num(token.text)
+                if 1 <= num <= 13:
+                    all_numbers.append(str(num))
+        except ValueError:
+            continue
 
     tokens = [token.text for token in doc]
     
@@ -422,6 +433,21 @@ def extract_key_phrases(text):
             second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
             
         # Extract event type
+        if token in exclusion_keywords or 'drew' in doc_text:
+            if len(all_numbers) >= 2:
+                first_event['player'] = all_numbers[0]
+                second_event['player'] = all_numbers[1]
+                
+                if 'drew' in doc_text:
+                    first_event['event'] = 'Exclusions Drawn'
+                    second_event['event'] = 'Exclusions'
+                    second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
+                else:
+                    first_event['event'] = 'Exclusions'
+                    second_event['event'] = 'Exclusions Drawn'
+                    second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
+                break
+                
         if token in shot_keywords and 'block' not in doc_text:
             first_event['event'] = 'Shot'
         elif token in block_keywords:
