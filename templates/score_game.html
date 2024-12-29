@@ -246,19 +246,19 @@
                 const awayTableBody = document.querySelector('#awayTeamTable tbody');
                 awayTableBody.innerHTML = ''; // Clear the current rows
 
-                (data.away_box.Player || []).forEach((player, index) => {
+                (data.away_box?.Player || []).forEach((player, index) => {
                     const row = `
                         <tr>
-                            <td>${player}</td>
-                            <td>${data.away_box.Shot[index]}</td>
-                            <td>${data.away_box['Shot Attempt'][index]}</td>
-                            <td>${data.away_box.Assists[index]}</td>
-                            <td>${data.away_box.Blocks[index]}</td>
-                            <td>${data.away_box.Steals[index]}</td>
-                            <td>${data.away_box.Exclusions[index]}</td>
-                            <td>${data.away_box['Exclusions Drawn'][index]}</td>
-                            <td>${data.away_box.Penalties[index]}</td>
-                            <td>${data.away_box.Turnovers[index]}</td>
+                            <td>${player || ''}</td>
+                            <td>${data.away_box?.Shot?.[index] || 0}</td>
+                            <td>${data.away_box?.['Shot Attempt']?.[index] || 0}</td>
+                            <td>${data.away_box?.Assists?.[index] || 0}</td>
+                            <td>${data.away_box?.Blocks?.[index] || 0}</td>
+                            <td>${data.away_box?.Steals?.[index] || 0}</td>
+                            <td>${data.away_box?.Exclusions?.[index] || 0}</td>
+                            <td>${data.away_box?.['Exclusions Drawn']?.[index] || 0}</td>
+                            <td>${data.away_box?.Penalties?.[index] || 0}</td>
+                            <td>${data.away_box?.Turnovers?.[index] || 0}</td>
                         </tr>`;
                     awayTableBody.innerHTML += row;
                 });
@@ -267,19 +267,19 @@
                 const homeTableBody = document.querySelector('#homeTeamTable tbody');
                 homeTableBody.innerHTML = ''; // Clear the current rows
 
-                (data.home_box.Player || []).forEach((player, index) => {
+                (data.home_box?.Player || []).forEach((player, index) => {
                     const row = `
                         <tr>
-                            <td>${player}</td>
-                            <td>${data.home_box.Shot[index] || 0}</td>
-                            <td>${data.home_box['Shot Attempt'][index] || 0}</td>
-                            <td>${data.home_box.Assists[index] || 0}</td>
-                            <td>${data.home_box.Blocks[index] || 0}</td>
-                            <td>${data.home_box.Steals[index] || 0}</td>
-                            <td>${data.home_box.Exclusions[index] || 0}</td>
-                            <td>${data.home_box['Exclusions Drawn'][index] || 0}</td>
-                            <td>${data.home_box.Penalties[index] || 0}</td>
-                            <td>${data.home_box.Turnovers[index] || 0}</td>
+                            <td>${player || ''}</td>
+                            <td>${data.home_box?.Shot?.[index] || 0}</td>
+                            <td>${data.home_box?.['Shot Attempt']?.[index] || 0}</td>
+                            <td>${data.home_box?.Assists?.[index] || 0}</td>
+                            <td>${data.home_box?.Blocks?.[index] || 0}</td>
+                            <td>${data.home_box?.Steals?.[index] || 0}</td>
+                            <td>${data.home_box?.Exclusions?.[index] || 0}</td>
+                            <td>${data.home_box?.['Exclusions Drawn']?.[index] || 0}</td>
+                            <td>${data.home_box?.Penalties?.[index] || 0}</td>
+                            <td>${data.home_box?.Turnovers?.[index] || 0}</td>
                         </tr>`;
                     homeTableBody.innerHTML += row;
                 });
