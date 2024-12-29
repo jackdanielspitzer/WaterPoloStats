@@ -864,7 +864,24 @@ def run(text):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    # Get all upcoming games from all teams
+    upcoming_games = []
+    today = datetime.now().date()
+    
+    for school in schools.values():
+        team_data = load_team_data(school['name'])
+        for game in team_data.get('games', []):
+            game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
+            if game_date >= today:
+                game['school_name'] = school['name']
+                game['school_logo'] = school['logo']
+                upcoming_games.append(game)
+    
+    # Sort games by date and get the 6 most recent
+    upcoming_games.sort(key=lambda x: x['date'])
+    upcoming_games = upcoming_games[:6]
+    
+    return render_template('home.html', upcoming_games=upcoming_games)
 
 # Render HTML page with two tables (initial zeros)
 @app.route('/scoring')
