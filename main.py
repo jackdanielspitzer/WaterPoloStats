@@ -372,18 +372,18 @@ dataBlack = {
 
 def extract_key_phrases(text):
     doc = nlp(text.lower())
-    team, player, event = None, None, None
-    #must figure out different kinds of wording
+    events = []  # List to store multiple events
     dark_keywords = ['dark','black','blue']
     light_keywords = ['light','white']
     shot_keywords = ['goal', 'shot', 'score', 'point','scored','scores']
     block_keywords = ['block', 'blocked','blocks']
-    steal_keywords = ['steal','stole','took','steals'] #stole not working?
+    steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded']
     turnover_keywords = ['turnover', 'foul','lost','loses']
     penalty_keywords = ['penalty', 'five meter']
 
     tokens = [token.text for token in doc]  # Tokenize text
+    current_event = {'team': None, 'player': None, 'event': None}
 
     i = 0
     while i < len(tokens):
@@ -442,7 +442,55 @@ def extract_key_phrases(text):
             event = "Exclusions Drawn"
 
 
-    return player, event, team
+    if current_event['player'] and current_event['event'] and current_event['team']:
+        events.append((current_event['player'], current_event['event'], current_event['team']))
+    
+    # Look for second event in the same sentence
+    # Common patterns like "but was" indicate a second event
+    second_half_markers = ["but", "and", "then", "while"]
+    for marker in second_half_markers:
+        if marker in tokens:
+            idx = tokens.index(marker)
+            # Process second half of sentence separately
+            second_text = " ".join(tokens[idx:])
+            doc2 = nlp(second_text)
+            tokens2 = [token.text for token in doc2]
+            current_event = {'team': None, 'player': None, 'event': None}
+            
+            # Process second event similar to first
+            for token in tokens2:
+                try:
+                    if token != "point":
+                        player = str(w2n.word_to_num(token))
+                        current_event['player'] = player
+                except:
+                    pass
+                
+                if token in dark_keywords:
+                    current_event['team'] = 'dark'
+                elif token in light_keywords:
+                    current_event['team'] = 'light'
+                    
+                if token == 'goalie':
+                    current_event['player'] = '1'
+                    
+                if token in shot_keywords and current_event['event'] != "Blocks":
+                    current_event['event'] = "Shot"
+                elif token in block_keywords:
+                    current_event['event'] = "Blocks"
+                elif token in steal_keywords:
+                    current_event['event'] = "Steals"
+                elif token in exclusion_keywords:
+                    current_event['event'] = "Exclusions"
+                elif token in turnover_keywords:
+                    current_event['event'] = "Turnovers"
+                elif token in penalty_keywords:
+                    current_event['event'] = "Penalties"
+                    
+            if current_event['player'] and current_event['event'] and current_event['team']:
+                events.append((current_event['player'], current_event['event'], current_event['team']))
+            
+    return events if events else [(None, None, None)]
 
 
 
@@ -530,15 +578,19 @@ def phrase(number, action, team):
         return f"The {team} team {number} got a 5-meter penalty"
 
 def run(text):
-    player, event, team = extract_key_phrases(text)
-    if player and event and team:
-        # Get current game teams from the request
-        home_team_name = request.form.get('home_team')
-        away_team_name = request.form.get('away_team')
-        if sort_data(player, event, team, home_team_name, away_team_name):
-            return phrase(player, event, team)
-        return f"Player {player} not found in roster."
-    return "Could not parse the input."
+    events = extract_key_phrases(text)
+    responses = []
+    home_team_name = request.form.get('home_team')
+    away_team_name = request.form.get('away_team')
+    
+    for player, event, team in events:
+        if player and event and team:
+            if sort_data(player, event, team, home_team_name, away_team_name):
+                responses.append(phrase(player, event, team))
+            else:
+                responses.append(f"Player {player} not found in roster.")
+    
+    return " and ".join(responses) if responses else "Could not parse the input."
 
 @app.route('/')
 def home():
