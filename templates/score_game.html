@@ -271,13 +271,15 @@
                     const row = `
                         <tr>
                             <td>${player}</td>
-                            <td>${data.home_box.Shot[index]}</td>
-                            <td>${data.home_box.Blocks[index]}</td>
-                            <td>${data.home_box.Steals[index]}</td>
-                            <td>${data.home_box.Exclusions[index]}</td>
-                            <td>${data.home_box['Exclusions Drawn'][index]}</td>
-                            <td>${data.home_box.Penalties[index]}</td>
-                            <td>${data.home_box.Turnovers[index]}</td>
+                            <td>${data.home_box.Shot[index] || 0}</td>
+                            <td>${data.home_box['Shot Attempt'][index] || 0}</td>
+                            <td>${data.home_box.Assists[index] || 0}</td>
+                            <td>${data.home_box.Blocks[index] || 0}</td>
+                            <td>${data.home_box.Steals[index] || 0}</td>
+                            <td>${data.home_box.Exclusions[index] || 0}</td>
+                            <td>${data.home_box['Exclusions Drawn'][index] || 0}</td>
+                            <td>${data.home_box.Penalties[index] || 0}</td>
+                            <td>${data.home_box.Turnovers[index] || 0}</td>
                         </tr>`;
                     homeTableBody.innerHTML += row;
                 });
