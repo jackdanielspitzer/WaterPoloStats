@@ -372,7 +372,8 @@ dataBlack = {
 
 def extract_key_phrases(text):
     doc = nlp(text.lower())
-    events = []  # List to store multiple events
+    doc_text = doc.text
+    events = []
     dark_keywords = ['dark','black','blue']
     light_keywords = ['light','white']
     shot_keywords = ['goal', 'shot', 'score', 'point','scored','scores']
@@ -382,64 +383,50 @@ def extract_key_phrases(text):
     turnover_keywords = ['turnover', 'foul','lost','loses']
     penalty_keywords = ['penalty', 'five meter']
 
-    tokens = [token.text for token in doc]  # Tokenize text
-    current_event = {'team': None, 'player': None, 'event': None}
-
-    i = 0
-    while i < len(tokens):
-        token = tokens[i]
-        try:
-            # Check if the word is a number unless it's part of "five meter"
-            if token == "five" and i + 1 < len(tokens) and tokens[i + 1] == "meter":
-                event = "Penalties"
-                i += 2  # Skip the next word since it's part of "five meter"
-                continue
-            elif token != "point":
-                player = str(w2n.word_to_num(token))
-        except Exception:
-            pass
-
-            if (token == "kick" or token == "kicked") and tokens[i+1] == "out":
-                event = "Exclusions"
-
-            if (token == "turn" or token == "turned") and tokens[i+1] == "over":
-                event = "Turnovers"
-                
-
-        # Detect teams
-        if token in dark_keywords:
-            team = 'dark'
-        elif token in light_keywords:
-            team = 'light'
-
-        # Special case for goalies
-        if token == 'goalie':
-            player = 1
-
-        # Detect events
-        if (token in shot_keywords and event != "Blocks"):
-            event = "Shot"
-        elif token in block_keywords:
-            event = "Blocks"
-        elif token in steal_keywords:
-            event = "Steals"
-        elif token in exclusion_keywords:
-            event = "Exclusions"
-        elif token in turnover_keywords:
-            event = "Turnovers"
-        elif token in penalty_keywords:
-            event = "Penalties"
-
-        i += 1
+    tokens = [token.text for token in doc]
     
-    if event == "Exclusions" or event == "Penalties":
-        predict_connotation(text)
-        if predict_connotation(text) == "Negative":
-            event = "Exclusions"
-        elif predict_connotation(text) == "Positive" and event == "Penalties":
-            event = "Penalties"
-        elif predict_connotation(text) == "Positive" and event == "Exclusions":
-            event = "Exclusions Drawn"
+    # Initialize variables for first event
+    first_event = {'team': None, 'player': None, 'event': None}
+    second_event = {'team': None, 'player': None, 'event': None}
+    
+    # Find teams and players in first part
+    for i, token in enumerate(tokens):
+        # Try to extract player number
+        try:
+            if token != "point" and token != "five":
+                num = w2n.word_to_num(token)
+                if 1 <= num <= 13:
+                    first_event['player'] = str(num)
+        except ValueError:
+            pass
+            
+        # Extract team
+        if token in dark_keywords:
+            first_event['team'] = 'dark'
+        elif token in light_keywords:
+            first_event['team'] = 'light'
+            
+        # Check for goalie
+        if token == 'goalie':
+            second_event['player'] = '1'
+            # Set opposite team
+            second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+            
+        # Extract event type
+        if token in shot_keywords and 'block' not in doc_text:
+            first_event['event'] = 'Shot'
+        elif token in block_keywords:
+            first_event['event'] = 'Shot Attempt'
+            second_event['event'] = 'Blocks'
+            
+    # Add events if complete
+    if first_event['team'] and first_event['player'] and first_event['event']:
+        events.append((first_event['player'], first_event['event'], first_event['team']))
+        
+    if second_event['team'] and second_event['player'] and second_event['event']:
+        events.append((second_event['player'], second_event['event'], second_event['team']))
+        
+    return events if events else [(None, None, None)]
 
 
     if current_event['player'] and current_event['event'] and current_event['team']:
