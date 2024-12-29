@@ -139,6 +139,39 @@
         .delete-button:hover {
             background-color: #c82333;
         }
+
+        /* Roster Table Styles */
+        .team-roster {
+            margin: 20px auto;
+            max-width: 800px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .roster-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .roster-table th,
+        .roster-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+            color: #000;
+        }
+
+        .roster-table th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+
+        .roster-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
     </style>
     <script>
         function toggleAddGameForm() {
@@ -163,6 +196,32 @@
     <!-- Edit Roster Button -->
     <div class="edit-roster">
         <a href="{{ url_for('edit_roster', school_slug=school_slug) }}" class="action-button">Edit Roster</a>
+    </div>
+
+    <!-- Team Roster Display -->
+    <div class="team-roster">
+        <h2>Team Roster</h2>
+        <table class="roster-table">
+            <thead>
+                <tr>
+                    <th>Cap #</th>
+                    <th>Name</th>
+                    <th>Grade</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% set roster = get_team_roster(school.name) %}
+                {% for player in roster|sort(attribute='cap_number') %}
+                <tr>
+                    <td>{{ player.cap_number }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.grade }}</td>
+                    <td>{{ player.position }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 
     <div class="game-schedule">

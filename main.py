@@ -922,7 +922,12 @@ def team_page(school_slug):
         save_team_data(school["name"], team_data)  # Save sorted data back to the file
 
     # Render the template with sorted team data
-    return render_template('teams.html', school=school, schools=schools, team_data=team_data, school_slug=school_slug)
+    return render_template('teams.html', 
+                         school=school, 
+                         schools=schools, 
+                         team_data=team_data, 
+                         school_slug=school_slug,
+                         get_team_roster=get_team_roster)
 
 
 
