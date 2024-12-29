@@ -195,11 +195,6 @@
         </div>
     </div>
 
-    <!-- Edit Roster Button -->
-    <div class="edit-roster">
-        <a href="{{ url_for('edit_roster', school_slug=school_slug) }}" class="action-button">Edit Roster</a>
-    </div>
-
     <!-- Team Roster Display -->
     <div class="team-roster" style="margin-top: 10px;">
         <h2 style="color: #000000;">{{ school.name }}'s Roster</h2>
@@ -224,6 +219,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        
+        <!-- Edit Roster Button -->
+        <div class="edit-roster" style="margin-top: 15px;">
+            <a href="{{ url_for('edit_roster', school_slug=school_slug) }}" class="action-button">Edit Roster</a>
+        </div>
     </div>
 
     <div class="game-schedule">
