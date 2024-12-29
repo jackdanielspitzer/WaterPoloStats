@@ -425,6 +425,20 @@ def extract_key_phrases(text):
         elif token in block_keywords:
             first_event['event'] = 'Shot Attempt'
             second_event['event'] = 'Blocks'
+        elif token in steal_keywords:
+            first_event['event'] = 'Steals'
+            # Find the second player number for turnover
+            try:
+                for t in tokens[i+1:]:
+                    if t != "point" and t != "five":
+                        num = w2n.word_to_num(t)
+                        if 1 <= num <= 13:
+                            second_event['player'] = str(num)
+                            second_event['event'] = 'Turnovers'
+                            second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                            break
+            except ValueError:
+                pass
             
     # Add events if complete
     if first_event['team'] and first_event['player'] and first_event['event']:
