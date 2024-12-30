@@ -51,7 +51,7 @@
     <h1>Water Polo Statistics Tracker</h1>
 
     <!-- Form for inputting text or speech -->
-    <form id="form">
+    <form id="form" data-game-id="{{ game_index }}">
         <input type="hidden" name="home_team" value="{{ home_team }}">
         <input type="hidden" name="away_team" value="{{ away_team }}">
         <input type="hidden" name="game_id" value="{{ game_index }}">
@@ -236,8 +236,9 @@
         // Update tables with live data
         async function updateTables() {
             try {
-                // Fetch updated data from the server
-                const response = await fetch(`/get_data?home_team={{ home_team }}&away_team={{ away_team }}`);
+                const gameId = document.getElementById('form').getAttribute('data-game-id');
+                // Fetch updated data from the server with game ID
+                const response = await fetch(`/get_data?home_team={{ home_team }}&away_team={{ away_team }}&game_id=${gameId}`);
 
                 if (!response.ok) {
                     console.error(`Error fetching data: ${response.status}`);

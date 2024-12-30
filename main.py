@@ -987,13 +987,34 @@ def search():
 @app.route('/process', methods=['POST'])
 def process_text():
     text = request.form['text']
-    response = run(text)
+    game_id = request.form.get('game_id')
+    if game_id not in game_data:
+        return jsonify({'error': 'Invalid game ID'}), 400
+    response = run(text, game_id)
     return jsonify({'response': response})
+
+def run(text, game_id):
+    events = extract_key_phrases(text)
+    responses = []
+    home_team_name = request.form.get('home_team')
+    away_team_name = request.form.get('away_team')
+    
+    for player, event, team in events:
+        if player and event and team:
+            if sort_data(player, event, team, home_team_name, away_team_name, game_id):
+                responses.append(phrase(player, event, team))
+            else:
+                responses.append(f"Player {player} not found in roster.")
+    
+    return " and ".join(responses) if responses else "Could not parse the input."
 
 # Helper function to load team rosters
 def load_team_rosters():
     with open('team_rosters.json', 'r') as file:
         return json.load(file)
+
+# Store game-specific data
+game_data = {}
 
 @app.route('/get_data', methods=['GET'])
 def get_data():
@@ -1001,9 +1022,38 @@ def get_data():
         # Load team rosters
         team_rosters = load_team_rosters()
         
-        # Get team names from query parameters
+        # Get team names and game ID from query parameters
         home_team_name = request.args.get('home_team')
         away_team_name = request.args.get('away_team')
+        game_id = request.args.get('game_id')
+        
+        if game_id not in game_data:
+            game_data[game_id] = {
+                'dataWhite': {
+                    'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
+                    'Shot': [0] * 10,
+                    'Shot Attempt': [0] * 10,
+                    'Assists': [0] * 10,
+                    'Blocks': [0] * 10,
+                    'Steals': [0] * 10,
+                    'Exclusions': [0] * 10,
+                    'Exclusions Drawn': [0] * 10,
+                    'Penalties': [0] * 10,
+                    'Turnovers': [0] * 10
+                },
+                'dataBlack': {
+                    'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
+                    'Shot': [0] * 10,
+                    'Shot Attempt': [0] * 10,
+                    'Assists': [0] * 10,
+                    'Blocks': [0] * 10,
+                    'Steals': [0] * 10,
+                    'Exclusions': [0] * 10,
+                    'Exclusions Drawn': [0] * 10,
+                    'Penalties': [0] * 10,
+                    'Turnovers': [0] * 10
+                }
+            }
         
         if not home_team_name or not away_team_name:
             return jsonify({'error': 'Missing team names'}), 400
