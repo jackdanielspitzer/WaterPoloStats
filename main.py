@@ -716,10 +716,25 @@ def extract_events(text):
                 if was_blocked:
                     # If 'goalie' is mentioned or no blocker number is given, assign to goalie (1)
                     blocker = '1' if 'goalie' in tokens or len(numbers) == 1 else numbers[1]
+                    # Use explicitly mentioned team for goalie/blocker if available
+                    blocker_team = None
+                    for i, t in enumerate(tokens):
+                        if t == 'goalie' or t == 'blocks' or t == 'blocked':
+                            # Look for team mention before and after the block keyword
+                            for check_token in tokens[max(0, i-3):i+3]:
+                                if check_token in ['dark', 'black', 'blue']:
+                                    blocker_team = 'dark'
+                                    break
+                                elif check_token in ['light', 'white']:
+                                    blocker_team = 'light'
+                                    break
+                    # Only use opposite team if no explicit team was mentioned
+                    if not blocker_team:
+                        blocker_team = 'dark' if team == 'light' else 'light'
                     events.append({
                         'player': blocker,
                         'event': 'Blocks',
-                        'team': 'dark' if team == 'light' else 'light'
+                        'team': blocker_team
                     })
 
         # Handle steals and turnovers

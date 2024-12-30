@@ -295,8 +295,11 @@
             }
         }
 
-        // Call updateTables every 3 seconds for live updates
-        setInterval(updateTables, 3000);
+        // Update tables after form submission and initially
+        document.getElementById('form').addEventListener('submit', function() {
+            setTimeout(updateTables, 500); // Update shortly after submission
+        });
+        updateTables(); // Initial update
 
 
     </script>
