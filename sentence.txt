@@ -26,6 +26,7 @@ Dark team goalie with a block (+)
 Player 6 got a block (+)
 Player 2 blocks the shot (+)
 Light team goalie got a block (+)
+Dark team goalie gets a block (+)
 
 # Shots and Failed Attempts
 Player 5's shot was blocked (-)
@@ -34,6 +35,7 @@ Player 7 from light was blocked (-)
 Player 4's shot got blocked by the goalie (-)
 Player 2 from dark shot and missed (-)
 Player 7 from light took a shot but missed (-)
+Dark goalie was blocked (-)
 
 # Assists and Goals
 Player 3 scored goal assisted by player 5 (+)
