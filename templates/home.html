@@ -75,12 +75,16 @@
                     <div class="teams">
                         {% if game.home_away == 'Home' %}
                             <div class="team">
-                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                <a href="/team/{{ game.school_name.lower().replace(' ', '-') }}">
+                                    <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                </a>
                                 <span>{{ game.school_name }}</span>
                             </div>
                             <span class="vs">vs</span>
                             <div class="team">
-                                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                <a href="/team/{{ game.opponent.lower().replace(' ', '-') }}">
+                                    <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                </a>
                                 <span>{{ game.opponent }}</span>
                             </div>
                         {% else %}
@@ -143,6 +147,11 @@
             height: 50px;
             object-fit: contain;
             margin-bottom: 5px;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .team img:hover {
+            transform: scale(1.1);
         }
         .vs {
             font-weight: bold;
