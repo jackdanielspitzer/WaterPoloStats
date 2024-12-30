@@ -54,6 +54,7 @@
     <form id="form">
         <input type="hidden" name="home_team" value="{{ home_team }}">
         <input type="hidden" name="away_team" value="{{ away_team }}">
+        <input type="hidden" name="game_id" value="{{ game_index }}">
         <textarea id="inputText" rows="4" cols="50" placeholder="Enter or speak your stats..."></textarea><br>
         <!-- Microphone button placed between the text area and submit button -->
         <button type="button" id="microphoneButton" style="background: none; border: none; padding: 0; cursor: pointer;">
@@ -136,9 +137,12 @@
             const inputText = document.getElementById('inputText').value;
             const homeTeam = document.querySelector('input[name="home_team"]').value;
             const awayTeam = document.querySelector('input[name="away_team"]').value;
+            const gameId = document.querySelector('input[name="game_id"]').value; //Added gameId
             console.log("Submitting text:", inputText);
             console.log("Home team:", homeTeam);
             console.log("Away team:", awayTeam);
+            console.log("Game ID:", gameId); //Added gameId
+
 
             try {
                 const response = await fetch('/process', {
@@ -146,7 +150,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}`
+                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}` //Added gameId
                 });
 
                 if (response.ok) {
@@ -198,7 +202,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}`
+                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}` //Added gameId
                 });
 
                 if (response.ok) {
