@@ -75,28 +75,28 @@
                     <div class="teams">
                         {% if game.home_away == 'Home' %}
                             <div class="team">
-                                <a href="/team/{{ game.school_name.lower().replace(' ', '-') }}">
+                                <a href="/team/{{ game.school_name.lower().replace(' ', '-').replace('.', '').replace('m.', 'm') }}">
                                     <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
                                 </a>
                                 <span>{{ game.school_name }}</span>
                             </div>
                             <span class="vs">vs</span>
                             <div class="team">
-                                <a href="/team/{{ game.opponent.lower().replace(' ', '-') }}">
+                                <a href="/team/{{ game.opponent.lower().replace(' ', '-').replace('.', '').replace('m.', 'm') }}">
                                     <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
                                 </a>
                                 <span>{{ game.opponent }}</span>
                             </div>
                         {% else %}
                             <div class="team">
-                                <a href="/team/{{ game.opponent.lower().replace(' ', '-') }}">
+                                <a href="/team/{{ game.opponent.lower().replace(' ', '-').replace('.', '').replace('m.', 'm') }}">
                                     <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
                                 </a>
                                 <span>{{ game.opponent }}</span>
                             </div>
                             <span class="vs">vs</span>
                             <div class="team">
-                                <a href="/team/{{ game.school_name.lower().replace(' ', '-') }}">
+                                <a href="/team/{{ game.school_name.lower().replace(' ', '-').replace('.', '').replace('m.', 'm') }}">
                                     <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
                                 </a>
                                 <span>{{ game.school_name }}</span>
