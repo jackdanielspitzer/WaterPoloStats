@@ -783,33 +783,37 @@ def extract_events(text):
         # Handle exclusions and penalties
         if token in exclusion_keywords or 'kicked out' in doc_text or 'five meter' in doc_text:
             connotation = predict_connotation(text)
-            if len(numbers) >= 2:
+            if len(numbers) >= 2 and ('drew' in doc_text or 'drawn' in doc_text):
+                # Handle double event (exclusion drawn)
                 if connotation == 'Positive' or 'drew' in doc_text:
-                    # Player who drew the exclusion
                     events.append({
                         'player': numbers[0],
                         'event': 'Exclusions Drawn',
                         'team': team
                     })
-                    # Player who got excluded
                     events.append({
                         'player': numbers[1],
                         'event': 'Exclusions',
                         'team': 'dark' if team == 'light' else 'light'
                     })
                 else:
-                    # Player who got excluded
                     events.append({
                         'player': numbers[0],
                         'event': 'Exclusions',
                         'team': team
                     })
-                    # Player who drew the exclusion
                     events.append({
                         'player': numbers[1],
                         'event': 'Exclusions Drawn',
                         'team': 'dark' if team == 'light' else 'light'
                     })
+            elif len(numbers) >= 1:
+                # Handle single exclusion event
+                events.append({
+                    'player': numbers[0],
+                    'event': 'Exclusions',
+                    'team': team
+                })
 
         if any(word in tokens[i:i+2] for word in penalty_keywords):
             if len(numbers) >= 2:
