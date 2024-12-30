@@ -911,7 +911,7 @@ def home():
         team_data = load_team_data(school['name'])
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
-            if game_date >= today:
+            if game_date >= today and not game.get('is_scored', False):
                 game['school_name'] = school['name']
                 game['school_logo'] = school['logo']
                 upcoming_games.append(game)
