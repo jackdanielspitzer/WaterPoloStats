@@ -17,11 +17,19 @@ Player 8 from light shot over the crossbar (-)
 Player 1 from dark shot into the corner for a goal (+)
 Player 6 from light shot but hit the post (-)
 
+# Blocks and Saves
+Player 3 made a great block (+)
+Goalie got a block (+)
+Light team goalie makes a save (+)
+Player 1 blocked brilliantly (+)
+Dark team goalie with an amazing block (+)
+Player 6 blocked the shot perfectly (+)
+
 # Shots
-Player 5 shot but was blocked by player 3 (-)
-Player 2 from dark shot and goalie blocked it (-)
+Player 5 shot but was blocked (-)
+Player 2 from dark shot and missed (-)
 Player 7 from light took a shot but missed (-)
-Player 4 attempted a shot but player 6 blocked it (-)
+Player 4 attempted a shot but missed (-)
 
 # Assists and Goals
 Player 3 scored goal assisted by player 5 (+)
