@@ -438,20 +438,21 @@ def extract_key_phrases(text):
         except ValueError:
             pass
             
-        # Check for goalie
-        if token == 'goalie':
+        # Check for goalie mentions
+        if token == 'goalie' or (token == '1' and 'goalie' in doc_text):
+            # Set goalie as player 1 for first event if no player set yet
             if not first_event['player']:
                 first_event['player'] = '1'
-                if not first_event['team'] and i > 0:
-                    # Look for team mention before goalie
-                    for prev_token in tokens[:i]:
-                        if prev_token in light_keywords:
-                            first_event['team'] = 'light'
-                            break
-                        elif prev_token in dark_keywords:
-                            first_event['team'] = 'dark'
-                            break
-            else:
+                # Look for team mention in surrounding context
+                for prev_token in tokens[max(0, i-3):i+3]:
+                    if prev_token in light_keywords:
+                        first_event['team'] = 'light'
+                        break
+                    elif prev_token in dark_keywords:
+                        first_event['team'] = 'dark'
+                        break
+            # If first event already has a player, this must be for second event
+            elif not second_event['player']:
                 second_event['player'] = '1'
                 second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
             
