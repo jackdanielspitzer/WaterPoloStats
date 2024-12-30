@@ -141,6 +141,12 @@
     ],
     "Palo Alto High School": [
         {
+            "cap_number": "1",
+            "name": "Jill",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
             "cap_number": "5",
             "name": "Matthew",
             "grade": "10",
