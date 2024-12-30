@@ -569,7 +569,7 @@ def extract_key_phrases(text):
 
 
 # Update team data
-def sort_data(player, event, team, home_team_name, away_team_name):
+def sort_data(player, event, team, home_team_name, away_team_name, game_id):
     print("\n=== Debug Info ===")
     print(f"Looking for player: {player}")
     print(f"Team color: {team}")
@@ -612,7 +612,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataWhite[event][player_index] += 1  # Light/away team uses dataWhite
+            game_data[game_id]['dataWhite'][event][player_index] += 1  # Light/away team uses dataWhite
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in away roster")
             return False
@@ -624,7 +624,7 @@ def sort_data(player, event, team, home_team_name, away_team_name):
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
             # Update the player's stats directly using the found index
-            dataBlack[event][player_index] += 1  # Dark/home team uses dataBlack
+            game_data[game_id]['dataBlack'][event][player_index] += 1  # Dark/home team uses dataBlack
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in home roster")
             return False
