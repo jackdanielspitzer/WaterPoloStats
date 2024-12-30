@@ -188,6 +188,11 @@
     </script>
 </head>
 <body>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <a href="/">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Logo" style="width: 150px;">
+        </a>
+    </div>
     <div class="school-container">
         <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }} Logo">
         <div class="school-info">
