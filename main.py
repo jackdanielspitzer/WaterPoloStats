@@ -1027,31 +1027,35 @@ def get_data():
         away_team_name = request.args.get('away_team')
         game_id = request.args.get('game_id')
         
+        # Get rosters for both teams
+        home_roster = team_rosters.get(home_team_name, [])
+        away_roster = team_rosters.get(away_team_name, [])
+
         if game_id not in game_data:
             game_data[game_id] = {
                 'dataWhite': {
-                    'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
-                    'Shot': [0] * 10,
-                    'Shot Attempt': [0] * 10,
-                    'Assists': [0] * 10,
-                    'Blocks': [0] * 10,
-                    'Steals': [0] * 10,
-                    'Exclusions': [0] * 10,
-                    'Exclusions Drawn': [0] * 10,
-                    'Penalties': [0] * 10,
-                    'Turnovers': [0] * 10
+                    'Player': [str(player['cap_number']) for player in away_roster],
+                    'Shot': [0] * len(away_roster),
+                    'Shot Attempt': [0] * len(away_roster),
+                    'Assists': [0] * len(away_roster),
+                    'Blocks': [0] * len(away_roster),
+                    'Steals': [0] * len(away_roster),
+                    'Exclusions': [0] * len(away_roster),
+                    'Exclusions Drawn': [0] * len(away_roster),
+                    'Penalties': [0] * len(away_roster),
+                    'Turnovers': [0] * len(away_roster)
                 },
                 'dataBlack': {
-                    'Player': ['Player 1', 'Player 2', 'Player 3', 'Player 4', 'Player 5', 'Player 6', 'Player 7', 'Player 8', 'Player 9', 'Player 10'],
-                    'Shot': [0] * 10,
-                    'Shot Attempt': [0] * 10,
-                    'Assists': [0] * 10,
-                    'Blocks': [0] * 10,
-                    'Steals': [0] * 10,
-                    'Exclusions': [0] * 10,
-                    'Exclusions Drawn': [0] * 10,
-                    'Penalties': [0] * 10,
-                    'Turnovers': [0] * 10
+                    'Player': [str(player['cap_number']) for player in home_roster],
+                    'Shot': [0] * len(home_roster),
+                    'Shot Attempt': [0] * len(home_roster),
+                    'Assists': [0] * len(home_roster),
+                    'Blocks': [0] * len(home_roster),
+                    'Steals': [0] * len(home_roster),
+                    'Exclusions': [0] * len(home_roster),
+                    'Exclusions Drawn': [0] * len(home_roster),
+                    'Penalties': [0] * len(home_roster),
+                    'Turnovers': [0] * len(home_roster)
                 }
             }
         
