@@ -905,6 +905,7 @@ def run(text):
 def home():
     # Get all upcoming games from all teams
     upcoming_games = []
+    seen_games = set()  # Track unique games
     today = datetime.now().date()
     
     for school in schools.values():
@@ -912,9 +913,13 @@ def home():
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
             if game_date >= today and not game.get('is_scored', False):
-                game['school_name'] = school['name']
-                game['school_logo'] = school['logo']
-                upcoming_games.append(game)
+                # Create a unique key for each game using date and team names
+                game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
+                if game_key not in seen_games:
+                    game['school_name'] = school['name']
+                    game['school_logo'] = school['logo']
+                    upcoming_games.append(game)
+                    seen_games.add(game_key)
     
     # Sort games by date and get the 6 most recent
     upcoming_games.sort(key=lambda x: x['date'])
