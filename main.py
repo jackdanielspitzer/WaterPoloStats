@@ -490,8 +490,13 @@ def extract_key_phrases(text):
         if token in shot_keywords and 'block' not in doc_text:
             first_event['event'] = 'Shot'
         elif token in block_keywords:
-            first_event['event'] = 'Shot Attempt'
-            second_event['event'] = 'Blocks'
+            # Check if it's an active block ("gets/got a block") vs getting blocked
+            if ('gets a block' in doc_text or 'got a block' in doc_text or 
+                'makes a save' in doc_text or 'with a block' in doc_text):
+                first_event['event'] = 'Blocks'
+            else:
+                first_event['event'] = 'Shot Attempt'
+                second_event['event'] = 'Blocks'
         elif 'assist' in doc_text:
             first_event['event'] = 'Shot'
             # Find the assisting player's number
