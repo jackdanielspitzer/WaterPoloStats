@@ -438,23 +438,28 @@ def extract_key_phrases(text):
         except ValueError:
             pass
             
-        # Check for goalie mentions
+        # Check for goalie mentions and team assignments
         if token == 'goalie' or (token == '1' and 'goalie' in doc_text):
-            # Set goalie as player 1 for first event if no player set yet
             if not first_event['player']:
                 first_event['player'] = '1'
-                # Look for team mention in surrounding context
-                for prev_token in tokens[max(0, i-3):i+3]:
-                    if prev_token in light_keywords:
-                        first_event['team'] = 'light'
-                        break
-                    elif prev_token in dark_keywords:
-                        first_event['team'] = 'dark'
-                        break
-            # If first event already has a player, this must be for second event
-            elif not second_event['player']:
-                second_event['player'] = '1'
-                second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                # Look for team mentions before goalie
+                for t_idx in range(max(0, i-5), i+1):
+                    if t_idx < len(tokens):
+                        if tokens[t_idx] in light_keywords:
+                            first_event['team'] = 'light'
+                            break
+                        elif tokens[t_idx] in dark_keywords:
+                            first_event['team'] = 'dark'
+                            break
+                
+                # Check for event type after finding goalie
+                if i + 1 < len(tokens):
+                    if tokens[i+1] in block_keywords or 'block' in doc_text:
+                        first_event['event'] = 'Blocks'
+                    elif tokens[i+1] in exclusion_keywords or 'excluded' in doc_text:
+                        first_event['event'] = 'Exclusions'
+                    elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
+                        first_event['event'] = 'Penalties'
             
         # Extract event type
         if 'penalty' in doc_text and len(all_numbers) >= 2:
