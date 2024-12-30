@@ -426,6 +426,15 @@ def extract_key_phrases(text):
                 if 1 <= num <= 13 and first_event['player'] is None:
                     first_event['player'] = str(num)
                     first_event['team'] = current_team
+                    
+                    # Check for single event keywords right after the number
+                    if i + 1 < len(tokens):
+                        if tokens[i+1] in exclusion_keywords or 'excluded' in doc_text:
+                            first_event['event'] = 'Exclusions'
+                            break
+                        elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
+                            first_event['event'] = 'Penalties'
+                            break
         except ValueError:
             pass
             
