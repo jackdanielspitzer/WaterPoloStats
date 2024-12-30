@@ -1062,13 +1062,40 @@ def get_data():
         home_roster = team_rosters.get(home_team_name, [])
         away_roster = team_rosters.get(away_team_name, [])
 
-        # Create copies of the current game data
-        home_box = dataBlack.copy()  # Home team uses dataBlack
-        away_box = dataWhite.copy()  # Away team uses dataWhite
-        
-        # Update player lists with cap numbers from rosters
-        home_box['Player'] = [player['cap_number'] for player in home_roster]
-        away_box['Player'] = [player['cap_number'] for player in away_roster]
+        # Get game-specific data
+        if game_id in game_data:
+            home_box = game_data[game_id]['dataBlack']  # Home team uses dataBlack
+            away_box = game_data[game_id]['dataWhite']  # Away team uses dataWhite
+        else:
+            # Initialize new game data if not exists
+            game_data[game_id] = {
+                'dataWhite': {
+                    'Player': [player['cap_number'] for player in away_roster],
+                    'Shot': [0] * len(away_roster),
+                    'Shot Attempt': [0] * len(away_roster),
+                    'Assists': [0] * len(away_roster),
+                    'Blocks': [0] * len(away_roster),
+                    'Steals': [0] * len(away_roster),
+                    'Exclusions': [0] * len(away_roster),
+                    'Exclusions Drawn': [0] * len(away_roster),
+                    'Penalties': [0] * len(away_roster),
+                    'Turnovers': [0] * len(away_roster)
+                },
+                'dataBlack': {
+                    'Player': [player['cap_number'] for player in home_roster],
+                    'Shot': [0] * len(home_roster),
+                    'Shot Attempt': [0] * len(home_roster),
+                    'Assists': [0] * len(home_roster),
+                    'Blocks': [0] * len(home_roster),
+                    'Steals': [0] * len(home_roster),
+                    'Exclusions': [0] * len(home_roster),
+                    'Exclusions Drawn': [0] * len(home_roster),
+                    'Penalties': [0] * len(home_roster),
+                    'Turnovers': [0] * len(home_roster)
+                }
+            }
+            home_box = game_data[game_id]['dataBlack']
+            away_box = game_data[game_id]['dataWhite']
 
         # Return the current game data with roster cap numbers
         return jsonify({
