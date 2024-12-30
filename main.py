@@ -440,9 +440,20 @@ def extract_key_phrases(text):
             
         # Check for goalie
         if token == 'goalie':
-            second_event['player'] = '1'
-            # Set opposite team
-            second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+            if not first_event['player']:
+                first_event['player'] = '1'
+                if not first_event['team'] and i > 0:
+                    # Look for team mention before goalie
+                    for prev_token in tokens[:i]:
+                        if prev_token in light_keywords:
+                            first_event['team'] = 'light'
+                            break
+                        elif prev_token in dark_keywords:
+                            first_event['team'] = 'dark'
+                            break
+            else:
+                second_event['player'] = '1'
+                second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
             
         # Extract event type
         if 'penalty' in doc_text and len(all_numbers) >= 2:
