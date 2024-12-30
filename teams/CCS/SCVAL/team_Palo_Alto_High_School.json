@@ -9,6 +9,26 @@
             "game_type": "League Game",
             "is_scored": false,
             "formatted_date": "January 15th, 2025"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Los Altos High School",
+            "opponent_logo": "images/Los Altos High School.png",
+            "time": "16:00",
+            "date": "2025-02-26",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "February 26th, 2025"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Los Gatos High School",
+            "opponent_logo": "images/Los Gatos High School.png",
+            "time": "04:45 PM",
+            "date": "2025-03-23",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 23rd, 2025"
         }
     ]
 }

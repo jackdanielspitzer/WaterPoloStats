@@ -1,0 +1,34 @@
+{
+    "games": [
+        {
+            "home_away": "Home",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": "15:30",
+            "date": "2025-02-15",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "February 15th, 2025"
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Los Altos High School",
+            "opponent_logo": "images/Los Altos High School.png",
+            "time": "18:00",
+            "date": "2025-03-02",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 2nd, 2025"
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": "04:45 PM",
+            "date": "2025-03-23",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 23rd, 2025"
+        }
+    ]
+}

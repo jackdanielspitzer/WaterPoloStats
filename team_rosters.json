@@ -209,6 +209,30 @@
             "name": "Jack",
             "grade": "9",
             "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Tommy",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "3",
+            "name": "Timmy",
+            "grade": "12",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "4",
+            "name": "Robby",
+            "grade": "11",
+            "position": "Center"
+        },
+        {
+            "cap_number": "5",
+            "name": "Daniel",
+            "grade": "10",
+            "position": "Driver"
         }
     ]
 }
