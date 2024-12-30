@@ -8,8 +8,11 @@ from datetime import datetime
 
 
 # Helper function to get team file path
-def get_team_file_path(team_name):
-    return os.path.join('teams', f"team_{team_name.replace(' ', '_')}.json")
+def get_team_file_path(team_name, league):
+    league_dir = os.path.join('teams', league)
+    if not os.path.exists(league_dir):
+        os.makedirs(league_dir)
+    return os.path.join(league_dir, f"team_{team_name.replace(' ', '_')}.json")
 
 FILE_PATH = 'team_data.json'
 import json
@@ -1065,6 +1068,7 @@ schools = {
         "bg_color": "#004b23",
         "text_color": "#ffffff",
         "link_color": "#004b23",
+        "league": "SCVAL",
         "games": [],
         "players":[]
     },
