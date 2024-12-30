@@ -89,12 +89,16 @@
                             </div>
                         {% else %}
                             <div class="team">
-                                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                <a href="/team/{{ game.opponent.lower().replace(' ', '-') }}">
+                                    <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                </a>
                                 <span>{{ game.opponent }}</span>
                             </div>
                             <span class="vs">vs</span>
                             <div class="team">
-                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                <a href="/team/{{ game.school_name.lower().replace(' ', '-') }}">
+                                    <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                </a>
                                 <span>{{ game.school_name }}</span>
                             </div>
                         {% endif %}
