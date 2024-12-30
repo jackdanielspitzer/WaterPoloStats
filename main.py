@@ -452,14 +452,13 @@ def extract_key_phrases(text):
                             first_event['team'] = 'dark'
                             break
                 
-                # Check for event type after finding goalie
-                if i + 1 < len(tokens):
-                    if tokens[i+1] in block_keywords or 'block' in doc_text:
-                        first_event['event'] = 'Blocks'
-                    elif tokens[i+1] in exclusion_keywords or 'excluded' in doc_text:
-                        first_event['event'] = 'Exclusions'
-                    elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
-                        first_event['event'] = 'Penalties'
+                # Check for event type in surrounding context
+                if 'exclusion' in doc_text or 'excluded' in doc_text or 'kicked out' in doc_text:
+                    first_event['event'] = 'Exclusions'
+                elif tokens[i+1] in block_keywords or 'block' in doc_text:
+                    first_event['event'] = 'Blocks'
+                elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
+                    first_event['event'] = 'Penalties'
             
         # Extract event type
         if 'penalty' in doc_text and len(all_numbers) >= 2:
