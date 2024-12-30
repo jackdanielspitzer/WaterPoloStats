@@ -182,7 +182,8 @@
         }
 
         function setTimeTBD() {
-            document.querySelector('select[name="time"]').value = 'TBD';
+            document.getElementById('timeInput').value = '';
+            document.getElementById('timeInput').disabled = true;
         }
     </script>
 </head>
@@ -275,15 +276,7 @@
                 {% endfor %}
             </select>
             <div class="button-container">
-                <select name="time" required>
-                    <option value="TBD">TBD</option>
-                    {% for hour in range(12) %}
-                        {% for minute in [0, 15, 30, 45] %}
-                            <option value="{{ '%02d:%02d' | format(hour, minute) }} AM">{{ '%02d:%02d' | format(hour, minute) }} AM</option>
-                            <option value="{{ '%02d:%02d' | format(hour, minute) }} PM">{{ '%02d:%02d' | format(hour, minute) }} PM</option>
-                        {% endfor %}
-                    {% endfor %}
-                </select>
+                <input type="time" name="time" required id="timeInput">
                 <button type="button" class="tbd-button" onclick="setTimeTBD()">Set to TBD</button>
             </div>
             <input type="date" name="date" required>
