@@ -519,12 +519,12 @@ def extract_key_phrases(text):
             first_event['event'] = 'Shot'
         elif token in block_keywords:
             # Check for "got block on player X" pattern
-            if ('got block' in doc_text or 'got a block' in doc_text or 'makes a save' in doc_text) and 'on player' in doc_text:
+            if ('got block' in doc_text or 'got a block' in doc_text or 'makes a save' in doc_text):
                 if len(all_numbers) >= 2:
                     first_event['event'] = 'Blocks'
-                    first_event['player'] = all_numbers[0]
+                    first_event['player'] = '1' if 'goalie' in doc_text else all_numbers[0]
                     second_event['event'] = 'Shot Attempt'  
-                    second_event['player'] = all_numbers[1]
+                    second_event['player'] = all_numbers[1] if 'goalie' in doc_text or len(all_numbers) > 1 else all_numbers[0]
                     second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
             # Check other block scenarios
             elif ('gets a block' in doc_text or 'got a block' in doc_text or 
