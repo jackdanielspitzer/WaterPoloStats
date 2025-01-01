@@ -101,7 +101,7 @@
                 <td>{{ stats.Turnovers }}</td>
             </tr>
         </table>
-        <a href="{{ url_for('teams') }}" class="back-link">Back to Teams</a>
+        <a href="{{ url_for('team_page', school_slug=request.args.get('school_slug', 'palo-alto')) }}" class="back-link">Back to Team</a>
     </div>
 </body>
 </html>

@@ -1251,7 +1251,8 @@ def player_stats(player_name, team_color):
                 combined_stats[key] += game['black_team'][key][idx]
 
     # Render the player stats page with the combined stats
-    return render_template('player_stats.html',player_name=player_name, team_color=team_color, stats=combined_stats)
+    school_slug = request.args.get('school_slug', 'palo-alto')
+    return render_template('player_stats.html', player_name=player_name, team_color=team_color, stats=combined_stats, school_slug=school_slug)
 
 
 # Simulate a dictionary of school data (name, logo, and colors)
