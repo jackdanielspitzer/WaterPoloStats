@@ -1774,6 +1774,20 @@ def sort_cap_number(cap_number):
 
 
 
+def format_time(time_str):
+    if not time_str:
+        return "TBD"
+    try:
+        # Parse the time string
+        time_obj = datetime.strptime(time_str, '%H:%M')
+        # Format in 12-hour format with AM/PM
+        return time_obj.strftime('%I:%M %p')
+    except ValueError:
+        return time_str
+
+# Register the filter with the Jinja environment
+app.jinja_env.filters['format_time'] = format_time
+
 if __name__ == '__main__':
     print("calling app.run")
     app.run(host='0.0.0.0', port=5000, debug=True)
