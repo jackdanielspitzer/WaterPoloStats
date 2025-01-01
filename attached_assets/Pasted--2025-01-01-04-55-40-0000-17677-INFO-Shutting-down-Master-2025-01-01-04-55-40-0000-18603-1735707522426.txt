@@ -1,0 +1,45 @@
+[2025-01-01 04:55:40 +0000] [17677] [INFO] Shutting down: Master
+ [2025-01-01 04:55:40 +0000] [18603] [INFO] Starting gunicorn 21.2.0
+[2025-01-01 04:55:40 +0000] [18603] [INFO] Listening at: http://0.0.0.0:5000 (18603)
+[2025-01-01 04:55:40 +0000] [18603] [INFO] Using worker: sync
+[2025-01-01 04:55:40 +0000] [18616] [INFO] Booting worker with pid: 18616
+              precision    recall  f1-score   support
+
+           0       1.00      0.83      0.91         6
+           1       0.86      1.00      0.92         6
+
+    accuracy                           0.92        12
+   macro avg       0.93      0.92      0.92        12
+weighted avg       0.93      0.92      0.92        12
+
+[2025-01-01 04:58:31,977] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/main.py", line 1893, in register
+    mail.send(msg)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 539, in send
+    with self.connect() as connection:
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 127, in __enter__
+    self.host = self.configure_host()
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 152, in configure_host
+    host.login(self.mail.username, self.mail.password)
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/smtplib.py", line 750, in login
+    raise last_exception
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/smtplib.py", line 739, in login
+    (code, resp) = self.auth(
+                   ^^^^^^^^^^
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/smtplib.py", line 662, in auth
+    raise SMTPAuthenticationError(code, resp)
+smtplib.SMTPAuthenticationError: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-72aad8dbad9sm22476616b3a.103 - gsmtp')
