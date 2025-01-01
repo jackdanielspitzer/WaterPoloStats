@@ -1228,7 +1228,16 @@ def game_details(game_id):
 
 @app.route('/player_stats/<string:player_name>', methods=['GET'])
 def player_stats(player_name):
-    school_slug = request.args.get('school_slug', 'palo-alto')
+    school_slug = request.args.get('school_slug')
+    if not school_slug:
+        # Search all schools for the player
+        for slug, school_data in schools.items():
+            roster = get_team_roster(school_data['name'])
+            if any(player['name'] == player_name for player in roster):
+                school_slug = slug
+                break
+    if not school_slug:
+        return "Player not found in any school", 404
     school = schools.get(school_slug)
     if not school:
         return "School not found", 404
