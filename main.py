@@ -498,21 +498,26 @@ def extract_key_phrases(text):
                 second_event['event'] = 'Exclusions'
                 second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
             break
-        elif token in exclusion_keywords or 'drew' in doc_text:
+        elif token in exclusion_keywords:
             if len(all_numbers) >= 2:
-                first_event['player'] = all_numbers[0]
-                second_event['player'] = all_numbers[1]
-                
-                if 'drew' in doc_text or 'kicked out' in doc_text or 'got a kickout' in doc_text:
-                    first_event['event'] = 'Exclusions Drawn'
-                    second_event['event'] = 'Exclusions'
-                    first_event['team'] = current_team
-                    second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
-                else:
+                # For "excluded by" pattern
+                if 'excluded by' in doc_text:
+                    first_event['player'] = all_numbers[0]  # Player who was excluded
                     first_event['event'] = 'Exclusions'
-                    second_event['event'] = 'Exclusions Drawn'
                     first_event['team'] = current_team
-                    second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
+                    
+                    second_event['player'] = all_numbers[1]  # Player who drew the exclusion
+                    second_event['event'] = 'Exclusions Drawn'
+                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
+                # For "drew an exclusion" pattern    
+                elif 'drew' in doc_text or 'kicked out' in doc_text or 'got a kickout' in doc_text:
+                    first_event['player'] = all_numbers[0]
+                    first_event['event'] = 'Exclusions Drawn'
+                    first_event['team'] = current_team
+                    
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Exclusions'
+                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
                 break
                 
         if token in shot_keywords and 'block' not in doc_text:
