@@ -1850,8 +1850,10 @@ def format_time(time_str):
 app.jinja_env.filters['format_time'] = format_time
 
 if __name__ == '__main__':
-    print("calling app.run")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    print("Starting Flask app...")
+    app.debug = True
+    app.logger.setLevel('DEBUG')
+    app.run(host='0.0.0.0', port=5000)
 
 
 #blocks a shot and scores a point doesn't work properly
