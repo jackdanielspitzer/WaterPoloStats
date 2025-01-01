@@ -401,11 +401,11 @@ def extract_key_phrases(text):
         except ValueError:
             continue
             
-    # Initialize events based on number of players
-    events = [{'team': None, 'player': None, 'event': None} for _ in range(len(all_numbers))]
-    if not events:
-        return [(None, None, None)]
-
+    # Initialize event tracking variables
+    first_event = {'team': None, 'player': None, 'event': None}
+    second_event = {'team': None, 'player': None, 'event': None}
+    events = []
+    
     # Extract all numbers first
     all_numbers = []
     for token in doc:
