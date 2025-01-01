@@ -1,5 +1,27 @@
-from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
+from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_mail import Mail, Message
+from werkzeug.security import generate_password_hash, check_password_hash
+import secrets
+from models import db, User
+
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.environ['MAIL_USERNAME']
+app.config['MAIL_PASSWORD'] = os.environ['MAIL_PASSWORD']
+
+db.init_app(app)
+mail = Mail(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 from word2number import w2n
 import spacy
 import json
@@ -1837,3 +1859,69 @@ if __name__ == '__main__':
 
 
 #blocks a shot and scores a point doesn't work properly
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form['email']
+        if User.query.filter_by(email=email).first():
+            flash('Email already registered')
+            return redirect(url_for('register'))
+        
+        user = User(
+            email=email,
+            password=generate_password_hash(request.form['password']),
+            first_name=request.form['first_name'],
+            last_name=request.form['last_name'],
+            date_of_birth=datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d'),
+            high_school=request.form['high_school'],
+            account_type=request.form['account_type']
+        )
+        
+        if user.account_type == 'team_manager':
+            user.role = request.form['role']
+            user.phone = request.form['phone']
+            
+        user.confirmation_token = secrets.token_urlsafe(32)
+        db.session.add(user)
+        db.session.commit()
+        
+        # Send confirmation email
+        confirm_url = url_for('confirm_email', token=user.confirmation_token, _external=True)
+        msg = Message('Confirm Your Account',
+                     sender='noreply@yourapp.com',
+                     recipients=[user.email])
+        msg.body = f'Please confirm your account by clicking on the link: {confirm_url}'
+        mail.send(msg)
+        
+        flash('Registration successful. Please check your email to confirm your account.')
+        return redirect(url_for('login'))
+        
+    return render_template('register.html', schools=schools)
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    user = User.query.filter_by(confirmation_token=token).first_or_404()
+    user.email_confirmed = True
+    user.confirmation_token = None
+    db.session.commit()
+    flash('Your account has been confirmed. Please login.')
+    return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        user = User.query.filter_by(email=request.form['email']).first()
+        if user and check_password_hash(user.password, request.form['password']):
+            if not user.email_confirmed:
+                flash('Please confirm your email before logging in.')
+                return redirect(url_for('login'))
+            login_user(user)
+            return redirect(url_for('home'))
+        flash('Invalid email or password')
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
