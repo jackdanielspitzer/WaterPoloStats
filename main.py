@@ -1422,7 +1422,8 @@ def team_page(school_slug):
                          schools=schools, 
                          team_data=team_data, 
                          school_slug=school_slug,
-                         get_team_roster=get_team_roster)
+                         get_team_roster=get_team_roster,
+                         sort_cap_number=sort_cap_number)
 
 
 
