@@ -1253,9 +1253,14 @@ def player_stats(player_name):
         'Turnovers': 0
     }
 
-    # Load team data
-    team_data = load_team_data(school['name'])
-    
+    # Load team data from SCVAL directory
+    team_file = f'teams/CCS/SCVAL/team_{school["name"].replace(" ", "_")}.json'
+    try:
+        with open(team_file, 'r') as file:
+            team_data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        team_data = {"games": []}
+
     # Get the player's cap number from roster
     roster = get_team_roster(school['name'])
     player_info = next((player for player in roster if player['name'] == player_name), None)
@@ -1267,7 +1272,7 @@ def player_stats(player_name):
         if not game.get('is_scored'):
             continue
 
-        # Determine which box to use based on home/away status
+        # Get the correct box score based on home/away status
         if game['home_away'] == 'Home':
             stats_box = game.get('home_box', {})
         else:
