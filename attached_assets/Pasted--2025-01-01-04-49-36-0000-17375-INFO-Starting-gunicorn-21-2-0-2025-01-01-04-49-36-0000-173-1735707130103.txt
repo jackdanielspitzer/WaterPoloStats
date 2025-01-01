@@ -1,0 +1,108 @@
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Starting gunicorn 21.2.0
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Listening at: http://0.0.0.0:5000 (17375)
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Using worker: sync
+[2025-01-01 04:49:36 +0000] [17383] [INFO] Booting worker with pid: 17383
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+[2025-01-01 04:49:36 +0000] [17375] [INFO] Handling signal: winch
+              precision    recall  f1-score   support
+
+           0       1.00      0.83      0.91         6
+           1       0.86      1.00      0.92         6
+
+    accuracy                           0.92        12
+   macro avg       0.93      0.92      0.92        12
+weighted avg       0.93      0.92      0.92        12
+
+[2025-01-01 04:50:29,502] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/main.py", line 1890, in register
+    mail.send(msg)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 540, in send
+    message.send(connection)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 482, in send
+    connection.send(self)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 177, in send
+    self.host.sendmail(
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/smtplib.py", line 887, in sendmail
+    raise SMTPSenderRefused(code, resp, from_addr)
+smtplib.SMTPSenderRefused: (530, b'5.7.0 Authentication Required. For more information, go to\n5.7.0  https://support.google.com/mail/?p=WantAuthError d2e1a72fcca58-72aad90c173sm21689252b3a.192 - gsmtp', 'noreply@yourapp.com')
+[2025-01-01 04:51:28 +0000] [17375] [INFO] Handling signal: term
+[2025-01-01 04:51:28 +0000] [17383] [INFO] Worker exiting (pid: 17383)
+[2025-01-01 04:51:28 +0000] [17375] [INFO] Shutting down: Master
+ [2025-01-01 04:51:29 +0000] [17677] [INFO] Starting gunicorn 21.2.0
+[2025-01-01 04:51:29 +0000] [17677] [INFO] Listening at: http://0.0.0.0:5000 (17677)
+[2025-01-01 04:51:29 +0000] [17677] [INFO] Using worker: sync
+[2025-01-01 04:51:29 +0000] [17686] [INFO] Booting worker with pid: 17686
+              precision    recall  f1-score   support
+
+           0       1.00      0.83      0.91         6
+           1       0.86      1.00      0.92         6
+
+    accuracy                           0.92        12
+   macro avg       0.93      0.92      0.92        12
+weighted avg       0.93      0.92      0.92        12
+
+[2025-01-01 04:51:59,285] ERROR in app: Exception on /register [POST]
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/main.py", line 1892, in register
+    mail.send(msg)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 540, in send
+    message.send(connection)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 482, in send
+    connection.send(self)
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask_mail/__init__.py", line 177, in send
+    self.host.sendmail(
+  File "/nix/store/clx0mcir7qw8zk36zbr4jra789g3knf6-python3-3.11.10/lib/python3.11/smtplib.py", line 887, in sendmail
+    raise SMTPSenderRefused(code, resp, from_addr)
+smtplib.SMTPSenderRefused: (530, b'5.7.0 Authentication Required. For more information, go to\n5.7.0  https://support.google.com/mail/?p=WantAuthError d9443c01a7336-219dc971814sm201802145ad.79 - gsmtp', 'noreply@yourapp.com')
