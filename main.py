@@ -1226,8 +1226,8 @@ def game_details(game_id):
 
 
 
-@app.route('/player_stats/<string:player_name>/<string:team_color>', methods=['GET'])
-def player_stats(player_name, team_color):
+@app.route('/player_stats/<string:player_name>', methods=['GET'])
+def player_stats(player_name):
     school_slug = request.args.get('school_slug', 'palo-alto')
     school = schools.get(school_slug)
     if not school:
