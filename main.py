@@ -429,6 +429,9 @@ def extract_key_phrases(text):
             current_team = 'light'
             break
             
+    # Initialize events list with dictionaries
+    events = [{'team': None, 'player': None, 'event': None} for _ in range(len(all_numbers))]
+    
     # Assign players to events
     for i, num in enumerate(all_numbers):
         events[i]['player'] = num
