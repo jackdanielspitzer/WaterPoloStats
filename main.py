@@ -1274,26 +1274,21 @@ def player_stats(player_name):
                     if not game.get('is_scored'):
                         continue
 
-                    # Determine if player's team was home or away
-                    is_home = (game['home_away'] == 'Home' and team_school['name'] == team_name) or \
-                             (game['home_away'] == 'Away' and game['opponent'] == team_name)
-                    
-                    # Get the correct box based on whether player's team was home or away
-                    box_key = 'home_box' if is_home else 'away_box'
-                    stats_box = game.get(box_key, {})
-                    
-                    if 'Player' not in stats_box:
-                        continue
-                        
-                    try:
-                        # Find player in this box score
-                        player_index = stats_box['Player'].index(str(cap_number))
-                        # Add up stats
-                        for key in combined_stats:
-                            if key in stats_box and isinstance(stats_box[key], list):
-                                combined_stats[key] += stats_box[key][player_index]
-                    except (ValueError, KeyError, IndexError):
-                        continue
+                    # Check both home and away boxes for the player's stats
+                    for box_key in ['home_box', 'away_box']:
+                        stats_box = game.get(box_key, {})
+                        if 'Player' not in stats_box:
+                            continue
+                            
+                        try:
+                            # Find player in this box score
+                            player_index = stats_box['Player'].index(str(cap_number))
+                            # Add up stats
+                            for key in combined_stats:
+                                if key in stats_box and isinstance(stats_box[key], list):
+                                    combined_stats[key] += stats_box[key][player_index]
+                        except (ValueError, KeyError, IndexError):
+                            continue
                             
         except (FileNotFoundError, json.JSONDecodeError):
             continue
