@@ -389,6 +389,22 @@ def extract_key_phrases(text):
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
     turnover_keywords = ['turnover', 'foul','lost','loses']
     penalty_keywords = ['penalty', 'five meter']
+    
+    # Extract all player numbers first
+    all_numbers = []
+    for token in doc:
+        try:
+            if token.text != "five":
+                num = w2n.word_to_num(token.text)
+                if 1 <= num <= 13:
+                    all_numbers.append(str(num))
+        except ValueError:
+            continue
+            
+    # Initialize events based on number of players
+    events = [{'team': None, 'player': None, 'event': None} for _ in range(len(all_numbers))]
+    if not events:
+        return [(None, None, None)]
 
     # Extract all numbers first
     all_numbers = []
@@ -403,19 +419,20 @@ def extract_key_phrases(text):
 
     tokens = [token.text for token in doc]
     
-    # Initialize variables for first event
-    first_event = {'team': None, 'player': None, 'event': None}
-    second_event = {'team': None, 'player': None, 'event': None}
-    
-    # First pass - find the team
+    # Find team first
     current_team = None
-    for i, token in enumerate(tokens):
+    for token in tokens:
         if token in dark_keywords:
             current_team = 'dark'
             break
         elif token in light_keywords:
             current_team = 'light'
             break
+            
+    # Assign players to events
+    for i, num in enumerate(all_numbers):
+        events[i]['player'] = num
+        events[i]['team'] = current_team
 
     # Second pass - find player and event
     for i, token in enumerate(tokens):
