@@ -421,7 +421,7 @@ def extract_key_phrases(text):
     
     # Find team first
     current_team = None
-    for token in tokens:
+    for i, token in enumerate(tokens):
         if token in dark_keywords:
             current_team = 'dark'
             break
@@ -429,13 +429,21 @@ def extract_key_phrases(text):
             current_team = 'light'
             break
             
-    # Initialize events list with dictionaries
-    events = [{'team': None, 'player': None, 'event': None} for _ in range(len(all_numbers))]
+    if current_team is None:
+        # Look for team mentions in larger context
+        doc_text = doc.text.lower()
+        if any(word in doc_text for word in dark_keywords):
+            current_team = 'dark'
+        elif any(word in doc_text for word in light_keywords):
+            current_team = 'light'
+
+    # Initialize first and second events
+    first_event = {'team': current_team, 'player': None, 'event': None}
+    second_event = {'team': None, 'player': None, 'event': None}
     
-    # Assign players to events
-    for i, num in enumerate(all_numbers):
-        events[i]['player'] = num
-        events[i]['team'] = current_team
+    # Assign first player number found
+    if all_numbers:
+        first_event['player'] = all_numbers[0]
 
     # Second pass - find player and event
     for i, token in enumerate(tokens):
