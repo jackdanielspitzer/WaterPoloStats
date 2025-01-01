@@ -4,16 +4,6 @@
             "home_away": "Home",
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
-            "time": "14:57",
-            "date": "2024-12-26",
-            "game_type": "League Game",
-            "is_scored": false,
-            "formatted_date": "December 26th, 2024"
-        },
-        {
-            "home_away": "Home",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
             "time": "16:00",
             "date": "2025-02-26",
             "game_type": "League Game",
