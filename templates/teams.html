@@ -221,7 +221,7 @@
                 {% for player in roster %}
                 <tr>
                     <td>{{ player.cap_number }}</td>
-                    <td><a href="{{ url_for('player_stats', player_name=player.name, team_color='black' if game.home_away == 'Home' else 'white') }}">{{ player.name }}</a></td>
+                    <td><a href="{{ url_for('player_stats', player_name=player.name, team_color='black') }}">{{ player.name }}</a></td>
                     <td>{{ player.grade }}</td>
                     <td>{{ player.position }}</td>
                 </tr>

@@ -1,44 +1,107 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ player }} Stats</title>
+    <title>Player Statistics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .stats-table th, .stats-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .stats-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            color: #333;
+        }
+        .stats-table tr:hover {
+            background-color: #f5f5f5;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+        .back-link:hover {
+            background-color: #0056b3;
+        }
+        .logo {
+            width: 175px;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Stats for {{ player }}</h1>
-
-    <table border="1">
-        <tr>
-            <th>Shot</th>
-            <td>{{ stats.Shot }}</td>
-        </tr>
-        <tr>
-            <th>Blocks</th>
-            <td>{{ stats.Blocks }}</td>
-        </tr>
-        <tr>
-            <th>Steals</th>
-            <td>{{ stats.Steals }}</td>
-        </tr>
-        <tr>
-            <th>Exclusions</th>
-            <td>{{ stats.Exclusions }}</td>
-        </tr>
-        <tr>
-            <th>Exclusions Drawn</th>
-            <td>{{ stats['Exclusions Drawn'] }}</td>
-        </tr>
-        <tr>
-            <th>Penalties</th>
-            <td>{{ stats.Penalties }}</td>
-        </tr>
-        <tr>
-            <th>Turnovers</th>
-            <td>{{ stats.Turnovers }}</td>
-        </tr>
-    </table>
-
-    <a href="/">Go Back</a>
+    <div class="container">
+        <a href="/">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Logo" class="logo">
+        </a>
+        <h1>Statistics for {{ player_name }}</h1>
+        <table class="stats-table">
+            <tr>
+                <th>Statistic</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Shots Made</td>
+                <td>{{ stats.Shot }}</td>
+            </tr>
+            <tr>
+                <td>Blocks</td>
+                <td>{{ stats.Blocks }}</td>
+            </tr>
+            <tr>
+                <td>Steals</td>
+                <td>{{ stats.Steals }}</td>
+            </tr>
+            <tr>
+                <td>Exclusions</td>
+                <td>{{ stats.Exclusions }}</td>
+            </tr>
+            <tr>
+                <td>Exclusions Drawn</td>
+                <td>{{ stats['Exclusions Drawn'] }}</td>
+            </tr>
+            <tr>
+                <td>Penalties</td>
+                <td>{{ stats.Penalties }}</td>
+            </tr>
+            <tr>
+                <td>Turnovers</td>
+                <td>{{ stats.Turnovers }}</td>
+            </tr>
+        </table>
+        <a href="{{ url_for('teams') }}" class="back-link">Back to Teams</a>
+    </div>
 </body>
 </html>
