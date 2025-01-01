@@ -1,0 +1,24 @@
+=== Debug Info ===
+Looking for player: team
+Team color: event
+Home team name: 'Los Altos High School'
+Away team name: 'Palo Alto High School'
+Available teams in roster: ['Los Gatos High School', 'Los Altos High School', 'Fremont High School', 'Mountain View High School', 'Palo Alto High School', 'Gunn High School', 'Henry M. Gunn High School']
+Home roster: [{'cap_number': '1', 'name': 'Dyll', 'grade': '9', 'position': 'Goalie'}, {'cap_number': '2', 'name': 'Ethan', 'grade': '10', 'position': 'Attacker'}, {'cap_number': '6', 'name': 'Logan', 'grade': '11', 'position': 'Center'}, {'cap_number': '8', 'name': 'Ryan', 'grade': '12', 'position': 'Center Defender'}, {'cap_number': '9', 'name': 'Jake', 'grade': '10', 'position': 'Driver'}]
+Away roster: [{'cap_number': '1', 'name': 'Jill', 'grade': '9', 'position': 'Goalie'}, {'cap_number': '5', 'name': 'Matthew', 'grade': '10', 'position': 'Driver'}, {'cap_number': '6', 'name': 'Benjamin', 'grade': '11', 'position': 'Center'}, {'cap_number': '8', 'name': 'James', 'grade': '12', 'position': 'Attacker'}, {'cap_number': '10', 'name': 'Henry', 'grade': '10', 'position': 'Center Defender'}]
+Home roster cap numbers: ['1', '2', '6', '8', '9']
+Away roster cap numbers: ['1', '5', '6', '8', '10']
+ERROR: Invalid team color
+
+=== Debug Info ===
+Looking for player: 1
+Team color: dark
+Home team name: 'Los Altos High School'
+Away team name: 'Palo Alto High School'
+Available teams in roster: ['Los Gatos High School', 'Los Altos High School', 'Fremont High School', 'Mountain View High School', 'Palo Alto High School', 'Gunn High School', 'Henry M. Gunn High School']
+Home roster: [{'cap_number': '1', 'name': 'Dyll', 'grade': '9', 'position': 'Goalie'}, {'cap_number': '2', 'name': 'Ethan', 'grade': '10', 'position': 'Attacker'}, {'cap_number': '6', 'name': 'Logan', 'grade': '11', 'position': 'Center'}, {'cap_number': '8', 'name': 'Ryan', 'grade': '12', 'position': 'Center Defender'}, {'cap_number': '9', 'name': 'Jake', 'grade': '10', 'position': 'Driver'}]
+Away roster: [{'cap_number': '1', 'name': 'Jill', 'grade': '9', 'position': 'Goalie'}, {'cap_number': '5', 'name': 'Matthew', 'grade': '10', 'position': 'Driver'}, {'cap_number': '6', 'name': 'Benjamin', 'grade': '11', 'position': 'Center'}, {'cap_number': '8', 'name': 'James', 'grade': '12', 'position': 'Attacker'}, {'cap_number': '10', 'name': 'Henry', 'grade': '10', 'position': 'Center Defender'}]
+Home roster cap numbers: ['1', '2', '6', '8', '9']
+Away roster cap numbers: ['1', '5', '6', '8', '10']
+Searching home roster for cap number: '1'
+Found player at index: 0
