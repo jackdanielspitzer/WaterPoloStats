@@ -1036,13 +1036,23 @@ def score_game(school_slug, game_index):
     }
 
     # Pass box scores and other game data to the template
+    # Get team colors and logos from schools dictionary
+    home_school = next((school for school in schools.values() if school['name'] == home_team), None)
+    away_school = next((school for school in schools.values() if school['name'] == away_team), None)
+
     return render_template(
         "score_game.html",
         home_team=home_team,
         away_team=away_team,
         game_index=game_index,
         home_box=home_box,
-        away_box=away_box
+        away_box=away_box,
+        home_team_color=home_school['bg_color'],
+        home_team_text_color=home_school['text_color'],
+        away_team_color=away_school['bg_color'],
+        away_team_text_color=away_school['text_color'],
+        home_team_logo=home_school['logo'],
+        away_team_logo=away_school['logo']
     )
 
 
