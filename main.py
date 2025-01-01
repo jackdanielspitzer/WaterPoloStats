@@ -1228,6 +1228,11 @@ def game_details(game_id):
 
 @app.route('/player_stats/<string:player_name>/<string:team_color>', methods=['GET'])
 def player_stats(player_name, team_color):
+    school_slug = request.args.get('school_slug', 'palo-alto')
+    school = schools.get(school_slug)
+    if not school:
+        return "School not found", 404
+
     # Initialize combined stats
     combined_stats = {
         'Shot': 0,
@@ -1239,19 +1244,36 @@ def player_stats(player_name, team_color):
         'Turnovers': 0
     }
 
-    # Loop through previous games and accumulate stats based on team color
-    for game in previous_games:
-        if team_color == 'white' and player_name in game['white_team']['Player']:
-            idx = game['white_team']['Player'].index(player_name)
-            for key in combined_stats:
-                combined_stats[key] += game['white_team'][key][idx]
-        elif team_color == 'black' and player_name in game['black_team']['Player']:
-            idx = game['black_team']['Player'].index(player_name)
-            for key in combined_stats:
-                combined_stats[key] += game['black_team'][key][idx]
+    # Load team data
+    team_data = load_team_data(school['name'])
+    
+    # Get the player's cap number from roster
+    roster = get_team_roster(school['name'])
+    player_info = next((player for player in roster if player['name'] == player_name), None)
+    if not player_info:
+        return "Player not found", 404
 
-    # Render the player stats page with the combined stats
-    school_slug = request.args.get('school_slug', 'palo-alto')
+    # Loop through all scored games
+    for game in team_data.get('games', []):
+        if not game.get('is_scored'):
+            continue
+
+        # Determine which box to use based on home/away status
+        if game['home_away'] == 'Home':
+            stats_box = game.get('home_box', {})
+        else:
+            stats_box = game.get('away_box', {})
+
+        # Find player's index in the box score
+        try:
+            player_index = stats_box['Player'].index(player_info['cap_number'])
+            # Add up stats
+            for key in combined_stats:
+                if key in stats_box:
+                    combined_stats[key] += stats_box[key][player_index]
+        except (ValueError, KeyError, IndexError):
+            continue
+
     return render_template('player_stats.html', player_name=player_name, team_color=team_color, stats=combined_stats, school_slug=school_slug)
 
 
