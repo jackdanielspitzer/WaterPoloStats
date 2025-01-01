@@ -1,10 +1,14 @@
 import os
+import json
+import spacy
+from datetime import datetime
 from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_mail import Mail, Message
 from werkzeug.security import generate_password_hash, check_password_hash
 import secrets
 from models import db, User
+from word2number import w2n
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -326,9 +330,7 @@ def predict_connotation(sentence):
     prediction = model.predict(vec_sentence)
     return 'Positive' if prediction == 1 else 'Negative'
 
-#next
-
-app = Flask(__name__)
+# Load spacy model
 
 # Load the pre-trained Spacy model
 nlp = spacy.load('en_core_web_sm')
