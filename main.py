@@ -1983,13 +1983,17 @@ def profile():
     if request.method == 'POST':
         if 'profile_image' in request.files:
             file = request.files['profile_image']
-            if file and file.filename:
-                filename = secure_filename(file.filename)
-                upload_path = os.path.join('static', 'images', 'profiles')
-                os.makedirs(upload_path, exist_ok=True)
-                file_path = os.path.join(upload_path, filename)
-                file.save(file_path)
-                current_user.profile_image = os.path.join('images', 'profiles', filename)
+            if file and file.filename and file.filename != '':
+                try:
+                    filename = secure_filename(file.filename)
+                    upload_path = os.path.join('static', 'images', 'profiles')
+                    os.makedirs(upload_path, exist_ok=True)
+                    file_path = os.path.join(upload_path, filename)
+                    file.save(file_path)
+                    current_user.profile_image = os.path.join('images', 'profiles', filename)
+                except Exception as e:
+                    flash(f'Error uploading file: {str(e)}')
+                    return redirect(url_for('profile'))
                 db.session.commit()
         elif 'selected_logo' in request.form and request.form['selected_logo']:
             current_user.profile_image = request.form['selected_logo']
