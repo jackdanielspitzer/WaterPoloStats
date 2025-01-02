@@ -19,13 +19,13 @@ app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER', os.environ.get('MAIL_USERNAME'))
 app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_MAX_EMAILS'] = None
 app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
-if not all([app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], app.config['MAIL_DEFAULT_SENDER']]):
-    print("Warning: Email configuration is incomplete. Email features will not work.")
+if not check_email_config():
+    print("Warning: Email configuration is incomplete. Please set MAIL_USERNAME, MAIL_PASSWORD, and MAIL_DEFAULT_SENDER in Replit Secrets.")
 
 db.init_app(app)
 mail = Mail(app)
@@ -49,8 +49,8 @@ def get_team_file_path(team_name, league='SCVAL'):
     if not os.path.exists(league_dir):
 
 def check_email_config():
-    required = ['MAIL_USERNAME', 'MAIL_PASSWORD']
-    missing = [key for key in required if not os.environ.get(key)]
+    required = ['MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_DEFAULT_SENDER']
+    missing = [key for key in required if not app.config.get(key)]
     if missing:
         print(f"Warning: Missing email configuration: {', '.join(missing)}")
         return False
