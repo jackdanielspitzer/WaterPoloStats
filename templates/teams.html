@@ -224,12 +224,6 @@
         }
     </style>
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding: 0 20px;">
-        {% if current_user.is_authenticated %}
-            {% set followed_teams = current_user.followed_teams|from_json %}
-            {% if school_slug in followed_teams %}
-                <span class="star">★</span>
-            {% endif %}
-        {% endif %}
         <a href="/">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Logo" style="width: 175px;">
         </a>
@@ -252,7 +246,15 @@
         <!-- Left Column -->
         <div style="flex: 1;">
             <div class="school-container" style="margin: 0;">
-                <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }} Logo">
+                <div style="display: flex; align-items: center;">
+                    <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }} Logo">
+                    {% if current_user.is_authenticated %}
+                        {% set followed_teams = current_user.followed_teams|from_json %}
+                        {% if school_slug in followed_teams %}
+                            <span class="star">★</span>
+                        {% endif %}
+                    {% endif %}
+                </div>
                 <div class="school-info">
                     <h1>{{ school.name }}</h1>
                     <a href="/search">Back to School List</a>
