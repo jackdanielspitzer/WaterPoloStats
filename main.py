@@ -59,6 +59,9 @@ def check_email_config():
     return True
     return True
 
+def get_team_file_path(team_name, league='SCVAL'):
+    league_dir = os.path.join('teams', 'CCS', league)
+    if not os.path.exists(league_dir):
         os.makedirs(league_dir)
     return os.path.join(league_dir, f"team_{team_name.replace(' ', '_')}.json")
 
