@@ -180,7 +180,7 @@
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Stats" class="logo">
         {% if current_user.is_authenticated %}
             <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="/search" style="text-decoration: none; color: #003366; font-size: 18px;">Teams</a>
+                
                 <div class="profile-dropdown">
                     <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-icon">
                     <div class="dropdown-content">
@@ -191,7 +191,7 @@
             </div>
         {% else %}
             <div style="display: flex; align-items: center; gap: 20px;">
-                <a href="/search" style="text-decoration: none; color: #003366; font-size: 18px;">Teams</a>
+                
                 <div class="auth-buttons">
                     <a href="{{ url_for('login') }}" class="auth-button login">Login</a>
                     <a href="{{ url_for('register') }}" class="auth-button register">Register</a>
@@ -202,6 +202,19 @@
     </div>
 
     <div class="content">
+        <div class="search-container" style="max-width: 600px; margin: 20px auto;">
+            <input type="text" id="searchBar" onkeyup="filterSchools()" placeholder="Search for a high school..." style="width: 100%; padding: 10px; font-size: 16px; border: 1px solid #ddd; border-radius: 4px;">
+        </div>
+        <ul id="schoolList" style="list-style-type: none; padding: 0; max-width: 600px; margin: 20px auto; display: none;">
+            <li><a href="/team/palo-alto" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Palo Alto High School</a></li>
+            <li><a href="/team/gunn" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Henry M. Gunn High School</a></li>
+            <li><a href="/team/harker" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Harker High School</a></li>
+            <li><a href="/team/los-gatos" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Los Gatos High School</a></li>
+            <li><a href="/team/los-altos" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Los Altos High School</a></li>
+            <li><a href="/team/fremont" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Fremont High School</a></li>
+            <li><a href="/team/mountain-view" style="display: block; padding: 15px; text-decoration: none; color: #007BFF; background: white; border: 1px solid #ddd; border-radius: 4px; margin: 10px 0;">Mountain View High School</a></li>
+        </ul>
+        <p id="noResults" style="color: red; text-align: center; font-size: 16px; display: none;">No results found.</p>
         <h2>Upcoming Games</h2>
         {% if upcoming_games %}
             <div class="games-grid">
@@ -250,5 +263,36 @@
             <p>No upcoming games scheduled.</p>
         {% endif %}
     </div>
+    <script>
+        const maxVisibleResults = 5;
+
+        function filterSchools() {
+            const input = document.getElementById('searchBar').value.toLowerCase();
+            const schoolList = document.getElementById('schoolList');
+            const schools = schoolList.getElementsByTagName('li');
+            const noResultsMessage = document.getElementById('noResults');
+            let visibleCount = 0;
+
+            noResultsMessage.style.display = "none";
+
+            for (let i = 0; i < schools.length; i++) {
+                const school = schools[i].getElementsByTagName("a")[0];
+                const txtValue = school.textContent || school.innerText;
+
+                if (txtValue.toLowerCase().includes(input)) {
+                    schools[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    schools[i].style.display = "none";
+                }
+            }
+
+            schoolList.style.display = visibleCount > 0 && visibleCount <= maxVisibleResults ? "block" : "none";
+
+            if (visibleCount === 0) {
+                noResultsMessage.style.display = "block";
+            }
+        }
+    </script>
 </body>
 </html>
