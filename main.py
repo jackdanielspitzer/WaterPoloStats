@@ -1063,6 +1063,7 @@ def index():
     return render_template('scoring.html')
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
+@login_required
 def score_game(school_slug, game_index):
     school = get_school_by_slug(school_slug)
     if not school:
@@ -1171,6 +1172,7 @@ def load_team_rosters():
 game_data = {}
 
 @app.route('/get_data', methods=['GET'])
+@login_required
 def get_data():
     try:
         # Load team rosters
@@ -1604,6 +1606,7 @@ def scoring_page(school_slug, game_index):
 from flask import render_template
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
+@login_required
 def view_scoring(school_slug, game_index):
     try:
         # Load team rosters from team_rosters.json
