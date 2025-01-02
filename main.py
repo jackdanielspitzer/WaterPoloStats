@@ -1806,10 +1806,15 @@ def save_roster(team_name, updated_roster):
 
 
 @app.route('/team/<school_slug>/edit_roster', methods=['GET', 'POST'])
+@login_required
 def edit_roster(school_slug):
     school = get_school_by_slug(school_slug)
     if not school:
         return "School not found", 404
+        
+    if not current_user.account_type == 'team_manager' or current_user.managed_team != school_slug:
+        flash('You do not have permission to edit this team\'s roster')
+        return redirect(url_for('team_page', school_slug=school_slug))
 
     team_name = school['name']  # Fetch team name
     roster = get_team_roster(team_name)  # Load the team's roster
@@ -1924,6 +1929,7 @@ def register():
         if user.account_type == 'team_manager':
             user.role = request.form['role']
             user.phone = request.form['phone']
+            user.managed_team = request.form['managed_team']
             
         user.confirmation_token = secrets.token_urlsafe(32)
         db.session.add(user)

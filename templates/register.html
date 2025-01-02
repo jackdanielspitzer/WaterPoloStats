@@ -132,6 +132,15 @@
                 </select>
             </div>
             <div>
+                <label>Team to Manage:</label>
+                <select name="managed_team" id="managed_team">
+                    <option value="">Select Team to Manage</option>
+                    {% for slug, school in schools.items() %}
+                        <option value="{{ slug }}">{{ school.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
                 <label>Phone:</label>
                 <input type="tel" name="phone">
             </div>

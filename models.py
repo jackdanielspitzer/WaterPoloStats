@@ -18,6 +18,7 @@ class User(UserMixin, db.Model):
     account_type = db.Column(db.String(20), nullable=False)
     role = db.Column(db.String(20))
     phone = db.Column(db.String(20))
+    managed_team = db.Column(db.String(100))
     email_confirmed = db.Column(db.Boolean, default=False)
     confirmation_token = db.Column(db.String(100), unique=True, nullable=True)
     reset_token = db.Column(db.String(100), unique=True, nullable=True)
