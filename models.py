@@ -8,6 +8,8 @@ db = SQLAlchemy()
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    profile_image = db.Column(db.String(200), default='static/images/logo.png')
+    followed_teams = db.Column(db.Text, default='[]')  # Stores JSON string of team slugs
     password = db.Column(db.String(200), nullable=False)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)

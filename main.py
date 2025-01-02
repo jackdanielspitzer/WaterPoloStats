@@ -1965,6 +1965,27 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
+def profile():
+    if request.method == 'POST':
+        if 'profile_image' in request.files:
+            file = request.files['profile_image']
+            if file:
+                filename = secure_filename(file.filename)
+                file.save(os.path.join('static/images/profiles', filename))
+                current_user.profile_image = f'static/images/profiles/{filename}'
+        
+        followed_teams = request.form.getlist('followed_teams')
+        current_user.followed_teams = json.dumps(followed_teams)
+        
+        db.session.commit()
+        return redirect(url_for('profile'))
+    
+    return render_template('profile.html', 
+                         schools=schools,
+                         followed_teams=json.loads(current_user.followed_teams))
+
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
     if not all([app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']]):

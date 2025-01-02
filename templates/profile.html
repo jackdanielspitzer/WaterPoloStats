@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile Settings</title>
+    <style>
+        .profile-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .school-logos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .school-logo {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            cursor: pointer;
+            padding: 5px;
+            border: 2px solid transparent;
+        }
+        .school-logo:hover {
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <h2>Profile Settings</h2>
+        <form method="POST" enctype="multipart/form-data">
+            <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-image"><br>
+            
+            <label>Choose Profile Picture:</label><br>
+            <input type="file" name="profile_image" accept="image/*"><br><br>
+            
+            <div class="school-logos">
+                {% for slug, school in schools.items() %}
+                <img src="{{ url_for('static', filename=school.logo) }}" 
+                     class="school-logo" 
+                     onclick="document.querySelector('[name=profile_image]').value='{{ school.logo }}'">
+                {% endfor %}
+            </div>
+            
+            <h3>Follow Teams:</h3>
+            {% for slug, school in schools.items() %}
+            <label>
+                <input type="checkbox" name="followed_teams" value="{{ slug }}"
+                       {% if slug in followed_teams %}checked{% endif %}>
+                {{ school.name }}
+            </label><br>
+            {% endfor %}
+            
+            <button type="submit" style="margin-top: 20px;">Save Changes</button>
+        </form>
+    </div>
+</body>
+</html>
