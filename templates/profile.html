@@ -19,6 +19,25 @@
             object-fit: cover;
             margin-bottom: 20px;
         }
+        .teams-section {
+            margin-top: 30px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+        .team-checkbox {
+            margin: 10px 0;
+        }
+        .team-checkbox img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+        .team-checkbox label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -29,6 +48,20 @@
             
             <label>Choose Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*"><br><br>
+            
+            <div class="teams-section">
+                <h3>Follow Teams</h3>
+                {% for slug, school in schools.items() %}
+                <div class="team-checkbox">
+                    <label>
+                        <input type="checkbox" name="followed_teams" value="{{ slug }}" 
+                               {% if slug in followed_teams %}checked{% endif %}>
+                        <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }}">
+                        {{ school.name }}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
             
             <button type="submit" style="margin-top: 20px;">Save Changes</button>
         </form>

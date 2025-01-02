@@ -1024,23 +1024,33 @@ def run(text):
 
 @app.route('/')
 def home():
-    # Get all upcoming games from all teams
     upcoming_games = []
-    seen_games = set()  # Track unique games
+    seen_games = set()
     today = datetime.now().date()
     
+    # Get user's followed teams if logged in
+    followed_teams = []
+    if current_user.is_authenticated:
+        followed_teams = json.loads(current_user.followed_teams)
+    
     for school in schools.values():
+        # Skip if user is logged in and not following this team
+        if current_user.is_authenticated and school['name'] not in [schools[slug]['name'] for slug in followed_teams]:
+            continue
+            
         team_data = load_team_data(school['name'])
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
             if game_date >= today and not game.get('is_scored', False):
-                # Create a unique key for each game using date and team names
-                game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
-                if game_key not in seen_games:
-                    game['school_name'] = school['name']
-                    game['school_logo'] = school['logo']
-                    upcoming_games.append(game)
-                    seen_games.add(game_key)
+                # Add game if user is not logged in or if opponent is also followed
+                opponent_slug = next((slug for slug, s in schools.items() if s['name'] == game['opponent']), None)
+                if not current_user.is_authenticated or opponent_slug in followed_teams:
+                    game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
+                    if game_key not in seen_games:
+                        game['school_name'] = school['name']
+                        game['school_logo'] = school['logo']
+                        upcoming_games.append(game)
+                        seen_games.add(game_key)
     
     # Sort games by date and get the 6 most recent
     upcoming_games.sort(key=lambda x: x['date'])
