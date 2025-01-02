@@ -194,8 +194,10 @@
                     </div>
                 </div>
             {% else %}
-                <a href="{{ url_for('login') }}" class="auth-button login">Login</a>
-                <a href="{{ url_for('register') }}" class="auth-button register">Register</a>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <a href="{{ url_for('login') }}" class="auth-button login" style="margin: 0;">Login</a>
+                    <a href="{{ url_for('register') }}" class="auth-button register" style="margin: 0;">Register</a>
+                </div>
             {% endif %}
             </div>
         </div>
