@@ -1972,14 +1972,18 @@ def profile():
     if request.method == 'POST':
         if 'profile_image' in request.files:
             file = request.files['profile_image']
-            if file:
+            if file and file.filename:
                 filename = secure_filename(file.filename)
-                file.save(os.path.join('static/images/profiles', filename))
-                current_user.profile_image = f'static/images/profiles/{filename}'
+                upload_path = os.path.join('static', 'images', 'profiles')
+                # Ensure upload directory exists
+                os.makedirs(upload_path, exist_ok=True)
+                file_path = os.path.join(upload_path, filename)
+                file.save(file_path)
+                current_user.profile_image = f'images/profiles/{filename}'
+                db.session.commit()
         
         followed_teams = request.form.getlist('followed_teams')
         current_user.followed_teams = json.dumps(followed_teams)
-        
         db.session.commit()
         return redirect(url_for('profile'))
     
