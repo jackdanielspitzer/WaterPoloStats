@@ -1,5 +1,6 @@
 
 from main import app, db
+from models import User
 import os
 
 # Remove existing database
