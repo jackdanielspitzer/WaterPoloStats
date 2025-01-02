@@ -1978,7 +1978,7 @@ def profile():
                 os.makedirs(upload_path, exist_ok=True)
                 file_path = os.path.join(upload_path, filename)
                 file.save(file_path)
-                current_user.profile_image = f'images/profiles/{filename}'
+                current_user.profile_image = os.path.join('images', 'profiles', filename)
                 db.session.commit()
         elif 'selected_logo' in request.form and request.form['selected_logo']:
             current_user.profile_image = request.form['selected_logo']
