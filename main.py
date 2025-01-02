@@ -1290,6 +1290,12 @@ def game_details(game_id):
 @login_required
 def player_stats(player_name):
     school_slug = request.args.get('school_slug')
+    # Check if stats are private
+    manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+    if manager and manager.stats_private and manager.id != current_user.id:
+        flash('These statistics are private')
+        return redirect(url_for('team_page', school_slug=school_slug))
+    school_slug = request.args.get('school_slug')
     if not school_slug:
         # Search all schools for the player
         for slug, school_data in schools.items():
@@ -1609,6 +1615,11 @@ from flask import render_template
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
 @login_required
 def view_scoring(school_slug, game_index):
+    # Check if stats are private
+    manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+    if manager and manager.stats_private and manager.id != current_user.id:
+        flash('These statistics are private')
+        return redirect(url_for('team_page', school_slug=school_slug))
     try:
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
@@ -1999,6 +2010,8 @@ def logout():
 @login_required
 def profile():
     if request.method == 'POST':
+        if current_user.account_type == 'team_manager':
+            current_user.stats_private = 'stats_private' in request.form
         if 'profile_image' in request.files:
             file = request.files['profile_image']
             if file and file.filename and file.filename != '':

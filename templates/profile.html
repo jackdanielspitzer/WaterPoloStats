@@ -48,6 +48,16 @@
             <label>Choose Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*"><br><br>
 
+            {% if current_user.account_type == 'team_manager' %}
+            <div class="privacy-section">
+                <h3>Privacy Settings</h3>
+                <label class="privacy-toggle">
+                    <input type="checkbox" name="stats_private" {% if current_user.stats_private %}checked{% endif %}>
+                    Hide team statistics from public view
+                </label>
+            </div>
+            {% endif %}
+
             <div class="teams-section">
                 <h3>Follow Teams</h3>
                 {% if schools %}
