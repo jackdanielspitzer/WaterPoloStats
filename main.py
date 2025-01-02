@@ -47,6 +47,8 @@ from datetime import datetime
 def get_team_file_path(team_name, league='SCVAL'):
     league_dir = os.path.join('teams', 'CCS', league)
     if not os.path.exists(league_dir):
+        os.makedirs(league_dir)
+    return os.path.join(league_dir, f"team_{team_name.replace(' ', '_')}.json")
 
 def check_email_config():
     required = ['MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_DEFAULT_SENDER']
@@ -54,6 +56,7 @@ def check_email_config():
     if missing:
         print(f"Warning: Missing email configuration: {', '.join(missing)}")
         return False
+    return True
     return True
 
         os.makedirs(league_dir)
