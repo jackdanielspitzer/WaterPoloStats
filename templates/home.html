@@ -178,7 +178,6 @@
 <body>
     <div class="header">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Stats" class="logo">
-        <a href="/search" style="text-decoration: none; color: #003366; font-size: 18px;">Teams</a>
         {% if current_user.is_authenticated %}
             <div class="profile-dropdown">
                 <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-icon">
@@ -188,9 +187,12 @@
                 </div>
             </div>
         {% else %}
-            <div class="auth-buttons">
-                <a href="{{ url_for('login') }}" class="auth-button login">Login</a>
-                <a href="{{ url_for('register') }}" class="auth-button register">Register</a>
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <a href="/search" style="text-decoration: none; color: #003366; font-size: 18px;">Teams</a>
+                <div class="auth-buttons">
+                    <a href="{{ url_for('login') }}" class="auth-button login">Login</a>
+                    <a href="{{ url_for('register') }}" class="auth-button register">Register</a>
+                </div>
             </div>
         {% endif %}
     </div>
