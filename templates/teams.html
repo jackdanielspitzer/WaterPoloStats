@@ -227,19 +227,22 @@
         <a href="/">
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Logo" style="width: 175px;">
         </a>
-        {% if current_user.is_authenticated %}
-            <div class="profile-dropdown" style="margin-left: auto;">
-                <img src="{{ url_for('static', filename=current_user.profile_image) }}" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; cursor: pointer;">
-                <div class="dropdown-content">
-                    <a href="{{ url_for('profile') }}">Profile Settings</a>
-                    <a href="{{ url_for('logout') }}">Logout</a>
+        <div class="auth-section" style="margin-left: auto;">
+            {% if current_user.is_authenticated %}
+                <div class="profile-dropdown">
+                    <img src="{{ url_for('static', filename=current_user.profile_image) }}" alt="Profile" style="width: 80px; height: 80px; border-radius: 50%; cursor: pointer;">
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('profile') }}">Profile Settings</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
                 </div>
-            </div>
-        {% else %}
-            <div>
-                <a href="{{ url_for('login') }}" style="text-decoration: none; margin-right: 10px; color: white;">Login</a>
-                <a href="{{ url_for('register') }}" style="text-decoration: none; color: white;">Register</a>
-            </div>
+            {% else %}
+                <div>
+                    <a href="{{ url_for('login') }}" style="text-decoration: none; margin-right: 10px; color: white;">Login</a>
+                    <a href="{{ url_for('register') }}" style="text-decoration: none; color: white;">Register</a>
+                </div>
+            {% endif %}
+        </div>
         {% endif %}
     </div>
     <div style="display: flex; gap: 20px; margin: 20px;">
