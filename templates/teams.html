@@ -205,10 +205,7 @@
             </div>
 
             <!-- Team Roster Display -->
-            {% extends "base.html" %}
-
-{% block content %}
-<div class="team-roster">
+            <div class="team-roster" style="margin-top: 10px;">
                 <h2 style="color: #000000;">{{ school.name }}'s Roster</h2>
                 <table class="roster-table">
             <thead>
@@ -240,7 +237,6 @@
         </div>
         <!-- Right Column -->
         <div style="flex: 1;">
-{% endblock %}
             <div class="game-schedule">
                 <h2>Game Schedule</h2>
 
