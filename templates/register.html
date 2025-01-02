@@ -95,9 +95,9 @@
             <label>Date of Birth:</label>
             <input type="date" name="date_of_birth" required>
         </div>
-        <div>
+        <div id="high_school_field" style="display: none;">
             <label>High School:</label>
-            <select name="high_school" required>
+            <select name="high_school">
                 {% for slug, school in schools.items() %}
                     <option value="{{ school.name }}">{{ school.name }}</option>
                 {% endfor %}
@@ -151,7 +151,14 @@
         function toggleManagerFields() {
             const accountType = document.getElementById('account_type').value;
             const managerFields = document.getElementById('manager_fields');
+            const highSchoolField = document.getElementById('high_school_field');
             managerFields.style.display = accountType === 'team_manager' ? 'block' : 'none';
+            highSchoolField.style.display = accountType === 'team_manager' ? 'block' : 'none';
+            if (accountType !== 'team_manager') {
+                document.querySelector('select[name="high_school"]').removeAttribute('required');
+            } else {
+                document.querySelector('select[name="high_school"]').setAttribute('required', 'required');
+            }
         }
     </script>
 </body>
