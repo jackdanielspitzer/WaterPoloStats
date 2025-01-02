@@ -332,7 +332,6 @@
 
     <!-- Add Game Form -->
     <div class="add-game-form" id="addGameForm">
-    {% endif %}
         <form method="POST" action="{{ url_for('team_page', school_slug=school_slug) }}">
             <select name="home_away" required>
                 <option value="">Select Home/Away</option>
@@ -364,6 +363,7 @@
             <button type="submit">Submit</button>
         </form>
     </div>
+    {% endif %}
         </div>
     </div>
 </body>
