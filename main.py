@@ -14,12 +14,15 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
-app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
-app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_DEFAULT_SENDER')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_USE_SSL'] = False
+app.config['MAIL_MAX_EMAILS'] = None
+app.config['MAIL_ASCII_ATTACHMENTS'] = False
 
 if not all([app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD'], app.config['MAIL_DEFAULT_SENDER']]):
     print("Warning: Email configuration is incomplete. Email features will not work.")
@@ -44,6 +47,15 @@ from datetime import datetime
 def get_team_file_path(team_name, league='SCVAL'):
     league_dir = os.path.join('teams', 'CCS', league)
     if not os.path.exists(league_dir):
+
+def check_email_config():
+    required = ['MAIL_USERNAME', 'MAIL_PASSWORD']
+    missing = [key for key in required if not os.environ.get(key)]
+    if missing:
+        print(f"Warning: Missing email configuration: {', '.join(missing)}")
+        return False
+    return True
+
         os.makedirs(league_dir)
     return os.path.join(league_dir, f"team_{team_name.replace(' ', '_')}.json")
 
