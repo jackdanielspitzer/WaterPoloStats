@@ -1975,12 +1975,14 @@ def profile():
             if file and file.filename:
                 filename = secure_filename(file.filename)
                 upload_path = os.path.join('static', 'images', 'profiles')
-                # Ensure upload directory exists
                 os.makedirs(upload_path, exist_ok=True)
                 file_path = os.path.join(upload_path, filename)
                 file.save(file_path)
                 current_user.profile_image = f'images/profiles/{filename}'
                 db.session.commit()
+        elif 'selected_logo' in request.form and request.form['selected_logo']:
+            current_user.profile_image = request.form['selected_logo']
+            db.session.commit()
         
         followed_teams = request.form.getlist('followed_teams')
         current_user.followed_teams = json.dumps(followed_teams)

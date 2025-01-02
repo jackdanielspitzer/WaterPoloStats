@@ -51,9 +51,21 @@
                 {% for slug, school in schools.items() %}
                 <img src="{{ url_for('static', filename=school.logo) }}" 
                      class="school-logo" 
-                     onclick="document.querySelector('[name=profile_image]').value='{{ school.logo }}'">
+                     data-logo="{{ school.logo }}"
+                     onclick="selectSchoolLogo(this)">
                 {% endfor %}
             </div>
+            <input type="hidden" name="selected_logo" id="selected_logo">
+            <script>
+                function selectSchoolLogo(img) {
+                    document.getElementById('selected_logo').value = img.dataset.logo;
+                    // Add visual feedback
+                    document.querySelectorAll('.school-logo').forEach(logo => {
+                        logo.style.border = '2px solid transparent';
+                    });
+                    img.style.border = '2px solid #007bff';
+                }
+            </script>
             
             <h3>Follow Teams:</h3>
             {% for slug, school in schools.items() %}
