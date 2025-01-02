@@ -1613,13 +1613,9 @@ def scoring_page(school_slug, game_index):
 from flask import render_template
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
-@login_required
 def view_scoring(school_slug, game_index):
-    # Check if stats are private
+    # Get manager info but don't block access
     manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
-    if manager and manager.stats_private and manager.id != current_user.id:
-        flash('These statistics are private')
-        return redirect(url_for('team_page', school_slug=school_slug))
     try:
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
