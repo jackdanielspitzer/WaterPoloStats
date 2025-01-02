@@ -1287,6 +1287,7 @@ def game_details(game_id):
 
 
 @app.route('/player_stats/<string:player_name>', methods=['GET'])
+@login_required
 def player_stats(player_name):
     school_slug = request.args.get('school_slug')
     if not school_slug:
