@@ -1034,9 +1034,11 @@ def home():
         followed_teams = json.loads(current_user.followed_teams)
     
     for school in schools.values():
-        # Skip if user is logged in and not following this team
-        if current_user.is_authenticated and school['name'] not in [schools[slug]['name'] for slug in followed_teams]:
-            continue
+        # Skip if user is logged in and this school's slug is not in followed_teams
+        if current_user.is_authenticated:
+            school_slug = next((slug for slug, s in schools.items() if s['name'] == school['name']), None)
+            if school_slug not in followed_teams:
+                continue
             
         team_data = load_team_data(school['name'])
         for game in team_data.get('games', []):
