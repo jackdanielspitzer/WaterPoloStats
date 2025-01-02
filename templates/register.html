@@ -1,10 +1,9 @@
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Register</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
     <h1>Register</h1>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -84,5 +83,4 @@
             managerFields.style.display = accountType === 'team_manager' ? 'block' : 'none';
         }
     </script>
-</body>
-</html>
+{% endblock %}

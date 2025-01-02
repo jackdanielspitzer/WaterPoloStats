@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Roster - {{ school.name }}</title>
-    <style>
+{% extends "base.html" %}
+
+{% block title %}Edit Roster - {{ school.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
         body {
             background-color: {{ school.bg_color }};
             color: {{ school.text_color }};
@@ -149,5 +148,4 @@
         <a href="/" style="text-decoration: none;"><button style="padding: 8px 16px; cursor: pointer;">Back to Home</button></a>
         <a href="{{ url_for('team_page', school_slug=school_slug) }}" style="text-decoration: none;"><button style="padding: 8px 16px; cursor: pointer;">Back to Team Page</button></a>
     </div>
-</body>
-</html>
+{% endblock %}

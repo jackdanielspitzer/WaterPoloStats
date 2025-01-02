@@ -1,10 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Water Polo Stats Tracker</title>
-    <style>
+{% extends "base.html" %}
+
+{% block title %}Water Polo Stats Tracker{% endblock %}
+
+{% block extra_css %}
+<style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -435,5 +434,4 @@
 
 
     </script>
-</body>
-</html>
+{% endblock %}
