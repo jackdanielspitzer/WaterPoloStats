@@ -25,7 +25,7 @@
     <div class="profile-container">
         <h2>Profile Settings</h2>
         <form method="POST" enctype="multipart/form-data">
-            <img src="{{ url_for('static', filename='waterpoloball.jpg') if not current_user.profile_image else url_for('static', filename=current_user.profile_image) }}" class="profile-image"><br>
+            <img src="{{ url_for('static', filename=current_user.profile_image) if current_user.profile_image and current_user.profile_image != 'None' and current_user.profile_image != 'static/waterpoloball.jpg' else url_for('static', filename='waterpoloball.jpg') }}" class="profile-image"><br>
             
             <label>Choose Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*"><br><br>
