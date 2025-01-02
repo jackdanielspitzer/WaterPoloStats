@@ -1905,6 +1905,7 @@ def register():
             flash('Email already registered')
             return redirect(url_for('register'))
         
+        followed_teams = request.form.getlist('followed_teams')
         user = User(
             email=email,
             password=generate_password_hash(request.form['password']),
@@ -1912,7 +1913,8 @@ def register():
             last_name=request.form['last_name'],
             date_of_birth=datetime.strptime(request.form['date_of_birth'], '%Y-%m-%d'),
             high_school=request.form['high_school'],
-            account_type=request.form['account_type']
+            account_type=request.form['account_type'],
+            followed_teams=json.dumps(followed_teams)
         )
         
         if user.account_type == 'team_manager':

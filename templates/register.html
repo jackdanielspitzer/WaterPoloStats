@@ -42,6 +42,18 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="teams-section">
+            <h3>Follow Teams</h3>
+            {% for slug, school in schools.items() %}
+            <div class="team-checkbox">
+                <label>
+                    <input type="checkbox" name="followed_teams" value="{{ slug }}">
+                    <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }}" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 10px;">
+                    {{ school.name }}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
         <div>
             <label>Account Type:</label>
             <select name="account_type" id="account_type" onchange="toggleManagerFields()" required>
