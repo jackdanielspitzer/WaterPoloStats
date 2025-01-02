@@ -220,17 +220,21 @@
                 <div class="game-card">
                     <div class="teams">
                         <div class="team">
-                            <a href="{{ url_for('team_page', school_slug=school_slug) }}" style="text-decoration: none; color: inherit;">
-                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
-                                <span>{{ game.school_name }}</span>
-                            </a>
+                            {% for slug, s in schools.items() %}
+                                {% if s.name == game.school_name %}
+                                    <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit;">
+                                        <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                        <span>{{ game.school_name }}</span>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                         <div class="vs">vs</div>
                         <div class="team">
-                            {% for slug, school in schools.items() %}
-                                {% if school.name == game.opponent %}
+                            {% for slug, s in schools.items() %}
+                                {% if s.name == game.opponent %}
                                     <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit;">
-                                        <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ game.opponent }}">
+                                        <img src="{{ url_for('static', filename=s.logo) }}" alt="{{ game.opponent }}">
                                         <span>{{ game.opponent }}</span>
                                     </a>
                                 {% endif %}
