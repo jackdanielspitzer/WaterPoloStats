@@ -1977,22 +1977,22 @@ def forgot_password():
                 try:
                     # Send reset email
                     reset_url = url_for('reset_password', token=reset_token, _external=True)
-            msg = Message('Reset Your Password',
-                         sender='noreply@waterpolostats.com',
-                         recipients=[user.email])
-            msg.html = f'''
-            <div style="font-family: Arial, sans-serif;">
-                <h2>Hello {user.first_name},</h2>
-                <p>To reset your password, click the link below:</p>
-                <p><a href="{reset_url}">Reset Password</a></p>
-                <p>This link will expire in 1 hour.</p>
-                <br>
-                <p>Sincerely,<br>The Water Polo Stats Team</p>
-                <br>
-                <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
-                <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
-            </div>
-            '''
+                    msg = Message('Reset Your Password',
+                                sender='noreply@waterpolostats.com',
+                                recipients=[user.email])
+                    msg.html = f'''
+                    <div style="font-family: Arial, sans-serif;">
+                        <h2>Hello {user.first_name},</h2>
+                        <p>To reset your password, click the link below:</p>
+                        <p><a href="{reset_url}">Reset Password</a></p>
+                        <p>This link will expire in 1 hour.</p>
+                        <br>
+                        <p>Sincerely,<br>The Water Polo Stats Team</p>
+                        <br>
+                        <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+                        <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
+                    </div>
+                    '''
                     mail.send(msg)
                     flash('Password reset instructions have been sent to your email.')
                     return redirect(url_for('login'))
