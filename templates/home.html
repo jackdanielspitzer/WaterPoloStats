@@ -234,20 +234,7 @@
                             </a>
                             <span>{{ game.opponent }}</span>
                         </div>
-                            <div class="team">
-                                <a href="/team/{% if 'Gunn' in game.opponent %}gunn{% else %}{{ game.opponent.lower().replace(' high school', '').replace(' ', '-').replace('.', '').replace('m.', 'm') }}{% endif %}">
-                                    <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
-                                </a>
-                                <span>{{ game.opponent }}</span>
-                            </div>
-                            <span class="vs">vs</span>
-                            <div class="team">
-                                <a href="/team/{% if 'Gunn' in game.school_name %}gunn{% else %}{{ game.school_name.lower().replace(' high school', '').replace(' ', '-').replace('.', '').replace('m.', 'm') }}{% endif %}">
-                                    <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
-                                </a>
-                                <span>{{ game.school_name }}</span>
-                            </div>
-                        {% endif %}
+                            {% endif %}
                     </div>
                     <div class="game-details">
                         <p class="date">{{ game.formatted_date }}</p>
