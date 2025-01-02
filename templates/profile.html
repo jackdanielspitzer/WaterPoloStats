@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -18,28 +19,16 @@
             object-fit: cover;
             margin-bottom: 20px;
         }
-        
     </style>
 </head>
 <body>
     <div class="profile-container">
         <h2>Profile Settings</h2>
         <form method="POST" enctype="multipart/form-data">
-            <img src="{{ url_for('static', filename=current_user.profile_image) if current_user.profile_image and current_user.profile_image != 'None' else url_for('static', filename='waterpoloball.jpg') }}" class="profile-image"><br>
+            <img src="{{ url_for('static', filename='waterpoloball.jpg') if not current_user.profile_image else url_for('static', filename=current_user.profile_image) }}" class="profile-image"><br>
             
             <label>Choose Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*"><br><br>
-            
-            
-            
-            <h3>Follow Teams:</h3>
-            {% for slug, school in schools.items() %}
-            <label>
-                <input type="checkbox" name="followed_teams" value="{{ slug }}"
-                       {% if slug in followed_teams %}checked{% endif %}>
-                {{ school.name }}
-            </label><br>
-            {% endfor %}
             
             <button type="submit" style="margin-top: 20px;">Save Changes</button>
         </form>
