@@ -67,48 +67,46 @@
         }
         .game-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .game-card:hover {
-            transform: translateY(-5px);
+            text-align: center;
         }
         .teams {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
         }
         .team {
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
         }
         .team img {
-            width: 60px;
-            height: 60px;
-            object-fit: contain;
+            width: 48px;
+            height: 48px;
             margin-bottom: 8px;
         }
         .team span {
-            font-size: 14px;
-            color: #555;
+            font-size: 12px;
+            color: #666;
         }
         .vs {
-            font-weight: bold;
+            font-weight: normal;
             color: #666;
-            margin: 0 10px;
         }
-        .game-details {
-            text-align: center;
-            border-top: 1px solid #eee;
-            padding-top: 15px;
+        .date {
+            color: #003366;
+            font-weight: 600;
+            margin-bottom: 5px;
         }
-        .game-details p {
-            margin: 5px 0;
+        .time {
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .game-type {
+            color: #666;
             font-size: 14px;
         }
         .date {
@@ -222,24 +220,18 @@
                 <div class="game-card">
                     <div class="teams">
                         <div class="team">
-                            <a href="/team/{% if 'Gunn' in game.school_name %}gunn{% else %}{{ game.school_name.lower().replace(' high school', '').replace(' ', '-').replace('.', '').replace('m.', 'm') }}{% endif %}">
-                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
-                            </a>
+                            <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
                             <span>{{ game.school_name }}</span>
                         </div>
-                        <span class="vs">vs</span>
+                        <div class="vs">vs</div>
                         <div class="team">
-                            <a href="/team/{% if 'Gunn' in game.opponent %}gunn{% else %}{{ game.opponent.lower().replace(' high school', '').replace(' ', '-').replace('.', '').replace('m.', 'm') }}{% endif %}">
-                                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
-                            </a>
+                            <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
                             <span>{{ game.opponent }}</span>
                         </div>
                     </div>
-                    <div class="game-details">
-                        <p class="date">{{ game.formatted_date }}</p>
-                        <p class="time">{{ game.time|format_time }}</p>
-                        <p class="type">{{ game.game_type }}</p>
-                    </div>
+                    <div class="date">{{ game.formatted_date }}</div>
+                    <div class="time">{{ game.time|format_time }}</div>
+                    <div class="game-type">League Game</div>
                 </div>
                 {% endfor %}
             </div>
