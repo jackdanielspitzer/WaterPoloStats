@@ -220,13 +220,17 @@
                 <div class="game-card">
                     <div class="teams">
                         <div class="team">
-                            <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
-                            <span>{{ game.school_name }}</span>
+                            <a href="/team/{{ school_slug }}" style="text-decoration: none; color: inherit;">
+                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                <span>{{ game.school_name }}</span>
+                            </a>
                         </div>
                         <div class="vs">vs</div>
                         <div class="team">
-                            <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
-                            <span>{{ game.opponent }}</span>
+                            <a href="/team/{{ opponent_slug }}" style="text-decoration: none; color: inherit;">
+                                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                <span>{{ game.opponent }}</span>
+                            </a>
                         </div>
                     </div>
                     <div class="date">{{ game.formatted_date }}</div>
