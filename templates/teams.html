@@ -326,11 +326,13 @@
         {% endif %}
     </div>
 
-    <!-- Add New Game Button -->
+    <!-- Add New Game Button (Only visible to team manager) -->
+    {% if current_user.is_authenticated and current_user.account_type == 'team_manager' and current_user.managed_team == school_slug %}
     <button class="add-game-button" id="toggleAddGameForm" onclick="toggleAddGameForm()">Add New Game</button>
 
     <!-- Add Game Form -->
     <div class="add-game-form" id="addGameForm">
+    {% endif %}
         <form method="POST" action="{{ url_for('team_page', school_slug=school_slug) }}">
             <select name="home_away" required>
                 <option value="">Select Home/Away</option>
