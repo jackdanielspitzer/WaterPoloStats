@@ -1889,6 +1889,10 @@ def format_time(time_str):
 # Register the filter with the Jinja environment
 app.jinja_env.filters['format_time'] = format_time
 
+@app.template_filter('from_json')
+def from_json(value):
+    return json.loads(value) if value else []
+
 if __name__ == '__main__':
     print("Starting Flask app...")
     app.debug = True
