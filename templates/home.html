@@ -16,19 +16,18 @@
             background-color: white;
             padding: 15px 30px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
         }
         .logo {
             width: 150px;
             height: auto;
-            justify-self: start;
-            margin-left: 20px;
         }
-        nav {
-            margin-right: 40px;
-            justify-self: end;
+        .right-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
         }
         nav ul {
             list-style-type: none;
@@ -179,12 +178,8 @@
 <body>
     <div class="header">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Stats" class="logo">
-        <div style="display: flex; align-items: center; gap: 30px; margin-left: auto; padding-right: 30px;">
-            <nav style="margin: 0;">
-                <ul style="margin: 0; padding: 0; display: flex; align-items: center;">
-                    <li><a href="/search" style="font-size: 18px;">Teams</a></li>
-                </ul>
-            </nav>
+        <div class="right-section">
+            <a href="/search" style="text-decoration: none; color: #003366; font-size: 18px;">Teams</a>
             {% if current_user.is_authenticated %}
                 <div class="profile-dropdown">
                     <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-icon">
