@@ -1,0 +1,91 @@
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Starting gunicorn 21.2.0
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Listening at: http://0.0.0.0:5000 (2280)
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Using worker: sync
+[2025-01-02 23:08:49 +0000] [2285] [INFO] Booting worker with pid: 2285
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:49 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+[2025-01-02 23:08:50 +0000] [2280] [INFO] Handling signal: winch
+              precision    recall  f1-score   support
+
+           0       1.00      0.83      0.91         6
+           1       0.86      1.00      0.92         6
+
+    accuracy                           0.92        12
+   macro avg       0.93      0.92      0.92        12
+weighted avg       0.93      0.92      0.92        12
+
+[2025-01-02 23:09:07,091] ERROR in app: Exception on /login [POST]
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlite3.OperationalError: no such table: user
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 1455, in wsgi_app
+    response = self.full_dispatch_request()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 869, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 867, in full_dispatch_request
+    rv = self.dispatch_request()
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/flask/app.py", line 852, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/main.py", line 2002, in login
+    user = User.query.filter_by(email=request.form['email']).first()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2728, in first
+    return self.limit(1)._iter().first()  # type: ignore
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/query.py", line 2827, in _iter
+    result: Union[ScalarResult[_T], Result[_T]] = self.session.execute(
+                                                  ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2362, in execute
+    return self._execute_internal(
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/session.py", line 2247, in _execute_internal
+    result: Result[Any] = compile_state_cls.orm_execute_statement(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/orm/context.py", line 305, in orm_execute_statement
+    result = conn.execute(
+             ^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1418, in execute
+    return meth(
+           ^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/sql/elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1640, in _execute_clauseelement
+    ret = self._execute_context(
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1846, in _execute_context
+    return self._exec_single_context(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1986, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 2355, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/base.py", line 1967, in _exec_single_context
+    self.dialect.do_execute(
+  File "/home/runner/Final-Project-112424/.pythonlibs/lib/python3.11/site-packages/sqlalchemy/engine/default.py", line 941, in do_execute
+    cursor.execute(statement, parameters)
+sqlalchemy.exc.OperationalError: (sqlite3.OperationalError) no such table: user
+[SQL: SELECT user.id AS user_id, user.email AS user_email, user.stats_private AS user_stats_private, user.profile_image AS user_profile_image, user.followed_teams AS user_followed_teams, user.password AS user_password, user.first_name AS user_first_name, user.last_name AS user_last_name, user.date_of_birth AS user_date_of_birth, user.high_school AS user_high_school, user.account_type AS user_account_type, user.role AS user_role, user.phone AS user_phone, user.managed_team AS user_managed_team, user.email_confirmed AS user_email_confirmed, user.confirmation_token AS user_confirmation_token, user.reset_token AS user_reset_token, user.reset_token_expiry AS user_reset_token_expiry, user.created_at AS user_created_at 
+FROM user 
+WHERE user.email = ?
+ LIMIT ? OFFSET ?]
+[parameters: ('jackdanielspitzer@gmail.com', 1, 0)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
