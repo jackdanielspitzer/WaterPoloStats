@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,6 +13,13 @@
         .container { max-width: 1200px; margin: auto; }
         button { padding: 8px 16px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 4px; }
         button:hover { background-color: #0056b3; }
+        .private-message { 
+            text-align: center; 
+            padding: 20px; 
+            background-color: #f8f9fa; 
+            border: 1px solid #dee2e6;
+            margin: 10px 0;
+        }
     </style>
 </head>
 <body>
@@ -22,6 +30,7 @@
         <p><strong>Score:</strong> {{ game.score.white_team_score }} - {{ game.score.black_team_score }}</p>
 
         <h2>{{ home_team }} Stats</h2>
+        {% if not home_stats_private or (current_user_id == home_manager_id) %}
         <table>
             <thead>
                 <tr>
@@ -52,8 +61,14 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="private-message">
+            Statistics for {{ home_team }} are not available for public viewing.
+        </div>
+        {% endif %}
 
         <h2>{{ away_team }} Stats</h2>
+        {% if not away_stats_private or (current_user_id == away_manager_id) %}
         <table>
             <thead>
                 <tr>
@@ -84,6 +99,11 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% else %}
+        <div class="private-message">
+            Statistics for {{ away_team }} are not available for public viewing.
+        </div>
+        {% endif %}
 
         <button onclick="window.location.href='/team/{{ school_slug }}'">Back to Main School Page</button>
     </div>

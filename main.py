@@ -1675,6 +1675,14 @@ def view_scoring(school_slug, game_index):
             'black_team_score': sum(black_team_stats.get('Shot', []))
         }
 
+        # Check privacy settings for both teams
+        home_manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+        away_team_slug = next((slug for slug, s in schools.items() if s['name'] == away_team_name), None)
+        away_manager = User.query.filter_by(managed_team=away_team_slug, account_type='team_manager').first()
+        
+        home_stats_private = home_manager.stats_private if home_manager else False
+        away_stats_private = away_manager.stats_private if away_manager else False
+
         return render_template(
             "view_game.html",
             game=game,
@@ -1685,7 +1693,12 @@ def view_scoring(school_slug, game_index):
             home_team=home_team_name,
             away_team=away_team_name,
             school_slug=school_slug,
-            game_index=game_index
+            game_index=game_index,
+            home_stats_private=home_stats_private,
+            away_stats_private=away_stats_private,
+            current_user_id=current_user.id if current_user.is_authenticated else None,
+            home_manager_id=home_manager.id if home_manager else None,
+            away_manager_id=away_manager.id if away_manager else None
         )
     except Exception as e:
         return f"Error: {str(e)}", 500
