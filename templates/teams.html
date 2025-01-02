@@ -302,7 +302,8 @@
             {% set sorted_games = team_data.games | sort(attribute='date') %}
         {% for game in sorted_games %}
             <div class="game">
-                <a href="{{ url_for('team_page', school_slug=game.opponent_logo.split('/')[-1].replace(' High School.png', '').lower().replace(' ', '-')) }}">
+                {% set opponent_slug = 'gunn' if 'Gunn' in game.opponent else game.opponent_logo.split('/')[-1].replace(' High School.png', '').lower().replace(' ', '-') %}
+                <a href="{{ url_for('team_page', school_slug=opponent_slug) }}">
                     <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
                 </a>
                 <div class="game-info">
