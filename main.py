@@ -10,6 +10,14 @@ import secrets
 from models import db, User
 from word2number import w2n
 
+def check_email_config():
+    required = ['MAIL_USERNAME', 'MAIL_PASSWORD', 'MAIL_DEFAULT_SENDER']
+    missing = [key for key in required if not app.config.get(key)]
+    if missing:
+        print(f"Warning: Missing email configuration: {', '.join(missing)}")
+        return False
+    return True
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
