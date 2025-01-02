@@ -179,13 +179,13 @@
 <body>
     <div class="header">
         <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Water Polo Stats" class="logo">
-        <div style="display: flex; align-items: center; gap: 20px; justify-self: end;">
+        <div style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
             <nav style="margin: 0;">
                 <ul>
                     <li><a href="/search">Teams</a></li>
                 </ul>
             </nav>
-            <div class="auth-buttons" style="margin: 0;">
+            <div class="auth-buttons" style="margin: 0; margin-right: 20px;">
             {% if current_user.is_authenticated %}
                 <div class="profile-dropdown">
                     <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-icon">
