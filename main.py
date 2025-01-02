@@ -1042,15 +1042,12 @@ def home():
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
             if game_date >= today and not game.get('is_scored', False):
-                # Add game if user is not logged in or if opponent is also followed
-                opponent_slug = next((slug for slug, s in schools.items() if s['name'] == game['opponent']), None)
-                if not current_user.is_authenticated or opponent_slug in followed_teams:
-                    game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
-                    if game_key not in seen_games:
-                        game['school_name'] = school['name']
-                        game['school_logo'] = school['logo']
-                        upcoming_games.append(game)
-                        seen_games.add(game_key)
+                game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
+                if game_key not in seen_games:
+                    game['school_name'] = school['name']
+                    game['school_logo'] = school['logo']
+                    upcoming_games.append(game)
+                    seen_games.add(game_key)
     
     # Sort games by date and get the 6 most recent
     upcoming_games.sort(key=lambda x: x['date'])
