@@ -1024,6 +1024,11 @@ def run(text):
 
 @app.route('/')
 def home():
+    # Get user info if authenticated
+    user_id = request.headers.get('X-Replit-User-Id')
+    user_name = request.headers.get('X-Replit-User-Name')
+    is_authenticated = user_id is not None
+    
     # Get all upcoming games from all teams
     upcoming_games = []
     seen_games = set()  # Track unique games

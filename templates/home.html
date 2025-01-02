@@ -185,18 +185,9 @@
                     <li><a href="/search" style="font-size: 18px;">Teams</a></li>
                 </ul>
             </nav>
-            {% if current_user.is_authenticated %}
-                <div class="profile-dropdown">
-                    <img src="{{ url_for('static', filename=current_user.profile_image) }}" class="profile-icon">
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('profile') }}">Profile Settings</a>
-                        <a href="{{ url_for('logout') }}">Logout</a>
-                    </div>
-                </div>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="auth-button login">Login</a>
-                <a href="{{ url_for('register') }}" class="auth-button register">Register</a>
-            {% endif %}
+            <div>
+                <script authed="location.reload()" src="https://auth.util.repl.co/script.js"></script>
+            </div>
             </div>
         </div>
     </div>
