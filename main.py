@@ -1996,7 +1996,8 @@ def profile():
         followed_teams = request.form.getlist('followed_teams')
         current_user.followed_teams = json.dumps(followed_teams)
         db.session.commit()
-        return redirect(url_for('profile'))
+        flash('Profile updated successfully')
+        return redirect(url_for('home'))
     
     return render_template('profile.html', 
                          schools=schools,
