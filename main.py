@@ -1935,3 +1935,64 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for('home'))
+
+@app.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            # Generate reset token
+            reset_token = secrets.token_urlsafe(32)
+            user.reset_token = reset_token
+            user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
+            db.session.commit()
+            
+            # Send reset email
+            reset_url = url_for('reset_password', token=reset_token, _external=True)
+            msg = Message('Reset Your Password',
+                         sender='noreply@waterpolostats.com',
+                         recipients=[user.email])
+            msg.html = f'''
+            <div style="font-family: Arial, sans-serif;">
+                <h2>Hello {user.first_name},</h2>
+                <p>To reset your password, click the link below:</p>
+                <p><a href="{reset_url}">Reset Password</a></p>
+                <p>This link will expire in 1 hour.</p>
+                <br>
+                <p>Sincerely,<br>The Water Polo Stats Team</p>
+                <br>
+                <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+                <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
+            </div>
+            '''
+            mail.send(msg)
+            flash('Password reset instructions have been sent to your email.')
+            return redirect(url_for('login'))
+        flash('Email address not found.')
+    return render_template('forgot_password.html')
+
+@app.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    user = User.query.filter_by(reset_token=token).first()
+    if not user or not user.reset_token_expiry or user.reset_token_expiry < datetime.utcnow():
+        flash('Invalid or expired reset link.')
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        password = request.form['password']
+        confirm_password = request.form['confirm_password']
+        
+        if password != confirm_password:
+            flash('Passwords do not match.')
+            return render_template('reset_password.html')
+            
+        user.password = generate_password_hash(password)
+        user.reset_token = None
+        user.reset_token_expiry = None
+        db.session.commit()
+        
+        flash('Your password has been reset. Please login with your new password.')
+        return redirect(url_for('login'))
+        
+    return render_template('reset_password.html')

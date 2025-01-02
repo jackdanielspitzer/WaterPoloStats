@@ -19,3 +19,5 @@ class User(UserMixin, db.Model):
     email_confirmed = db.Column(db.Boolean, default=False)
     confirmation_token = db.Column(db.String(100), unique=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reset_token = db.Column(db.String(100), unique=True)
+    reset_token_expiry = db.Column(db.DateTime)
