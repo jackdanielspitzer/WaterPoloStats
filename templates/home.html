@@ -220,17 +220,25 @@
                 <div class="game-card">
                     <div class="teams">
                         <div class="team">
-                            <a href="/team/{{ school_slug }}" style="text-decoration: none; color: inherit;">
-                                <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
-                                <span>{{ game.school_name }}</span>
-                            </a>
+                            {% for slug, school in schools.items() %}
+                                {% if school.name == game.school_name %}
+                                    <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit;">
+                                        <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}">
+                                        <span>{{ game.school_name }}</span>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                         <div class="vs">vs</div>
                         <div class="team">
-                            <a href="/team/{{ opponent_slug }}" style="text-decoration: none; color: inherit;">
-                                <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
-                                <span>{{ game.opponent }}</span>
-                            </a>
+                            {% for slug, school in schools.items() %}
+                                {% if school.name == game.opponent %}
+                                    <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit;">
+                                        <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}">
+                                        <span>{{ game.opponent }}</span>
+                                    </a>
+                                {% endif %}
+                            {% endfor %}
                         </div>
                     </div>
                     <div class="date">{{ game.formatted_date }}</div>
