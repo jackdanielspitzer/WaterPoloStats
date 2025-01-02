@@ -1887,9 +1887,20 @@ def register():
         # Send confirmation email
         confirm_url = url_for('confirm_email', token=user.confirmation_token, _external=True)
         msg = Message('Confirm Your Account',
-                     sender='noreply@yourapp.com',
+                     sender='noreply@waterpolostats.com',
                      recipients=[user.email])
-        msg.body = f'Please confirm your account by clicking on the link: {confirm_url}'
+        msg.html = f'''
+        <div style="font-family: Arial, sans-serif;">
+            <h2>Hello {user.first_name},</h2>
+            <p>Please confirm your account by clicking on the link below:</p>
+            <p><a href="{confirm_url}">Confirm Account</a></p>
+            <br>
+            <p>Sincerely,<br>The Water Polo Stats Team</p>
+            <br>
+            <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+            <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
+        </div>
+        '''
         mail.send(msg)
         
         flash('Registration successful. Please check your email to confirm your account.')
