@@ -19,23 +19,7 @@
             object-fit: cover;
             margin-bottom: 20px;
         }
-        .school-logos {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin: 20px 0;
-        }
-        .school-logo {
-            width: 100px;
-            height: 100px;
-            object-fit: contain;
-            cursor: pointer;
-            padding: 5px;
-            border: 2px solid transparent;
-        }
-        .school-logo:hover {
-            border-color: #007bff;
-        }
+        
     </style>
 </head>
 <body>
@@ -47,25 +31,7 @@
             <label>Choose Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*"><br><br>
             
-            <div class="school-logos">
-                {% for slug, school in schools.items() %}
-                <img src="{{ url_for('static', filename=school.logo) }}" 
-                     class="school-logo" 
-                     data-logo="{{ school.logo }}"
-                     onclick="selectSchoolLogo(this)">
-                {% endfor %}
-            </div>
-            <input type="hidden" name="selected_logo" id="selected_logo">
-            <script>
-                function selectSchoolLogo(img) {
-                    document.getElementById('selected_logo').value = img.dataset.logo;
-                    // Add visual feedback
-                    document.querySelectorAll('.school-logo').forEach(logo => {
-                        logo.style.border = '2px solid transparent';
-                    });
-                    img.style.border = '2px solid #007bff';
-                }
-            </script>
+            
             
             <h3>Follow Teams:</h3>
             {% for slug, school in schools.items() %}
