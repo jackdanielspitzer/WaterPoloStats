@@ -1058,9 +1058,7 @@ def home():
     return render_template('home.html', upcoming_games=upcoming_games, schools=schools)
 
 # Render HTML page with two tables (initial zeros)
-@app.route('/scoring')
-def index():
-    return render_template('scoring.html')
+
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
 @login_required
@@ -1290,12 +1288,12 @@ def game_details(game_id):
 @login_required
 def player_stats(player_name):
     school_slug = request.args.get('school_slug')
+    school_slug = request.args.get('school_slug')
     # Check if stats are private
     manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
-    if manager and manager.stats_private and manager.id != current_user.id:
+    if manager and manager.stats_private and (not current_user.is_authenticated or manager.id != current_user.id):
         flash('These statistics are private')
         return redirect(url_for('team_page', school_slug=school_slug))
-    school_slug = request.args.get('school_slug')
     if not school_slug:
         # Search all schools for the player
         for slug, school_data in schools.items():
