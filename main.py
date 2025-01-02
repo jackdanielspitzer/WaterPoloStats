@@ -1953,18 +1953,24 @@ def logout():
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
+    if not all([app.config['MAIL_USERNAME'], app.config['MAIL_PASSWORD']]):
+        flash('Email service is not configured. Please contact administrator.')
+        return redirect(url_for('login'))
+
     if request.method == 'POST':
-        email = request.form['email']
-        user = User.query.filter_by(email=email).first()
-        if user:
-            # Generate reset token
-            reset_token = secrets.token_urlsafe(32)
-            user.reset_token = reset_token
-            user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
-            db.session.commit()
-            
-            # Send reset email
-            reset_url = url_for('reset_password', token=reset_token, _external=True)
+        try:
+            email = request.form['email']
+            user = User.query.filter_by(email=email).first()
+            if user:
+                # Generate reset token
+                reset_token = secrets.token_urlsafe(32)
+                user.reset_token = reset_token
+                user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
+                db.session.commit()
+                
+                try:
+                    # Send reset email
+                    reset_url = url_for('reset_password', token=reset_token, _external=True)
             msg = Message('Reset Your Password',
                          sender='noreply@waterpolostats.com',
                          recipients=[user.email])
@@ -1981,9 +1987,17 @@ def forgot_password():
                 <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
             </div>
             '''
-            mail.send(msg)
-            flash('Password reset instructions have been sent to your email.')
-            return redirect(url_for('login'))
+                    mail.send(msg)
+                    flash('Password reset instructions have been sent to your email.')
+                    return redirect(url_for('login'))
+                except Exception as e:
+                    app.logger.error(f"Failed to send email: {str(e)}")
+                    flash('Failed to send reset email. Please try again later.')
+                    return redirect(url_for('forgot_password'))
+        except Exception as e:
+            app.logger.error(f"Error in forgot password: {str(e)}")
+            flash('An error occurred. Please try again.')
+            return redirect(url_for('forgot_password'))
         flash('Email address not found.')
     return render_template('forgot_password.html')
 
