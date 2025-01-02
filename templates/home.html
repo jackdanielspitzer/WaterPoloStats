@@ -16,16 +16,18 @@
             background-color: white;
             padding: 15px 30px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
         }
         .logo {
             width: 150px;
             height: auto;
+            justify-self: center;
         }
         nav {
-            margin-right: 80px;
+            margin-right: 40px;
+            justify-self: end;
         }
         nav ul {
             list-style-type: none;
@@ -113,9 +115,7 @@
             color: #003366;
         }
         .auth-buttons {
-            position: absolute;
-            top: 20px;
-            right: 20px;
+            justify-self: end;
         }
         .auth-button {
             padding: 8px 16px;
