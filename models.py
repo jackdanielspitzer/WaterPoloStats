@@ -13,11 +13,11 @@ class User(UserMixin, db.Model):
     last_name = db.Column(db.String(100), nullable=False)
     date_of_birth = db.Column(db.Date, nullable=False)
     high_school = db.Column(db.String(200), nullable=False)
-    account_type = db.Column(db.String(20), nullable=False)  # 'standard' or 'team_manager'
-    role = db.Column(db.String(20))  # For team managers: 'coach', 'parent', or 'statistician'
-    phone = db.Column(db.String(20))  # For team managers
+    account_type = db.Column(db.String(20), nullable=False)
+    role = db.Column(db.String(20))
+    phone = db.Column(db.String(20))
     email_confirmed = db.Column(db.Boolean, default=False)
-    confirmation_token = db.Column(db.String(100), unique=True)
+    confirmation_token = db.Column(db.String(100), unique=True, nullable=True)
+    reset_token = db.Column(db.String(100), unique=True, nullable=True)
+    reset_token_expiry = db.Column(db.DateTime, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    reset_token = db.Column(db.String(100), unique=True)
-    reset_token_expiry = db.Column(db.DateTime)
