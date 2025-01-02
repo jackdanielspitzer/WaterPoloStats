@@ -1819,23 +1819,14 @@ def save_rosters(rosters):
 
 # Get the roster for a specific team
 def get_team_roster(team_name):
-    try:
-        rosters = load_rosters()
-        return rosters.get(team_name, [])
-    except Exception as e:
-        print(f"Error loading roster for {team_name}: {str(e)}")
-        return []
+    rosters = load_rosters()
+    return rosters.get(team_name, [])
 
 
 def save_roster(team_name, updated_roster):
-    try:
-        rosters = load_rosters()
-        rosters[team_name] = updated_roster
-        save_rosters(rosters)
-        return True
-    except Exception as e:
-        print(f"Error saving roster for {team_name}: {str(e)}")
-        return False
+    rosters = load_rosters()
+    rosters[team_name] = updated_roster
+    save_rosters(rosters)
 
 
 @app.route('/team/<school_slug>/edit_roster', methods=['GET', 'POST'])
