@@ -742,12 +742,16 @@ def extract_key_phrases(text):
                             break
             except ValueError:
                 pass
-        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text:
+        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text:
             # Check if it's a self-turnover (committed a ball under)
-            if 'committed a ball under' in doc_text or 'put a ball under' in doc_text:
-                first_event['event'] = 'Turnovers'
-                if numbers:
-                    first_event['player'] = numbers[0]
+            if 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text:
+                first_event['event'] = 'Steals'
+                if all_numbers:
+                    first_event['player'] = all_numbers[0]
+                    if len(all_numbers) >= 2:
+                        second_event['player'] = all_numbers[1]
+                        second_event['event'] = 'Turnovers'
+                        second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 break
             
             first_event['event'] = 'Steals'
