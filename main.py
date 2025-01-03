@@ -588,8 +588,8 @@ def extract_key_phrases(text):
                 elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
                     first_event['event'] = 'Penalties'
             
-        # Extract event type for penalties
-        if any(phrase in doc_text for phrase in penalty_keywords):
+        # Extract event type for penalties and exclusions
+        if any(phrase in doc_text for phrase in penalty_keywords) and 'penalty' in doc_text.lower():
             if 'against' in doc_text or 'on' in doc_text:
                 if len(all_numbers) >= 2:
                     # First event is the penalty for the offensive player
@@ -614,6 +614,12 @@ def extract_key_phrases(text):
                         first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['event'] = 'Penalties'
                 first_event['team'] = current_team
+            break
+        elif 'on' in doc_text or 'against' in doc_text:
+            # Handle exclusions
+            first_event['player'] = all_numbers[0] if all_numbers else None
+            first_event['event'] = 'Exclusions'
+            first_event['team'] = current_team
             break
         elif token in exclusion_keywords:
             if len(all_numbers) >= 2 and ('excluded by' in doc_text or 'by player' in doc_text):
