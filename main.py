@@ -609,23 +609,30 @@ def extract_key_phrases(text):
         elif token in block_keywords:
             # Check for block scenarios
             if any(phrase in doc_text for phrase in ['blocked by', 'got block', 'got a block', 'makes a save']):
-                if 'goalie' in doc_text or '1' in all_numbers:
-                    first_event['event'] = 'Blocks'
-                    first_event['player'] = '1'
-                    first_event['team'] = current_team
-                    
-                    # Add shot attempt for the shooter
-                    second_event['event'] = 'Shot Attempt'
-                    second_event['player'] = all_numbers[1] if len(all_numbers) > 1 else all_numbers[0]
-                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
-                else:
-                    first_event['event'] = 'Blocks'
-                    first_event['player'] = all_numbers[0]
-                    first_event['team'] = current_team
-                    
-                    second_event['event'] = 'Shot Attempt'
-                    second_event['player'] = all_numbers[1] if len(all_numbers) > 1 else None
-                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
+                shooter_team = current_team
+                shooter_number = all_numbers[0]
+                blocker_number = '1' if ('goalie' in doc_text or '1' in all_numbers) else all_numbers[1]
+                blocker_team = 'dark' if shooter_team == 'light' else 'light'
+
+                # First event is the shot attempt
+                first_event['event'] = 'Shot Attempt'
+                first_event['player'] = shooter_number
+                first_event['team'] = shooter_team
+                
+                # Second event is the block
+                second_event['event'] = 'Blocks'
+                second_event['player'] = blocker_number
+                second_event['team'] = blocker_team
+
+        elif token in turnover_keywords or any(phrase in doc_text for phrase in [
+            'lost the ball', 'turned the ball over', 'offensive foul', 
+            'foul on offense', 'lost possession', 'dropped the ball'
+        ]):
+            # Handle single player turnover events
+            if len(all_numbers) == 1:
+                first_event['event'] = 'Turnovers'
+                first_event['player'] = all_numbers[0]
+                first_event['team'] = current_team
         elif 'assist' in doc_text:
             first_event['event'] = 'Shot'
             # Find the assisting player's number
@@ -1742,8 +1749,8 @@ def view_scoring(school_slug, game_index):
         away_team_slug = next((slug for slug, s in schools.items() if s['name'] == away_team_name), None)
         away_manager = User.query.filter_by(managed_team=away_team_slug, account_type='team_manager').first()
         
-        home_stats_private = home_manager.stats_private if home_manager and not current_user.is_admin else False
-        away_stats_private = away_manager.stats_private if away_manager and not current_user.is_admin else False
+        home_stats_private = home_manager.stats_private if home_manager else False
+        away_stats_private = away_manager.stats_private if away_manager else False
 
         return render_template(
             "view_game.html",
@@ -1907,11 +1914,11 @@ def edit_roster(school_slug):
     if not school:
         return "School not found", 404
 
-    if not (current_user.account_type == 'team_manager' or current_user.is_admin):
-        flash('Only team managers and admins can edit rosters')
+    if not current_user.account_type == 'team_manager':
+        flash('Only team managers can edit rosters')
         return redirect(url_for('team_page', school_slug=school_slug))
         
-    if not current_user.is_admin and current_user.managed_team != school_slug:
+    if current_user.managed_team != school_slug:
         flash(f'Not permitted - you can only edit the roster for {schools[current_user.managed_team]["name"]}')
         return redirect(url_for('team_page', school_slug=school_slug))
 
