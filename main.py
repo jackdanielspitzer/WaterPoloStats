@@ -805,11 +805,15 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             print(f"Searching away roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            if not game_data[game_id]['dataWhite'][event]:
+            
+            # Initialize the event array if it doesn't exist or is not a list
+            if event not in game_data[game_id]['dataWhite'] or not isinstance(game_data[game_id]['dataWhite'][event], list):
                 game_data[game_id]['dataWhite'][event] = [0] * len(away_roster)
+                
             game_data[game_id]['dataWhite'][event][player_index] += 1  # Light/away team uses dataWhite
-        except (StopIteration, ValueError):
-            print(f"ERROR: Player {player} not found in away roster")
+            return True
+        except (StopIteration, ValueError, IndexError) as e:
+            print(f"ERROR: Player {player} not found in away roster: {str(e)}")
             return False
     elif team == 'dark':
         # Find the player in the home roster by cap number (dark team)
@@ -818,10 +822,15 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             print(f"Searching home roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            # Update the player's stats directly using the found index
+            
+            # Initialize the event array if it doesn't exist or is not a list
+            if event not in game_data[game_id]['dataBlack'] or not isinstance(game_data[game_id]['dataBlack'][event], list):
+                game_data[game_id]['dataBlack'][event] = [0] * len(home_roster)
+                
             game_data[game_id]['dataBlack'][event][player_index] += 1  # Dark/home team uses dataBlack
-        except (StopIteration, ValueError):
-            print(f"ERROR: Player {player} not found in home roster")
+            return True
+        except (StopIteration, ValueError, IndexError) as e:
+            print(f"ERROR: Player {player} not found in home roster: {str(e)}")
             return False
     else:
         print("ERROR: Invalid team color")
