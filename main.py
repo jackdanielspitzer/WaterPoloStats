@@ -132,17 +132,23 @@ def add_player_to_roster(school, cap_number, player_name, grade, position):
 
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
 def start_scoring(school_slug, game_index):
-    print(1)
-    # Load team data for the specified school
-    team_data = load_team_data(school_slug)
-    print(team_data,game_index)
-    if not team_data or game_index >= len(team_data["games"]):
-        return "Game not found", 404
+    school = get_school_by_slug(school_slug)
+    if not school:
+        return "School not found", 404
 
-    print(game_index)
+    team_name = school['name']
+    team_data = load_team_data(team_name)
+    
+    if not team_data:
+        return "Team data not found", 404
+        
+    if "games" not in team_data or not isinstance(team_data["games"], list):
+        return "Invalid team data format", 404
+        
+    if game_index < 0 or game_index >= len(team_data["games"]):
+        return f"Game index {game_index} not found", 404
+
     game = team_data["games"][game_index]
-
-    # Pass necessary game data to scoring.html
     return render_template("scoring.html", game=game, school_slug=school_slug, game_index=game_index)
 
 def initialize_team_file(team_name):
