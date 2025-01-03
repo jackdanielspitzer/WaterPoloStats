@@ -1972,7 +1972,6 @@ def register():
             <p>Please confirm your account by clicking on the link below:</p>
             <p><a href="{confirm_url}">Confirm Account</a></p>
             <p>Sincerely,<br>The Water Polo Stats Team</p>
-            <img src="{{ url_for('static', filename='images/logo.png', _external=True) }}" alt="Water Polo Stats Logo" style="width: 150px;">
             <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
         </div>
         '''
@@ -2083,10 +2082,7 @@ def forgot_password():
                         <p>To reset your password, click the link below:</p>
                         <p><a href="{reset_url}">Reset Password</a></p>
                         <p>This link will expire in 1 hour.</p>
-                        <br>
                         <p>Sincerely,<br>The Water Polo Stats Team</p>
-                        <br>
-                        <img src="https://water-polo-stats.repl.co/static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
                         <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
                     </div>
                     '''
