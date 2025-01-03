@@ -135,28 +135,7 @@
                 }
             </script>
 
-            {% if current_user.account_type == 'team_manager' %}
-            <div class="privacy-section">
-                <h3>Privacy Settings</h3>
-                {% if current_user.is_admin %}
-                    <h4>Team Privacy Controls</h4>
-                    {% for slug, school in schools.items() %}
-                    <div class="team-privacy">
-                        <label class="privacy-toggle">
-                            {% set manager = get_team_manager(slug) %}
-                            <input type="checkbox" name="team_privacy_{{ slug }}" {% if manager and manager.stats_private %}checked{% endif %}>
-                            Make {{ school.name }} statistics private
-                        </label>
-                    </div>
-                    {% endfor %}
-                {% elif current_user.account_type == 'team_manager' %}
-                    <label class="privacy-toggle">
-                        <input type="checkbox" name="stats_private" {% if current_user.stats_private %}checked{% endif %}>
-                        Make team statistics private
-                    </label>
-                {% endif %}
-            </div>
-            {% endif %}
+            
 
             <div class="teams-section">
                 <h3>Teams You Follow</h3>
