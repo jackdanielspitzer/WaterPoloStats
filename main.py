@@ -640,7 +640,7 @@ def extract_key_phrases(text):
                     # Second player mentioned drew the exclusion 
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Exclusions Drawn'
-                    second_event['team'] = current_team  # Same team as mentioned
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'  # Opposite team drew the exclusion
                 break
             elif 'for' in doc_text:
                 # Handle format: "exclusion on [team1] [player1] for [team2] [player2]"
