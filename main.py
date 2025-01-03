@@ -630,18 +630,21 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
                 break
+            elif 'by' in doc_text and len(all_numbers) >= 2:
+                # When "by" is present, first player mentioned got excluded, second player drew it
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Exclusions'
+                first_event['team'] = current_team
+                
+                second_event['player'] = all_numbers[1]
+                second_event['event'] = 'Exclusions Drawn'
+                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                break
             elif len(all_numbers) >= 1 and ('excluded' in doc_text or 'kicked out' in doc_text or 'kicked' in doc_text):
-                # Handle "player was excluded by" case
-                if 'by' in doc_text and len(all_numbers) >= 2:
-                    # First player gets the exclusion (player who was kicked out)
-                    first_event['player'] = all_numbers[0]
-                    first_event['event'] = 'Exclusions'
-                    first_event['team'] = current_team
-                    
-                    # Second player gets the drawn (player who drew it)
-                    second_event['player'] = all_numbers[1]
-                    second_event['event'] = 'Exclusions Drawn'
-                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                # Handle regular exclusion without "by"
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Exclusions'
+                first_event['team'] = current_team
                 break
             elif 'for' in doc_text:
                 # Handle format: "exclusion on [team1] [player1] for [team2] [player2]"
