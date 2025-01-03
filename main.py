@@ -742,17 +742,31 @@ def extract_key_phrases(text):
                             break
             except ValueError:
                 pass
-        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text:
+        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text:
+            # Check if it's a self-turnover (committed a ball under)
+            if 'committed a ball under' in doc_text:
+                first_event['event'] = 'Turnovers'
+                if numbers:
+                    first_event['player'] = numbers[0]
+                break
+            
             first_event['event'] = 'Steals'
             
             # Handle underwater ball scenarios
-            if any(phrase in doc_text for phrase in ['under water', 'underwater', 'drew under', 'forced under']):
+            if any(phrase in doc_text for phrase in ['under water', 'underwater', 'drew under', 'forced under', 'put under']):
                 if numbers:
                     first_event['player'] = numbers[0]  # First player mentioned gets the steal
                     if len(numbers) >= 2:
-                        second_event['player'] = numbers[1]  # Second player gets the turnover
-                        second_event['event'] = 'Turnovers'
-                        second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                        if any(word in doc_text for word in ["'s", "s'", " ball"]):
+                            # Case: Player forced another player's ball under
+                            second_event['player'] = numbers[1]  # Second player gets the turnover
+                            second_event['event'] = 'Turnovers'
+                            second_event['team'] = first_event['team']  # Same team as first player
+                        else:
+                            # Regular underwater steal case
+                            second_event['player'] = numbers[1]
+                            second_event['event'] = 'Turnovers'
+                            second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 break
             
             # Check if steal was from goalie
