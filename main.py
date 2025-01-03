@@ -2013,6 +2013,15 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/delete-account', methods=['POST'])
+@login_required
+def delete_account():
+    user = User.query.get(current_user.id)
+    db.session.delete(user)
+    db.session.commit()
+    logout_user()
+    return '', 200
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():

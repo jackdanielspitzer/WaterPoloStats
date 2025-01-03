@@ -158,6 +158,26 @@
 
             <button type="submit">Save Changes</button>
         </form>
+        
+        <div style="margin-top: 30px; border-top: 1px solid #e8eaed; padding-top: 20px;">
+            <button onclick="confirmDelete()" style="background: #dc3545; color: white; border: none; padding: 12px 24px; border-radius: 6px; cursor: pointer;">Delete Account</button>
+        </div>
     </div>
+
+    <script>
+        function confirmDelete() {
+            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+                fetch('/delete-account', {
+                    method: 'POST',
+                    credentials: 'same-origin'
+                }).then(response => {
+                    if (response.ok) {
+                        alert('Sorry to see you go!');
+                        window.location.href = '/';
+                    }
+                });
+            }
+        }
+    </script>
 </body>
 </html>
