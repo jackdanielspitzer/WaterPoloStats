@@ -436,7 +436,7 @@ def extract_key_phrases(text):
     block_keywords = ['block', 'blocked','blocks']
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
-    turnover_keywords = ['turnover', 'foul','lost','loses']
+    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over']
     penalty_keywords = ['penalty', 'five meter']
     
     # Extract all player numbers first
@@ -576,26 +576,32 @@ def extract_key_phrases(text):
                 
         if token in shot_keywords and 'block' not in doc_text:
             first_event['event'] = 'Shot'
+            first_event['player'] = all_numbers[0] if all_numbers else None
+            first_event['team'] = current_team
+            # Add shot attempt when goal is scored
+            second_event['event'] = 'Shot Attempt'
+            second_event['player'] = all_numbers[0] if all_numbers else None
+            second_event['team'] = current_team
         elif token in block_keywords:
-            # Check for "got block on player X" pattern
-            if ('got block' in doc_text or 'got a block' in doc_text or 'makes a save' in doc_text):
-                if len(all_numbers) >= 1:
-                    # First event is the block
+            # Check for block scenarios
+            if any(phrase in doc_text for phrase in ['blocked by', 'got block', 'got a block', 'makes a save']):
+                if 'goalie' in doc_text or '1' in all_numbers:
                     first_event['event'] = 'Blocks'
-                    first_event['player'] = '1' if 'goalie' in doc_text else all_numbers[0]
+                    first_event['player'] = '1'
                     first_event['team'] = current_team
                     
-                    # Second event is the shot attempt
-                    second_event['event'] = 'Shot Attempt'  
-                    second_event['player'] = all_numbers[1] if len(all_numbers) > 1 else '5'
+                    # Add shot attempt for the shooter
+                    second_event['event'] = 'Shot Attempt'
+                    second_event['player'] = all_numbers[1] if len(all_numbers) > 1 else all_numbers[0]
                     second_event['team'] = 'dark' if current_team == 'light' else 'light'
-            # Check other block scenarios
-            elif ('gets a block' in doc_text or 'got a block' in doc_text or 
-                'makes a save' in doc_text or 'with a block' in doc_text):
-                first_event['event'] = 'Blocks'
-            else:
-                first_event['event'] = 'Shot Attempt'
-                second_event['event'] = 'Blocks'
+                else:
+                    first_event['event'] = 'Blocks'
+                    first_event['player'] = all_numbers[0]
+                    first_event['team'] = current_team
+                    
+                    second_event['event'] = 'Shot Attempt'
+                    second_event['player'] = all_numbers[1] if len(all_numbers) > 1 else None
+                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
         elif 'assist' in doc_text:
             first_event['event'] = 'Shot'
             # Find the assisting player's number
@@ -1726,9 +1732,14 @@ def end_game():
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
 
-        # Calculate scores
-        white_team_score = sum(dataWhite.get('Shot', []))
-        black_team_score = sum(dataBlack.get('Shot', []))
+        # Calculate scores from game-specific data
+        game_id = request.form.get('game_index')
+        if game_id in game_data:
+            white_team_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
+            black_team_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
+        else:
+            white_team_score = sum(dataWhite.get('Shot', []))
+            black_team_score = sum(dataBlack.get('Shot', []))
         print(f"Calculated scores -> White: {white_team_score}, Black: {black_team_score}")
 
         # Function to find corresponding game in other team's data
