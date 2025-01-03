@@ -6,7 +6,7 @@
     },
     "gunn": {
         "name": "Henry M. Gunn High School", 
-        "stats_private": false
+        "stats_private": true
     },
     "harker": {
         "name": "Harker High School",
