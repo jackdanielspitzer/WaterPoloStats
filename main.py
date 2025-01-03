@@ -39,6 +39,30 @@ if not check_email_config():
 db.init_app(app)
 mail = Mail(app)
 login_manager = LoginManager()
+
+def load_team_permissions():
+    try:
+        with open('team_permissions.json', 'r') as file:
+            return json.load(file)
+    except FileNotFoundError:
+        return {}
+
+def save_team_permissions(permissions):
+    with open('team_permissions.json', 'w') as file:
+        json.dump(permissions, file, indent=4)
+
+def set_team_privacy(school_slug, is_private):
+    permissions = load_team_permissions()
+    if school_slug in permissions:
+        permissions[school_slug]['stats_private'] = is_private
+        save_team_permissions(permissions)
+        return True
+    return False
+
+def is_team_private(school_slug):
+    permissions = load_team_permissions()
+    return permissions.get(school_slug, {}).get('stats_private', False)
+
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 

@@ -1,0 +1,31 @@
+
+{
+    "palo-alto": {
+        "name": "Palo Alto High School",
+        "stats_private": false
+    },
+    "gunn": {
+        "name": "Henry M. Gunn High School", 
+        "stats_private": false
+    },
+    "harker": {
+        "name": "Harker High School",
+        "stats_private": false
+    },
+    "los-gatos": {
+        "name": "Los Gatos High School",
+        "stats_private": false
+    },
+    "los-altos": {
+        "name": "Los Altos High School",
+        "stats_private": false
+    },
+    "fremont": {
+        "name": "Fremont High School",
+        "stats_private": false
+    },
+    "mountain-view": {
+        "name": "Mountain View High School",
+        "stats_private": false
+    }
+}
