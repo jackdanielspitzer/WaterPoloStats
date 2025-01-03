@@ -111,7 +111,14 @@
     <div class="profile-container">
         <h2>Profile Settings</h2>
         <form method="POST" enctype="multipart/form-data">
-            <img id="profile-preview" src="{{ url_for('static', filename=current_user.profile_image) if current_user and current_user.profile_image else '/static/default_profile.jpg' }}" class="profile-image"><br>
+            <div style="display: flex; align-items: center; gap: 30px; margin-bottom: 30px;">
+                <img id="profile-preview" src="{{ url_for('static', filename=current_user.profile_image) if current_user and current_user.profile_image else '/static/default_profile.jpg' }}" class="profile-image">
+                <div style="text-align: left;">
+                    <h3 style="margin: 0 0 10px 0;">{{ current_user.first_name }} {{ current_user.last_name }}</h3>
+                    <p style="margin: 0 0 5px 0; color: #666;">{{ current_user.email }}</p>
+                    <p style="margin: 0; color: #666;">Account Type: {{ current_user.account_type.replace('_', ' ').title() }}</p>
+                </div>
+            </div>
 
             <label>Update Profile Picture:</label><br>
             <input type="file" name="profile_image" accept="image/*" onchange="previewImage(this)"><br>
