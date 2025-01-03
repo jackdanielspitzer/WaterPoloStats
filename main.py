@@ -586,7 +586,7 @@ def extract_key_phrases(text):
                     first_event['event'] = 'Penalties'
             
         # Extract event type
-        if 'penalty' in doc_text:
+        if 'penalty' in doc_text or 'five meter' in doc_text:
             if 'drew' in doc_text or 'got' in doc_text or 'received' in doc_text:
                 # Handle when player draws or gets a penalty
                 if first_event['player'] is None and 'goalie' in doc_text:
