@@ -1187,7 +1187,7 @@ def phrase(number, action, team):
     elif action == 'Exclusions':
         return f"The {team} team {number} was excluded from the game"
     elif action == 'Turnovers':
-        return f"The {team} team {number} was turned over"
+        return f"Turnover on {team} {number}"
     elif action == 'Penalties':
         return f"The {team} team {number} got a 5-meter penalty"
     else:
