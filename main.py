@@ -614,15 +614,15 @@ def extract_key_phrases(text):
         elif token in exclusion_keywords:
             drew_keywords = ['drew', 'draws', 'draw', 'drawn by', 'by']
             if any(word in doc_text for word in drew_keywords):
-                # First player mentioned drew the exclusion
+                # First player mentioned gets exclusion
                 first_event['player'] = all_numbers[0]
-                first_event['event'] = 'Exclusions Drawn' 
+                first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
                 
                 if len(all_numbers) >= 2:
-                    # Second player mentioned got excluded
+                    # Second player gets exclusion drawn
                     second_event['player'] = all_numbers[1] 
-                    second_event['event'] = 'Exclusions'
+                    second_event['event'] = 'Exclusions Drawn'
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
             elif 'for' in doc_text:
                 # Handle "exclusion for player X" case
