@@ -590,13 +590,13 @@ def extract_key_phrases(text):
             
         # Extract event type for penalties and exclusions
         if any(phrase in doc_text for phrase in penalty_keywords) and 'penalty' in doc_text.lower():
-            if ('against' in doc_text or 'on' in doc_text) and len(all_numbers) == 1:
-                # Single exclusion event when "penalty/5m on/against player"
-                first_event['player'] = all_numbers[0]
-                first_event['event'] = 'Exclusions'
-                first_event['team'] = current_team
-            elif 'drew' in doc_text and len(all_numbers) >= 2:
+            if 'drew' in doc_text or 'for' in doc_text or ('penalty' in doc_text and len(all_numbers) == 1):
                 # First event is who drew the penalty
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Penalties'
+                first_event['team'] = current_team
+            elif len(all_numbers) >= 2:
+                # Second event is who committed the penalty
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Penalties'
                 first_event['team'] = current_team
@@ -617,20 +617,14 @@ def extract_key_phrases(text):
             break
         elif token in exclusion_keywords:
             drew_keywords = ['drew', 'draws', 'draw', 'drawn by']
-            if any(word in doc_text for word in drew_keywords):
-                # Handle "drew an exclusion" case
+            if any(word in doc_text for word in drew_keywords) or ('for' in doc_text and len(all_numbers) == 1):
+                # Handle "drew an exclusion" case or "exclusion for player X" case
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions Drawn'
                 first_event['team'] = current_team
-                
-                if len(all_numbers) >= 2:
-                    # Second event is who got excluded
-                    second_event['player'] = all_numbers[1]
-                    second_event['event'] = 'Exclusions'
-                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
                 break
-            elif 'for' in doc_text or ('exclusion' in doc_text and 'drawn by' not in doc_text and not any(word in doc_text for word in drew_keywords)):
-                # Handle case where it's an exclusion against a player (not drawn)
+            elif len(all_numbers) >= 2:
+                # Second event is who got excluded
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
