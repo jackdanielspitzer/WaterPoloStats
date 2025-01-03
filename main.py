@@ -1101,7 +1101,7 @@ def run(text):
             if sort_data(player, event, team, home_team_name, away_team_name):
                 responses.append(phrase(player, event, team))
             else:
-                responses.append(f"Player {player} not found in roster.")
+                responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
     
     return " and ".join(responses) if responses else "Could not parse the input."
 
