@@ -587,21 +587,19 @@ def extract_key_phrases(text):
             
         # Extract event type
         if 'penalty' in doc_text:
-            if 'got a penalty' in doc_text or 'received a penalty' in doc_text:
-                # Handle when player gets a penalty/exclusion, including goalie
+            if 'drew' in doc_text or 'got' in doc_text or 'received' in doc_text:
+                # Handle when player draws or gets a penalty
                 if first_event['player'] is None and 'goalie' in doc_text:
                     first_event['player'] = '1'
                 else:
                     first_event['player'] = all_numbers[0] if all_numbers else None
-                first_event['event'] = 'Exclusions'
+                
+                if 'drew' in doc_text:
+                    first_event['event'] = 'Penalties'
+                else:
+                    first_event['event'] = 'Exclusions'
+                    
                 first_event['team'] = current_team
-            elif len(all_numbers) >= 2:
-                first_event['player'] = all_numbers[0]
-                first_event['event'] = 'Penalties'
-                first_event['team'] = current_team
-                second_event['player'] = all_numbers[1]
-                second_event['event'] = 'Exclusions'
-                second_event['team'] = 'dark' if first_event['team'] == 'light' else 'light'
             break
         elif token in exclusion_keywords:
             if len(all_numbers) >= 2 and ('excluded by' in doc_text or 'by player' in doc_text):
