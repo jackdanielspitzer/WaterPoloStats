@@ -1314,12 +1314,33 @@ def search():
 # Process user input and return updated stats
 @app.route('/process', methods=['POST'])
 def process_text():
-    text = request.form['text']
-    game_id = request.form.get('game_id')
-    if game_id not in game_data:
-        return jsonify({'error': 'Invalid game ID'}), 400
-    response = run(text, game_id)
-    return jsonify({'response': response})
+    try:
+        text = request.form.get('text')
+        game_id = request.form.get('game_id')
+        home_team = request.form.get('home_team')
+        away_team = request.form.get('away_team')
+
+        if not text:
+            return jsonify({'error': 'No text provided'}), 400
+        if not game_id:
+            return jsonify({'error': 'No game ID provided'}), 400
+        if not home_team or not away_team:
+            return jsonify({'error': 'Team information missing'}), 400
+
+        if game_id not in game_data:
+            # Initialize game data if it doesn't exist
+            game_data[game_id] = {
+                'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []},
+                'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': []}
+            }
+
+        response = run(text, game_id)
+        return jsonify({'response': response})
+    except Exception as e:
+        app.logger.error(f"Error processing text: {str(e)}")
+        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
 
 def run(text, game_id):
     events = extract_key_phrases(text)
