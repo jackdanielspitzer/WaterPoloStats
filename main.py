@@ -598,6 +598,11 @@ def extract_key_phrases(text):
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Exclusions'
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                else:
+                    # Single penalty against/on player
+                    first_event['player'] = all_numbers[0] if all_numbers else None
+                    first_event['event'] = 'Penalties'
+                    first_event['team'] = current_team
             else:
                 if first_event['player'] is None:
                     if 'goalie' in doc_text:
