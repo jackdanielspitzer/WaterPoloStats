@@ -484,7 +484,7 @@ def extract_key_phrases(text):
     block_keywords = ['block', 'blocked','blocks']
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
-    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul']
+    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
     
     # Extract all player numbers first
