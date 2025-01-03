@@ -585,8 +585,8 @@ def extract_key_phrases(text):
                 elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
                     first_event['event'] = 'Penalties'
             
-        # Extract event type
-        if 'penalty' in doc_text or 'five meter' in doc_text:
+        # Extract event type for penalties
+        if any(phrase in doc_text for phrase in ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m']):
             if first_event['player'] is None and 'goalie' in doc_text:
                 first_event['player'] = '1'
             else:
