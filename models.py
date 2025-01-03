@@ -7,6 +7,7 @@ db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    is_admin = db.Column(db.Boolean, default=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     stats_private = db.Column(db.Boolean, default=False)
     profile_image = db.Column(db.String(200), default='waterpoloball.jpg')
