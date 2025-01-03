@@ -4,11 +4,11 @@
             "home_away": "Away",
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
-            "time": "15:15",
-            "date": "2025-04-23",
+            "time": "15:00",
+            "date": "2025-03-03",
             "game_type": "League Game",
             "is_scored": true,
-            "formatted_date": "April 23rd, 2025",
+            "formatted_date": "March 3rd, 2025",
             "away_box": {
                 "Player": [
                     "1",
@@ -18,7 +18,7 @@
                     "10"
                 ],
                 "Shot": [
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -53,6 +53,13 @@
                     0
                 ],
                 "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
                     0,
                     0,
                     0,
@@ -78,7 +85,7 @@
                 "Shot": [
                     0,
                     0,
-                    0,
+                    1,
                     0,
                     0
                 ],
@@ -117,6 +124,13 @@
                     0,
                     0
                 ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
                 "Turnovers": [
                     0,
                     0,
@@ -126,8 +140,8 @@
                 ]
             },
             "score": {
-                "home_team_score": 0,
-                "away_team_score": 0
+                "home_team_score": 1,
+                "away_team_score": 1
             }
         }
     ]
