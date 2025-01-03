@@ -615,26 +615,22 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Penalties'
                 first_event['team'] = current_team
             break
-        elif 'on' in doc_text or 'against' in doc_text:
-            # Handle exclusions
-            first_event['player'] = all_numbers[0] if all_numbers else None
-            first_event['event'] = 'Exclusions'
-            first_event['team'] = current_team
-            break
         elif token in exclusion_keywords:
-            if len(all_numbers) >= 2 and ('excluded by' in doc_text or 'by player' in doc_text):
-                # First event is the exclusion
+            drew_keywords = ['drew', 'draws', 'draw']
+            if any(word in doc_text for word in drew_keywords):
+                # Handle "drew an exclusion" case
                 first_event['player'] = all_numbers[0]
-                first_event['event'] = 'Exclusions'
+                first_event['event'] = 'Exclusions Drawn'
                 first_event['team'] = current_team
                 
-                # Second event is who drew it
-                second_event['player'] = all_numbers[1]
-                second_event['event'] = 'Exclusions Drawn'
-                second_event['team'] = 'dark' if current_team == 'light' else 'light'
+                if len(all_numbers) >= 2:
+                    # Second event is who got excluded
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Exclusions'
+                    second_event['team'] = 'dark' if current_team == 'light' else 'light'
                 break
-            elif len(all_numbers) == 1:
-                # Single exclusion event
+            elif 'on' in doc_text or 'against' in doc_text or any(word in doc_text for word in ['excluded', 'kicked out']):
+                # Handle receiving an exclusion
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
