@@ -735,11 +735,15 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Turnovers'
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
-        elif ('assist' in doc_text or 'assisted' in doc_text or 'assists' in doc_text) and not first_event['event']:
-            # Add assist for the helper
-            if all_numbers:
-                events.append((all_numbers[0], 'Assists', current_team))
-            return events
+        elif 'assist' in doc_text and not first_event['event']:
+            # Only process if we have both scorer and assister numbers
+            if len(all_numbers) >= 2:
+                # Add goal for scorer
+                events.append((all_numbers[0], 'Shot', current_team))
+                events.append((all_numbers[0], 'Shot Attempt', current_team))
+                # Add single assist for helper
+                events.append((all_numbers[1], 'Assists', current_team))
+                return events # Return immediately to prevent duplicate processing
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
             if 'ball under on' in doc_text:
