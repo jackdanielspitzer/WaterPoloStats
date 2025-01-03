@@ -800,7 +800,8 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             print(f"Searching away roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            # Update the player's stats directly using the found index
+            if not game_data[game_id]['dataWhite'][event]:
+                game_data[game_id]['dataWhite'][event] = [0] * len(away_roster)
             game_data[game_id]['dataWhite'][event][player_index] += 1  # Light/away team uses dataWhite
         except (StopIteration, ValueError):
             print(f"ERROR: Player {player} not found in away roster")
