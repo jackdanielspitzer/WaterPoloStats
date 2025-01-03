@@ -1631,6 +1631,37 @@ def scoring_page(school_slug, game_index):
     if not home_school or not away_school:
         return "Team configuration not found", 404
 
+    # Load rosters
+    home_roster = get_team_roster(home_team)
+    away_roster = get_team_roster(away_team)
+
+    # Initialize box scores
+    home_box = {
+        'Player': [player['cap_number'] for player in home_roster],
+        'Shot': [0] * len(home_roster),
+        'Shot Attempt': [0] * len(home_roster),
+        'Assists': [0] * len(home_roster),
+        'Blocks': [0] * len(home_roster),
+        'Steals': [0] * len(home_roster),
+        'Exclusions': [0] * len(home_roster),
+        'Exclusions Drawn': [0] * len(home_roster),
+        'Penalties': [0] * len(home_roster),
+        'Turnovers': [0] * len(home_roster)
+    }
+
+    away_box = {
+        'Player': [player['cap_number'] for player in away_roster],
+        'Shot': [0] * len(away_roster),
+        'Shot Attempt': [0] * len(away_roster),
+        'Assists': [0] * len(away_roster),
+        'Blocks': [0] * len(away_roster),
+        'Steals': [0] * len(away_roster),
+        'Exclusions': [0] * len(away_roster),
+        'Exclusions Drawn': [0] * len(away_roster),
+        'Penalties': [0] * len(away_roster),
+        'Turnovers': [0] * len(away_roster)
+    }
+
     return render_template("score_game.html",
                          home_team=home_team,
                          away_team=away_team,
@@ -1641,7 +1672,9 @@ def scoring_page(school_slug, game_index):
                          away_team_color=away_school['bg_color'],
                          away_team_text_color=away_school['text_color'],
                          home_team_logo=home_school['logo'],
-                         away_team_logo=away_school['logo'])
+                         away_team_logo=away_school['logo'],
+                         home_box=home_box,
+                         away_box=away_box)
 
 from flask import render_template
 
