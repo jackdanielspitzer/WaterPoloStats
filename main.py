@@ -2099,11 +2099,22 @@ def delete_account():
     logout_user()
     return '', 200
 
+def get_team_manager(school_slug):
+    return User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
     if request.method == 'POST':
-        if current_user.account_type == 'team_manager':
+        if current_user.is_admin:
+            # Handle privacy settings for all teams
+            for slug in schools.keys():
+                privacy_key = f'team_privacy_{slug}'
+                manager = get_team_manager(slug)
+                if manager:
+                    manager.stats_private = privacy_key in request.form
+            db.session.commit()
+        elif current_user.account_type == 'team_manager':
             current_user.stats_private = 'stats_private' in request.form
         if 'profile_image' in request.files:
             file = request.files['profile_image']
