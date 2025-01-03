@@ -742,7 +742,7 @@ def extract_key_phrases(text):
                             break
             except ValueError:
                 pass
-        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text:
+        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text:
             first_event['event'] = 'Steals'
             
             # Check if steal was from goalie
@@ -765,7 +765,12 @@ def extract_key_phrases(text):
                                 continue
                     
                     if numbers and len(numbers) > 0:
-                        second_event['player'] = numbers[-1]  # Take the last number found
+                        if len(numbers) >= 2:
+                            # For underwater ball scenarios, first number is the stealer
+                            first_event['player'] = numbers[0]
+                            second_event['player'] = numbers[1]
+                        else:
+                            second_event['player'] = numbers[-1]  # Take the last number found
                         second_event['event'] = 'Turnovers'
                         second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 except ValueError:
