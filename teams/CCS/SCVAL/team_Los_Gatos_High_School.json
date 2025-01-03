@@ -269,10 +269,10 @@
             }
         },
         {
-            "home_away": "Home",
+            "home_away": "Away",
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
-            "time": "04:45 PM",
+            "time": "15:00",
             "date": "2025-03-23",
             "game_type": "League Game",
             "is_scored": false,
