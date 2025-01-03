@@ -761,17 +761,12 @@ def extract_key_phrases(text):
             if any(phrase in doc_text for phrase in ['under water', 'underwater', 'drew under', 'forced under', 'put under']):
                 if numbers:
                     first_event['player'] = numbers[0]  # First player mentioned gets the steal
+                    first_event['event'] = 'Steals'
                     if len(numbers) >= 2:
-                        if any(word in doc_text for word in ["'s", "s'", " ball"]):
-                            # Case: Player forced another player's ball under
-                            second_event['player'] = numbers[1]  # Second player gets the turnover
-                            second_event['event'] = 'Turnovers'
-                            second_event['team'] = first_event['team']  # Same team as first player
-                        else:
-                            # Regular underwater steal case
-                            second_event['player'] = numbers[1]
-                            second_event['event'] = 'Turnovers'
-                            second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                        # Always create turnover for the opposing player
+                        second_event['player'] = numbers[1]
+                        second_event['event'] = 'Turnovers'
+                        second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 break
             
             # Check if steal was from goalie
