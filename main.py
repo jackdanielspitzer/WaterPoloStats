@@ -629,6 +629,36 @@ def extract_key_phrases(text):
                     second_event['event'] = 'Exclusions'
                     second_event['team'] = 'dark' if current_team == 'light' else 'light'
                 break
+            elif 'for' in doc_text:
+                # Handle format: "exclusion on [team1] [player1] for [team2] [player2]"
+                words = doc_text.split()
+                try:
+                    # Find indices of key words
+                    on_idx = words.index('on')
+                    for_idx = words.index('for')
+                    
+                    # Parse first team (before 'for')
+                    if any(word in words[on_idx:for_idx] for word in dark_keywords):
+                        first_event['team'] = 'dark'
+                    elif any(word in words[on_idx:for_idx] for word in light_keywords):
+                        first_event['team'] = 'light'
+                        
+                    # Parse second team (after 'for')
+                    if any(word in words[for_idx:] for word in dark_keywords):
+                        second_event['team'] = 'dark'
+                    elif any(word in words[for_idx:] for word in light_keywords):
+                        second_event['team'] = 'light'
+                    
+                    # First event is the exclusion
+                    first_event['player'] = all_numbers[0]
+                    first_event['event'] = 'Exclusions'
+                    
+                    # Second event is who drew it
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Exclusions Drawn'
+                except (ValueError, IndexError):
+                    pass
+                break
             elif 'on' in doc_text or 'against' in doc_text or any(word in doc_text for word in ['excluded', 'kicked out']):
                 # Handle receiving an exclusion
                 first_event['player'] = all_numbers[0]
