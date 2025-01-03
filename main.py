@@ -2117,6 +2117,8 @@ def profile():
             db.session.commit()
         elif current_user.account_type == 'team_manager':
             current_user.stats_private = 'stats_private' in request.form
+            db.session.add(current_user)
+            db.session.commit()
         if 'profile_image' in request.files:
             file = request.files['profile_image']
             if file and file.filename and file.filename != '':
