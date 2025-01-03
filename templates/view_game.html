@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Game View</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         body { font-family: Arial, sans-serif; }
         table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
@@ -15,10 +16,20 @@
         button:hover { background-color: #0056b3; }
         .private-message { 
             text-align: center; 
-            padding: 20px; 
+            padding: 30px; 
             background-color: #f8f9fa; 
-            border: 1px solid #dee2e6;
-            margin: 10px 0;
+            border: 2px solid #dee2e6;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .private-message h3 {
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .private-message p {
+            color: #495057;
+            margin: 5px 0;
         }
     </style>
 </head>
@@ -63,7 +74,10 @@
         </table>
         {% else %}
         <div class="private-message">
-            Statistics for {{ home_team }} are not available for public viewing.
+            <i class="fas fa-lock"></i>
+            <h3>Statistics Hidden</h3>
+            <p>The team manager has set these statistics to private.</p>
+            <p>Only team managers can view these statistics.</p>
         </div>
         {% endif %}
 
