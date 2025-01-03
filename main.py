@@ -1968,13 +1968,13 @@ def register():
                      recipients=[user.email])
         msg.html = f'''
         <div style="font-family: Arial, sans-serif;">
-            <h2>Hello {user.first_name},</h2>
+            <p>Hello {user.first_name},</p>
             <p>Please confirm your account by clicking on the link below:</p>
             <p><a href="{confirm_url}">Confirm Account</a></p>
             <br>
             <p>Sincerely,<br>The Water Polo Stats Team</p>
             <br>
-            <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+            <img src="https://water-polo-stats.repl.co/static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
             <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
         </div>
         '''
@@ -2081,14 +2081,14 @@ def forgot_password():
                                 recipients=[user.email])
                     msg.html = f'''
                     <div style="font-family: Arial, sans-serif;">
-                        <h2>Hello {user.first_name},</h2>
+                        <p>Hello {user.first_name},</p>
                         <p>To reset your password, click the link below:</p>
                         <p><a href="{reset_url}">Reset Password</a></p>
                         <p>This link will expire in 1 hour.</p>
                         <br>
                         <p>Sincerely,<br>The Water Polo Stats Team</p>
                         <br>
-                        <img src="static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+                        <img src="https://water-polo-stats.repl.co/static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
                         <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
                     </div>
                     '''
