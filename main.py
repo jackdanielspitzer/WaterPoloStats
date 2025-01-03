@@ -742,9 +742,17 @@ def extract_key_phrases(text):
                             break
             except ValueError:
                 pass
-        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text:
+        elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
-            if ('put' in doc_text and 'ball under' in doc_text) or ('forced' in doc_text and 'ball under' in doc_text):
+            if 'ball under on' in doc_text:
+                first_event['event'] = 'Turnovers'
+                if all_numbers:
+                    first_event['player'] = all_numbers[0]
+            elif 'ball under by' in doc_text:
+                first_event['event'] = 'Steals'
+                if all_numbers:
+                    first_event['player'] = all_numbers[0]
+            elif ('put' in doc_text and 'ball under' in doc_text) or ('forced' in doc_text and 'ball under' in doc_text):
                 first_event['event'] = 'Steals'
                 if all_numbers:
                     first_event['player'] = all_numbers[0]
