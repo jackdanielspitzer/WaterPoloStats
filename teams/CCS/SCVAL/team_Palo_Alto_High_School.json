@@ -12,19 +12,25 @@
             "home_box": {
                 "Player": [
                     "1",
-                    "5",
-                    "6",
-                    "8",
-                    "10"
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
                 ],
                 "Shot": [
-                    1,
+                    0,
+                    0,
+                    0,
                     0,
                     0,
                     0,
                     0
                 ],
                 "Assists": [
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -36,9 +42,13 @@
                     0,
                     0,
                     0,
+                    0,
+                    0,
                     0
                 ],
                 "Steals": [
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -50,9 +60,13 @@
                     0,
                     0,
                     0,
+                    0,
+                    0,
                     0
                 ],
                 "Exclusions Drawn": [
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -64,9 +78,13 @@
                     0,
                     0,
                     0,
+                    0,
+                    0,
                     0
                 ],
                 "Turnovers": [
+                    0,
+                    0,
                     0,
                     0,
                     0,
@@ -77,15 +95,15 @@
             "away_box": {
                 "Player": [
                     "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5"
+                    "5",
+                    "6",
+                    "8",
+                    "10"
                 ],
                 "Shot": [
+                    4,
                     0,
-                    0,
-                    1,
+                    4,
                     0,
                     0
                 ],
@@ -106,7 +124,7 @@
                 "Steals": [
                     0,
                     0,
-                    0,
+                    2,
                     0,
                     0
                 ],
@@ -140,9 +158,19 @@
                 ]
             },
             "score": {
-                "home_team_score": 1,
-                "away_team_score": 1
+                "home_team_score": 8,
+                "away_team_score": 0
             }
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Los Gatos High School",
+            "opponent_logo": "images/Los Gatos High School.png",
+            "time": "15:02",
+            "date": "2025-03-22",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 22nd, 2025"
         }
     ]
 }
