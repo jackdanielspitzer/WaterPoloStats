@@ -116,7 +116,7 @@
                 <div style="text-align: left;">
                     <h3 style="margin: 0 0 10px 0;">{{ current_user.first_name }} {{ current_user.last_name }}</h3>
                     <p style="margin: 0 0 5px 0; color: #666;">{{ current_user.email }}</p>
-                    <p style="margin: 0; color: #666;">Account Type: {{ current_user.account_type.replace('_', ' ').title() }}</p>
+                    <p style="margin: 0; color: #666;">{{ current_user.account_type.replace('_', ' ').title() }}{% if current_user.account_type == 'team_manager' %} for {{ schools[current_user.managed_team]['name'] }}{% endif %}</p>
                 </div>
             </div>
 
