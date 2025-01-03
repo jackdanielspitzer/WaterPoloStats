@@ -684,11 +684,26 @@ def extract_key_phrases(text):
                 first_event['team'] = current_team
                 break
                 
-        if token in shot_keywords or any(word in doc_text.lower() for word in ['blocked', 'shotblocked', 'hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
+        if 'blocked' in doc_text.lower() or 'shotblocked' in doc_text.lower():
+            if len(all_numbers) >= 2:
+                # First player attempted the shot
+                first_event['event'] = 'Shot Attempt'
+                first_event['player'] = all_numbers[0]
+                first_event['team'] = current_team
+                
+                # Second player blocked it
+                second_event['event'] = 'Blocks'
+                second_event['player'] = all_numbers[1]
+                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+            else:
+                first_event['event'] = 'Shot Attempt'
+                first_event['player'] = all_numbers[0] if all_numbers else None
+                first_event['team'] = current_team
+        elif token in shot_keywords or any(word in doc_text.lower() for word in ['hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
             first_event['event'] = 'Shot Attempt'
             first_event['player'] = all_numbers[0] if all_numbers else None
             first_event['team'] = current_team
-        elif token in block_keywords or 'blocked' in doc_text:
+        elif token in block_keywords:
             # Check for block scenarios
             if len(all_numbers) >= 2:
                 # First event is the block
