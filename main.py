@@ -1106,14 +1106,18 @@ def extract_events(text):
                         team = t
                         break
 
-            # Only append Shot if it hasn't been recorded yet
-            if not any(e['player'] == numbers[0] and e['event'] == 'Shot' for e in events):
-                events.append({
-                    'player': numbers[0],
-                    'event': 'Shot',
-                    'team': team
-                })
-            # Both players are from the same team in an assist
+            # Add shot attempt and goal for the scorer
+            events.append({
+                'player': numbers[0],
+                'event': 'Shot Attempt',
+                'team': team
+            })
+            events.append({
+                'player': numbers[0],
+                'event': 'Shot',
+                'team': team
+            })
+            # Add assist for the second player
             events.append({
                 'player': numbers[1],
                 'event': 'Assists',
