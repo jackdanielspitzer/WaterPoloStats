@@ -1971,10 +1971,8 @@ def register():
             <p>Hello {user.first_name},</p>
             <p>Please confirm your account by clicking on the link below:</p>
             <p><a href="{confirm_url}">Confirm Account</a></p>
-            <br>
             <p>Sincerely,<br>The Water Polo Stats Team</p>
-            <br>
-            <img src="https://water-polo-stats.repl.co/static/images/logo.png" alt="Water Polo Stats Logo" style="width: 150px;">
+            <img src="{{ url_for('static', filename='images/logo.png', _external=True) }}" alt="Water Polo Stats Logo" style="width: 150px;">
             <p style="color: #666; font-size: 12px;">This is an automated message. Please do not reply to this email.</p>
         </div>
         '''
