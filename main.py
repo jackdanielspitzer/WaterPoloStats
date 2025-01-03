@@ -684,7 +684,7 @@ def extract_key_phrases(text):
                 first_event['team'] = current_team
                 break
                 
-        if token in shot_keywords or any(word in doc_text for word in ['blocked', 'shotblocked', 'hit the bar', 'hit the crossbar', 'bar', 'crossbar']):
+        if token in shot_keywords or any(word in doc_text.lower() for word in ['blocked', 'shotblocked', 'hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
             first_event['event'] = 'Shot Attempt'
             first_event['player'] = all_numbers[0] if all_numbers else None
             first_event['team'] = current_team
