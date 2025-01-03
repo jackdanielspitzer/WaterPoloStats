@@ -137,19 +137,27 @@ def start_scoring(school_slug, game_index):
         return "School not found", 404
 
     team_name = school['name']
-    team_data = load_team_data(team_name)
-    
-    if not team_data:
-        return "Team data not found", 404
+    game = open_game(team_name, game_index)
+    if not game:
+        return "Game not found", 404
         
-    if "games" not in team_data or not isinstance(team_data["games"], list):
-        return "Invalid team data format", 404
-        
-    if game_index < 0 or game_index >= len(team_data["games"]):
-        return f"Game index {game_index} not found", 404
+    home_team = team_name if game['home_away'] == 'Home' else game['opponent']
+    away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
 
-    game = team_data["games"][game_index]
-    return render_template("scoring.html", game=game, school_slug=school_slug, game_index=game_index)
+    home_school = next((school for school in schools.values() if school['name'] == home_team), None)
+    away_school = next((school for school in schools.values() if school['name'] == away_team), None)
+
+    return render_template("score_game.html",
+                         home_team=home_team,
+                         away_team=away_team,
+                         game_index=game_index,
+                         school_slug=school_slug,
+                         home_team_color=home_school['bg_color'],
+                         home_team_text_color=home_school['text_color'],
+                         away_team_color=away_school['bg_color'],
+                         away_team_text_color=away_school['text_color'],
+                         home_team_logo=home_school['logo'],
+                         away_team_logo=away_school['logo'])
 
 def initialize_team_file(team_name):
     # Ensure the 'teams' directory exists
