@@ -111,10 +111,22 @@
     <div class="profile-container">
         <h2>Profile Settings</h2>
         <form method="POST" enctype="multipart/form-data">
-            <img src="{{ url_for('static', filename=current_user.profile_image) if current_user and current_user.profile_image else '/static/default_profile.jpg' }}" class="profile-image"><br>
+            <img id="profile-preview" src="{{ url_for('static', filename=current_user.profile_image) if current_user and current_user.profile_image else '/static/default_profile.jpg' }}" class="profile-image"><br>
 
             <label>Update Profile Picture:</label><br>
-            <input type="file" name="profile_image" accept="image/*"><br>
+            <input type="file" name="profile_image" accept="image/*" onchange="previewImage(this)"><br>
+
+            <script>
+                function previewImage(input) {
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function(e) {
+                            document.getElementById('profile-preview').src = e.target.result;
+                        }
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                }
+            </script>
 
             {% if current_user.account_type == 'team_manager' %}
             <div class="privacy-section">
