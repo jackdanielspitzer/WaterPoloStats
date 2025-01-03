@@ -2,6 +2,16 @@
     "games": [
         {
             "home_away": "Home",
+            "opponent": "Los Altos High School",
+            "opponent_logo": "images/Los Altos High School.png",
+            "time": "15:00",
+            "date": "2024-02-21",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "February 21st, 2024"
+        },
+        {
+            "home_away": "Home",
             "opponent": "Henry M. Gunn High School",
             "opponent_logo": "images/Henry M. Gunn High School.png",
             "time": "02:00 PM",
