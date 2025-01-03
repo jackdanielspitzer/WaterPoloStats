@@ -485,13 +485,13 @@ def extract_key_phrases(text):
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over']
-    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m']
+    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
     
     # Extract all player numbers first
     all_numbers = []
     for token in doc:
         try:
-            if token.text != "five":
+            if token.text not in ["five", "5m", "5meter"]:  # Avoid counting penalty terms as numbers
                 num = w2n.word_to_num(token.text)
                 if 1 <= num <= 13:
                     all_numbers.append(str(num))
@@ -586,18 +586,23 @@ def extract_key_phrases(text):
                     first_event['event'] = 'Penalties'
             
         # Extract event type for penalties
-        if any(phrase in doc_text for phrase in ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m']):
+        if any(phrase in doc_text for phrase in penalty_keywords):
             if 'against' in doc_text or 'on' in doc_text:
                 # This is an exclusion event for the defender
                 if len(all_numbers) >= 2:
                     first_event['player'] = all_numbers[1]  # Use second number (defender)
                     first_event['event'] = 'Exclusions'
                     first_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                elif len(all_numbers) == 1 and all_numbers[0] != str(first_event.get('player')):
+                    first_event['player'] = all_numbers[0]
+                    first_event['event'] = 'Exclusions'
+                    first_event['team'] = 'light' if current_team == 'dark' else 'dark'
             else:
-                if first_event['player'] is None and 'goalie' in doc_text:
-                    first_event['player'] = '1'
-                else:
-                    first_event['player'] = all_numbers[0] if all_numbers else None
+                if first_event['player'] is None:
+                    if 'goalie' in doc_text:
+                        first_event['player'] = '1'
+                    else:
+                        first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['event'] = 'Penalties'
                 first_event['team'] = current_team
             break
