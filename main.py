@@ -748,6 +748,8 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Turnovers'
                 if all_numbers:
                     first_event['player'] = all_numbers[0]
+                    second_event['player'] = None  # Clear second event to prevent additional messages
+                    second_event['event'] = None
             elif 'ball under by' in doc_text:
                 first_event['event'] = 'Steals'
                 if all_numbers:
