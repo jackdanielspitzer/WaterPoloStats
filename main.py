@@ -761,10 +761,15 @@ def extract_key_phrases(text):
                     second_event = {'event': None, 'player': None, 'team': None}
                 break
             elif 'ball under by' in doc_text:
+                # First player mentioned gets the steal
                 first_event['event'] = 'Steals'
                 if all_numbers:
                     first_event['player'] = all_numbers[0]
-                    second_event['player'] = None  # Prevent turnover from being recorded
+                    # Second player gets the turnover
+                    if len(all_numbers) >= 2:
+                        second_event['player'] = all_numbers[1]
+                        second_event['event'] = 'Turnovers'
+                        second_event['team'] = 'light' if current_team == 'dark' else 'dark'
             elif ('put' in doc_text and 'ball under' in doc_text) or ('forced' in doc_text and 'ball under' in doc_text):
                 first_event['event'] = 'Steals'
                 if all_numbers:
