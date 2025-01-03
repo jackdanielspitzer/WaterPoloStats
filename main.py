@@ -745,10 +745,16 @@ def extract_key_phrases(text):
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
             if 'ball under on' in doc_text:
-                first_event = {'event': 'Turnovers', 'player': None, 'team': current_team}
-                if all_numbers:
-                    first_event['player'] = all_numbers[0]
-                second_event = {'event': None, 'player': None, 'team': None}
+                if 'by' in doc_text and len(all_numbers) >= 2:
+                    # First player gets turnover
+                    first_event = {'event': 'Turnovers', 'player': all_numbers[0], 'team': current_team}
+                    # Second player gets steal
+                    second_event = {'event': 'Steals', 'player': all_numbers[1], 'team': 'light' if current_team == 'dark' else 'dark'}
+                else:
+                    first_event = {'event': 'Turnovers', 'player': None, 'team': current_team}
+                    if all_numbers:
+                        first_event['player'] = all_numbers[0]
+                    second_event = {'event': None, 'player': None, 'team': None}
                 break
             elif 'ball under by' in doc_text:
                 first_event['event'] = 'Steals'
