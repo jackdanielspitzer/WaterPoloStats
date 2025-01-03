@@ -2142,7 +2142,8 @@ def profile():
     
     return render_template('profile.html', 
                          schools=schools,
-                         followed_teams=json.loads(current_user.followed_teams))
+                         followed_teams=json.loads(current_user.followed_teams),
+                         get_team_manager=get_team_manager)
 
 @app.route('/forgot-password', methods=['GET', 'POST'])
 def forgot_password():
