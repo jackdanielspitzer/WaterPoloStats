@@ -491,10 +491,13 @@ def extract_key_phrases(text):
     all_numbers = []
     for token in doc:
         try:
-            if token.text not in ["five", "5m", "5meter"]:  # Avoid counting penalty terms as numbers
-                num = w2n.word_to_num(token.text)
-                if 1 <= num <= 13:
-                    all_numbers.append(str(num))
+            # Skip penalty-related tokens
+            if token.text.lower() in ["five", "5m", "5meter", "5-meter", "5meters", "5-meters"]:
+                continue
+            # Convert token to number if valid
+            num = w2n.word_to_num(token.text)
+            if 1 <= num <= 13:
+                all_numbers.append(str(num))
         except ValueError:
             continue
             
