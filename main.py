@@ -483,7 +483,7 @@ def extract_key_phrases(text):
     shot_keywords = ['goal', 'shot', 'score', 'point','scored','scores']
     block_keywords = ['block', 'blocked','blocks']
     steal_keywords = ['steal','stole','took','steals']
-    exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
+    exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
     
@@ -674,7 +674,8 @@ def extract_key_phrases(text):
                 except (ValueError, IndexError):
                     pass
                 break
-            elif 'on' in doc_text or 'against' in doc_text or any(word in doc_text for word in ['excluded', 'kicked out']):
+            elif ('on' in doc_text or 'against' in doc_text or 'kicked' in doc_text or 
+                  any(word in doc_text for word in ['excluded', 'kicked out'])):
                 # Handle receiving an exclusion
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions'
