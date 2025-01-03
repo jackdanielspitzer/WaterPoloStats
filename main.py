@@ -736,8 +736,16 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
         elif 'assist' in doc_text:
+            # Add shot attempt and goal for the scorer
             first_event['event'] = 'Shot'
-            # Find the assisting player's number
+            first_event['team'] = current_team
+            
+            # Add second event for shot attempt
+            second_event['event'] = 'Shot Attempt'
+            second_event['player'] = first_event['player']
+            second_event['team'] = first_event['team']
+            
+            # Find the assisting player's number for third event
             try:
                 assist_number = None
                 for t in tokens[i+1:]:
@@ -745,9 +753,7 @@ def extract_key_phrases(text):
                         num = w2n.word_to_num(t)
                         if 1 <= num <= 13:
                             assist_number = str(num)
-                            second_event['player'] = assist_number
-                            second_event['event'] = 'Assists'
-                            second_event['team'] = first_event['team']
+                            events.append((assist_number, 'Assists', first_event['team']))
                             break
             except ValueError:
                 pass
