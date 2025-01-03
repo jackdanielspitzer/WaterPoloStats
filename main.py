@@ -485,7 +485,7 @@ def extract_key_phrases(text):
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over']
-    penalty_keywords = ['penalty', 'five meter']
+    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter']
     
     # Extract all player numbers first
     all_numbers = []
@@ -860,7 +860,7 @@ def extract_events(text):
     steal_keywords = ['steal', 'stole', 'took', 'steals']
     assist_keywords = ['assist', 'assisted', 'helps', 'helped']
     exclusion_keywords = ['exclusion', 'kickout', 'excluded']
-    penalty_keywords = ['penalty', 'five meter']
+    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter']
 
     numbers = extract_numbers(text)
 
