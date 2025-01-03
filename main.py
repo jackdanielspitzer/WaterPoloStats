@@ -177,23 +177,33 @@ def load_team_data(team_name):
 def open_game(team_name, game_index):
     # Get the file path for the team's data
     team_file_path = get_team_file_path(team_name)
-    print(team_file_path)
+    print(f"Looking for game {game_index} in {team_file_path}")
+    
     # Check if the team file exists
-    if os.path.exists(team_file_path):
-        try:
-            with open(team_file_path, 'r') as file:
-                # Load the team data from the JSON file
-                team_data = json.load(file)
-                # Validate the game_index
-                if game_index < 0 or game_index >= len(team_data["games"]):
-                    return "out of bounds"  # Return None if the game_index is out of bounds
-                # Return the requested game
-                return team_data["games"][game_index]
-        except json.JSONDecodeError:
-            print(f"Error: {team_file_path} contains invalid JSON.")
-            return "is invalid"  # Return None if JSON is invalid
-    # Return None if the file does not exist
-    return "doesn't exist"
+    if not os.path.exists(team_file_path):
+        print(f"Team file not found: {team_file_path}")
+        initialize_team_file(team_name)
+        return None
+        
+    try:
+        with open(team_file_path, 'r') as file:
+            team_data = json.load(file)
+            if "games" not in team_data:
+                print("No games array found in team data")
+                return None
+                
+            if not isinstance(game_index, int):
+                game_index = int(game_index)
+                
+            if game_index < 0 or game_index >= len(team_data["games"]):
+                print(f"Game index {game_index} out of bounds (0-{len(team_data['games'])-1})")
+                return None
+                
+            return team_data["games"][game_index]
+                
+    except (json.JSONDecodeError, ValueError) as e:
+        print(f"Error loading game data: {str(e)}")
+        return None
 
 
 # Helper function to save a team's JSON data
