@@ -1666,26 +1666,79 @@ def quick_score(school_slug, game_index):
 
     # Process form submission
     if request.method == 'POST':
-        # Initialize game data if needed
-        if game_index not in game_data:
-            game_data[game_index] = {
-                'dataBlack': {stat: [0] * len(home_roster) for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']},
-                'dataWhite': {stat: [0] * len(away_roster) for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']}
+        try:
+            # Initialize game data
+            home_box = {
+                'Player': [str(p['cap_number']) for p in home_roster],
+                'Shot': [0] * len(home_roster),
+                'Assists': [0] * len(home_roster),
+                'Blocks': [0] * len(home_roster),
+                'Steals': [0] * len(home_roster),
+                'Exclusions': [0] * len(home_roster),
+                'Exclusions Drawn': [0] * len(home_roster),
+                'Turnovers': [0] * len(home_roster)
             }
-            game_data[game_index]['dataBlack']['Player'] = [p['cap_number'] for p in home_roster]
-            game_data[game_index]['dataWhite']['Player'] = [p['cap_number'] for p in away_roster]
 
-        # Update home team stats
-        for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
-            for i in range(len(home_roster)):
-                game_data[game_index]['dataBlack'][stat][i] = int(request.form.get(f'home_{stat}_{i}', 0))
+            away_box = {
+                'Player': [str(p['cap_number']) for p in away_roster],
+                'Shot': [0] * len(away_roster),
+                'Assists': [0] * len(away_roster),
+                'Blocks': [0] * len(away_roster),
+                'Steals': [0] * len(away_roster),
+                'Exclusions': [0] * len(away_roster),
+                'Exclusions Drawn': [0] * len(away_roster),
+                'Turnovers': [0] * len(away_roster)
+            }
 
-        # Update away team stats
-        for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
-            for i in range(len(away_roster)):
-                game_data[game_index]['dataWhite'][stat][i] = int(request.form.get(f'away_{stat}_{i}', 0))
+            # Update stats from form data
+            for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
+                for i in range(len(home_roster)):
+                    home_box[stat][i] = int(request.form.get(f'home_{stat}_{i}', 0))
+                for i in range(len(away_roster)):
+                    away_box[stat][i] = int(request.form.get(f'away_{stat}_{i}', 0))
 
-        return redirect(url_for('team_page', school_slug=school_slug))
+            # Load and update both teams' data
+            initialize_team_file(home_team)
+            initialize_team_file(away_team)
+            home_team_data = load_team_data(home_team)
+            away_team_data = load_team_data(away_team)
+
+            # Update home team's game
+            if game_index < len(home_team_data["games"]):
+                home_game = home_team_data["games"][game_index]
+                home_game["is_scored"] = True
+                home_game["home_box" if game['home_away'] == 'Home' else "away_box"] = home_box
+                home_game["away_box" if game['home_away'] == 'Home' else "home_box"] = away_box
+                
+                # Calculate and add score
+                home_score = sum(home_box['Shot'])
+                away_score = sum(away_box['Shot'])
+                home_game["score"] = {
+                    "home_team_score": home_score,
+                    "away_team_score": away_score
+                }
+
+            # Find and update away team's corresponding game
+            for idx, away_game in enumerate(away_team_data["games"]):
+                if (away_game["opponent"] == home_team and 
+                    away_game["date"] == home_game["date"]):
+                    away_game["is_scored"] = True
+                    away_game["home_box" if game['home_away'] != 'Home' else "away_box"] = home_box
+                    away_game["away_box" if game['home_away'] != 'Home' else "home_box"] = away_box
+                    away_game["score"] = {
+                        "home_team_score": away_score if game['home_away'] != 'Home' else home_score,
+                        "away_team_score": home_score if game['home_away'] != 'Home' else away_score
+                    }
+                    break
+
+            # Save both teams' data
+            save_team_data(home_team, home_team_data)
+            save_team_data(away_team, away_team_data)
+
+            return redirect(url_for('team_page', school_slug=school_slug))
+        except Exception as e:
+            print(f"Error saving game data: {str(e)}")
+            return f"Error saving game data: {str(e)}", 500
 
     # Initialize box scores
     home_box = {
