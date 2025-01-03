@@ -1601,28 +1601,33 @@ def scoring_page(school_slug, game_index):
         return "School not found", 404
 
     team_name = school['name']
-    roster = get_team_roster(team_name)  # Fetch the roster for this team
-
-    # Load game data as before
-    game = open_game(team_name, game_index)
-    if not game:
+    team_data = load_team_data(team_name)
+    
+    if not team_data or "games" not in team_data or game_index >= len(team_data["games"]):
         return "Game not found", 404
 
-    # Pass roster and game data to the scoring template
-    return render_template('score_game.html', game=game, roster=roster, school_slug=school_slug)
+    game = team_data["games"][game_index]
+    home_team = team_name if game['home_away'] == 'Home' else game['opponent']
+    away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
 
+    # Get team colors and logos
+    home_school = next((school for school in schools.values() if school['name'] == home_team), None)
+    away_school = next((school for school in schools.values() if school['name'] == away_team), None)
 
-    # game = team_data["games"][game_index]
+    if not home_school or not away_school:
+        return "Team configuration not found", 404
 
-    # home_away = team_data["home_away"]
-    # print(home_away)
-    # opponent_name = team_data["opponent"]
-    # print(opponent_name)
-
-    home_team = school['name'] if team_data['home_away'] == 'Home' else team_data['opponent']
-    away_team = team_data['opponent'] if team_data['home_away'] == 'Home' else school['name']
-    # Render the score_game template
-    return render_template("score_game.html", home_team=home_team, away_team=away_team, game_index=game_index)
+    return render_template("score_game.html",
+                         home_team=home_team,
+                         away_team=away_team,
+                         game_index=game_index,
+                         school_slug=school_slug,
+                         home_team_color=home_school['bg_color'],
+                         home_team_text_color=home_school['text_color'],
+                         away_team_color=away_school['bg_color'],
+                         away_team_text_color=away_school['text_color'],
+                         home_team_logo=home_school['logo'],
+                         away_team_logo=away_school['logo'])
 
 from flask import render_template
 
