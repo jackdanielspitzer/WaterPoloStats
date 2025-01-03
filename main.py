@@ -744,26 +744,32 @@ def extract_key_phrases(text):
                 pass
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text:
             first_event['event'] = 'Steals'
-            # Find the second player number for turnover
-            try:
-                # Look for numbers after the steal keyword
-                remaining_text = ' '.join(tokens[i+1:])
-                numbers = []
-                for t in tokens[i+1:]:
-                    if t != "point" and t != "five":
-                        try:
-                            num = w2n.word_to_num(t)
-                            if 1 <= num <= 13:
-                                numbers.append(str(num))
-                        except ValueError:
-                            continue
-                
-                if numbers and len(numbers) > 0:
-                    second_event['player'] = numbers[-1]  # Take the last number found
-                    second_event['event'] = 'Turnovers'
-                    second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
-            except ValueError:
-                pass
+            
+            # Check if steal was from goalie
+            if 'goalie' in doc_text.lower():
+                second_event['player'] = '1'  # Goalie is always number 1
+                second_event['event'] = 'Turnovers'
+                second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+            else:
+                # Find the second player number for turnover
+                try:
+                    remaining_text = ' '.join(tokens[i+1:])
+                    numbers = []
+                    for t in tokens[i+1:]:
+                        if t != "point" and t != "five":
+                            try:
+                                num = w2n.word_to_num(t)
+                                if 1 <= num <= 13:
+                                    numbers.append(str(num))
+                            except ValueError:
+                                continue
+                    
+                    if numbers and len(numbers) > 0:
+                        second_event['player'] = numbers[-1]  # Take the last number found
+                        second_event['event'] = 'Turnovers'
+                        second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                except ValueError:
+                    pass
             
     # Add events if complete
     if first_event['team'] and first_event['player'] and first_event['event']:
