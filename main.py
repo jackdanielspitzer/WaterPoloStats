@@ -2221,9 +2221,16 @@ def profile():
                 if manager:
                     new_setting = request.form.get(privacy_key) == 'on'
                     if manager.stats_private != new_setting:
+                        # Update manager's privacy setting in database
                         manager.stats_private = new_setting
                         db.session.add(manager)
-                        db.session.commit()  # Commit each change individually
+                        db.session.commit()
+                        
+                        # Update team_permissions.json
+                        permissions = load_team_permissions()
+                        if slug in permissions:
+                            permissions[slug]['stats_private'] = new_setting
+                            save_team_permissions(permissions)
         elif current_user.account_type == 'team_manager':
             current_user.stats_private = 'stats_private' in request.form
             db.session.add(current_user)
