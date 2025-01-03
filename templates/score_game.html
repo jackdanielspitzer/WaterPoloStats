@@ -357,6 +357,10 @@
                 }
 
                 const data = await response.json();
+                if (!data || !data.home_box || !data.away_box) {
+                    console.error('Invalid data format received');
+                    return;
+                }
 
                 // Update the Away Team Table
                 const awayTableBody = document.querySelector('#awayTeamTable tbody');
