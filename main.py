@@ -740,34 +740,20 @@ def extract_key_phrases(text):
             first_event['event'] = 'Shot'
             first_event['team'] = current_team
             
-            # Find the assisting player's number
-            assist_match = None
-            for t in tokens[i+1:]:
-                try:
-                    num = w2n.word_to_num(t)
-                    if 1 <= num <= 13:
-                        assist_match = str(num)
-                        events.append((assist_match, 'Assists', current_team))
-                        break
-                except ValueError:
-                    continue
-                    
             # Add shot attempt for the scorer
             second_event['event'] = 'Shot Attempt'
             second_event['player'] = first_event['player']
             second_event['team'] = first_event['team']
             
-            try:
-                assist_number = None
-                for t in tokens[i+1:]:
-                    if t != "point" and t != "five":
-                        num = w2n.word_to_num(t)
-                        if 1 <= num <= 13:
-                            assist_number = str(num)
-                            events.append((assist_number, 'Assists', first_event['team']))
-                            break
-            except ValueError:
-                pass
+            # Find the assisting player's number (only once)
+            for t in tokens[i+1:]:
+                try:
+                    num = w2n.word_to_num(t)
+                    if 1 <= num <= 13:
+                        events.append((str(num), 'Assists', current_team))
+                        break
+                except ValueError:
+                    continue
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
             if 'ball under on' in doc_text:
