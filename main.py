@@ -2112,8 +2112,10 @@ def profile():
                 privacy_key = f'team_privacy_{slug}'
                 manager = get_team_manager(slug)
                 if manager:
-                    manager.stats_private = request.form.get(privacy_key) == 'on'
-                    db.session.add(manager)  # Ensure the change is tracked
+                    new_value = request.form.get(privacy_key) == 'on'
+                    if manager.stats_private != new_value:
+                        manager.stats_private = new_value
+                        db.session.add(manager)
             db.session.commit()
         elif current_user.account_type == 'team_manager':
             current_user.stats_private = 'stats_private' in request.form
