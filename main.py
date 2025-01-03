@@ -692,23 +692,18 @@ def extract_key_phrases(text):
             second_event['event'] = 'Shot Attempt'
             second_event['player'] = all_numbers[0] if all_numbers else None
             second_event['team'] = current_team
-        elif token in block_keywords:
+        elif token in block_keywords or 'blocked' in doc_text:
             # Check for block scenarios
-            if any(phrase in doc_text for phrase in ['blocked by', 'got block', 'got a block', 'makes a save']):
-                shooter_team = current_team
-                shooter_number = all_numbers[0]
-                blocker_number = '1' if ('goalie' in doc_text or '1' in all_numbers) else all_numbers[1]
-                blocker_team = 'dark' if shooter_team == 'light' else 'light'
-
-                # First event is the shot attempt
-                first_event['event'] = 'Shot Attempt'
-                first_event['player'] = shooter_number
-                first_event['team'] = shooter_team
+            if len(all_numbers) >= 2:
+                # First event is the block
+                first_event['event'] = 'Blocks'
+                first_event['player'] = all_numbers[0]
+                first_event['team'] = current_team
                 
-                # Second event is the block
-                second_event['event'] = 'Blocks'
-                second_event['player'] = blocker_number
-                second_event['team'] = blocker_team
+                # Second event is the shot attempt
+                second_event['event'] = 'Shot Attempt'
+                second_event['player'] = all_numbers[1]
+                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
 
         elif token in turnover_keywords or any(phrase in doc_text for phrase in [
             'lost the ball', 'turned the ball over', 'offensive foul', 
