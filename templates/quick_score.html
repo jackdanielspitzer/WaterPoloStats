@@ -65,6 +65,7 @@
                         <th>Blocks</th>
                         <th>Exclusions</th>
                         <th>Drawn</th>
+                        <th>Penalties</th>
                         <th>Turnovers</th>
                     </tr>
                     {% for player in home_box['Player'] %}
@@ -76,6 +77,7 @@
                         <td><input type="number" class="stat-input" name="home_Blocks_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="home_Exclusions_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="home_Exclusions Drawn_{{ loop.index0 }}" value="0" min="0"></td>
+                        <td><input type="number" class="stat-input" name="home_Penalties_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="home_Turnovers_{{ loop.index0 }}" value="0" min="0"></td>
                     </tr>
                     {% endfor %}
@@ -93,6 +95,7 @@
                         <th>Blocks</th>
                         <th>Exclusions</th>
                         <th>Drawn</th>
+                        <th>Penalties</th>
                         <th>Turnovers</th>
                     </tr>
                     {% for player in away_box['Player'] %}
@@ -104,6 +107,7 @@
                         <td><input type="number" class="stat-input" name="away_Blocks_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="away_Exclusions_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="away_Exclusions Drawn_{{ loop.index0 }}" value="0" min="0"></td>
+                        <td><input type="number" class="stat-input" name="away_Penalties_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="away_Turnovers_{{ loop.index0 }}" value="0" min="0"></td>
                     </tr>
                     {% endfor %}

@@ -1751,6 +1751,7 @@ def quick_score(school_slug, game_index):
         'Steals': [0] * len(home_roster),
         'Exclusions': [0] * len(home_roster),
         'Exclusions Drawn': [0] * len(home_roster),
+        'Penalties': [0] * len(home_roster),
         'Turnovers': [0] * len(home_roster)
     }
 
@@ -1762,6 +1763,7 @@ def quick_score(school_slug, game_index):
         'Steals': [0] * len(away_roster),
         'Exclusions': [0] * len(away_roster),
         'Exclusions Drawn': [0] * len(away_roster),
+        'Penalties': [0] * len(away_roster),
         'Turnovers': [0] * len(away_roster)
     }
 
