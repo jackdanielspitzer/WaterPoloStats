@@ -1615,6 +1615,89 @@ def delete_game(school_slug, game_id):
 
 #     return render_template('scoring_page.html', school=school, game=game)
 
+@app.route('/team/<school_slug>/quick_score/<int:game_index>', methods=['GET', 'POST'])
+def quick_score(school_slug, game_index):
+    school = schools.get(school_slug)
+    if not school:
+        return "School not found", 404
+
+    team_name = school['name']
+    game = open_game(team_name, game_index)
+    if not game:
+        return "Game not found", 404
+
+    home_team = team_name if game['home_away'] == 'Home' else game['opponent']
+    away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
+
+    # Get team colors and logos
+    home_school = next((school for school in schools.values() if school['name'] == home_team), None)
+    away_school = next((school for school in schools.values() if school['name'] == away_team), None)
+
+    if not home_school or not away_school:
+        return "Team configuration not found", 404
+
+    # Load rosters
+    home_roster = get_team_roster(home_team)
+    away_roster = get_team_roster(away_team)
+
+    # Process form submission
+    if request.method == 'POST':
+        # Initialize game data if needed
+        if game_index not in game_data:
+            game_data[game_index] = {
+                'dataBlack': {stat: [0] * len(home_roster) for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']},
+                'dataWhite': {stat: [0] * len(away_roster) for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']}
+            }
+            game_data[game_index]['dataBlack']['Player'] = [p['cap_number'] for p in home_roster]
+            game_data[game_index]['dataWhite']['Player'] = [p['cap_number'] for p in away_roster]
+
+        # Update home team stats
+        for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
+            for i in range(len(home_roster)):
+                game_data[game_index]['dataBlack'][stat][i] = int(request.form.get(f'home_{stat}_{i}', 0))
+
+        # Update away team stats
+        for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
+            for i in range(len(away_roster)):
+                game_data[game_index]['dataWhite'][stat][i] = int(request.form.get(f'away_{stat}_{i}', 0))
+
+        return redirect(url_for('team_page', school_slug=school_slug))
+
+    # Initialize box scores
+    home_box = {
+        'Player': [player['cap_number'] for player in home_roster],
+        'Shot': [0] * len(home_roster),
+        'Assists': [0] * len(home_roster),
+        'Blocks': [0] * len(home_roster),
+        'Steals': [0] * len(home_roster),
+        'Exclusions': [0] * len(home_roster),
+        'Exclusions Drawn': [0] * len(home_roster),
+        'Turnovers': [0] * len(home_roster)
+    }
+
+    away_box = {
+        'Player': [player['cap_number'] for player in away_roster],
+        'Shot': [0] * len(away_roster),
+        'Assists': [0] * len(away_roster),
+        'Blocks': [0] * len(away_roster),
+        'Steals': [0] * len(away_roster),
+        'Exclusions': [0] * len(away_roster),
+        'Exclusions Drawn': [0] * len(away_roster),
+        'Turnovers': [0] * len(away_roster)
+    }
+
+    return render_template('quick_score.html',
+                         home_team=home_team,
+                         away_team=away_team,
+                         game_index=game_index,
+                         school_slug=school_slug,
+                         home_team_color=home_school['bg_color'],
+                         home_team_text_color=home_school['text_color'],
+                         away_team_color=away_school['bg_color'],
+                         away_team_text_color=away_school['text_color'],
+                         home_box=home_box,
+                         away_box=away_box)
+
 @app.route('/team/<school_slug>/score/<int:game_index>', methods=['GET'])
 def scoring_page(school_slug, game_index):
     school = schools.get(school_slug)
@@ -2112,10 +2195,8 @@ def profile():
                 privacy_key = f'team_privacy_{slug}'
                 manager = get_team_manager(slug)
                 if manager:
-                    new_value = request.form.get(privacy_key) == 'on'
-                    if manager.stats_private != new_value:
-                        manager.stats_private = new_value
-                        db.session.add(manager)
+                    manager.stats_private = request.form.get(privacy_key) == 'on'
+                    db.session.add(manager)  # Ensure the change is tracked
             db.session.commit()
         elif current_user.account_type == 'team_manager':
             current_user.stats_private = 'stats_private' in request.form
