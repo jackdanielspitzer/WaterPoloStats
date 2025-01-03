@@ -752,6 +752,7 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Steals'
                 if all_numbers:
                     first_event['player'] = all_numbers[0]
+                    second_event['player'] = None  # Prevent turnover from being recorded
             elif ('put' in doc_text and 'ball under' in doc_text) or ('forced' in doc_text and 'ball under' in doc_text):
                 first_event['event'] = 'Steals'
                 if all_numbers:
