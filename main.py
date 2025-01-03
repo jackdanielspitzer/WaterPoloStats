@@ -1742,8 +1742,8 @@ def view_scoring(school_slug, game_index):
         away_team_slug = next((slug for slug, s in schools.items() if s['name'] == away_team_name), None)
         away_manager = User.query.filter_by(managed_team=away_team_slug, account_type='team_manager').first()
         
-        home_stats_private = home_manager.stats_private if home_manager else False
-        away_stats_private = away_manager.stats_private if away_manager else False
+        home_stats_private = home_manager.stats_private if home_manager and not current_user.is_admin else False
+        away_stats_private = away_manager.stats_private if away_manager and not current_user.is_admin else False
 
         return render_template(
             "view_game.html",
@@ -1907,11 +1907,11 @@ def edit_roster(school_slug):
     if not school:
         return "School not found", 404
 
-    if not current_user.account_type == 'team_manager':
-        flash('Only team managers can edit rosters')
+    if not (current_user.account_type == 'team_manager' or current_user.is_admin):
+        flash('Only team managers and admins can edit rosters')
         return redirect(url_for('team_page', school_slug=school_slug))
         
-    if current_user.managed_team != school_slug:
+    if not current_user.is_admin and current_user.managed_team != school_slug:
         flash(f'Not permitted - you can only edit the roster for {schools[current_user.managed_team]["name"]}')
         return redirect(url_for('team_page', school_slug=school_slug))
 
