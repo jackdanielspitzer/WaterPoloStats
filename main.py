@@ -1020,7 +1020,7 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             if event not in game_data[game_id]['dataBlack'] or not isinstance(game_data[game_id]['dataBlack'][event], list):
                 game_data[game_id]['dataBlack'][event] = [0] * len(home_roster)
                 
-            game_data[game_id]['dataBlack'][event][player_index] += 1  # Dark/home team uses dataBlack
+            game_data[game_id]['dataBlack'][event][player_index] += 0.25  # Dark/home team uses dataBlack, divided by 4
             return True
         except (StopIteration, ValueError, IndexError) as e:
             print(f"ERROR: Player {player} not found in home roster: {str(e)}")
