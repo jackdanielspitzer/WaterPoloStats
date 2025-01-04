@@ -654,10 +654,10 @@ def extract_key_phrases(text):
             elif len(all_numbers) >= 2 and ('excluded' in doc_text or 'kicked out' in doc_text or 'kicked' in doc_text):
                 if 'was excluded by' in doc_text.lower():
                     # For pattern "dark 1 was excluded by light 10"
-                    # Player 1 gets Exclusion, Player 10 gets Exclusion Drawn
+                    # Player 10 gets Exclusions Drawn, Player 1 gets Exclusion
                     events = [
-                        (all_numbers[0], 'Exclusions', current_team),  # Player 1 gets excluded
-                        (all_numbers[1], 'Exclusions Drawn', 'light' if current_team == 'dark' else 'dark')  # Player 10 drew it
+                        (all_numbers[1], 'Exclusions', 'light' if current_team == 'dark' else 'dark'),  # Player 10 gets excluded
+                        (all_numbers[0], 'Exclusions Drawn', current_team)  # Player 1 drew it
                     ]
                     return events
                 elif 'excluded' in doc_text:
