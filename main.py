@@ -1647,12 +1647,12 @@ def player_stats(player_name):
                             for key in combined_stats:
                                 if key in stats_box and isinstance(stats_box[key], list):
                                     combined_stats[key] += stats_box[key][player_index]
-                            
-                            # After all stats are collected, divide by 2
-                            for key in combined_stats:
-                                combined_stats[key] = combined_stats[key] // 2
                         except (ValueError, KeyError, IndexError):
                             continue
+                            
+    # After ALL stats are collected from ALL games, divide by 2
+    for key in combined_stats:
+        combined_stats[key] = combined_stats[key] // 2
                             
         except (FileNotFoundError, json.JSONDecodeError):
             continue
