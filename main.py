@@ -1583,12 +1583,12 @@ def game_details(game_id):
 @login_required
 def player_stats(player_name):
     school_slug = request.args.get('school_slug')
-    school_slug = request.args.get('school_slug')
     # Check if stats are private
     manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
     if manager and manager.stats_private and (not current_user.is_authenticated or manager.id != current_user.id):
         flash('These statistics are private')
         return redirect(url_for('team_page', school_slug=school_slug))
+    
     if not school_slug:
         # Search all schools for the player
         for slug, school_data in schools.items():
@@ -1596,8 +1596,10 @@ def player_stats(player_name):
             if any(player['name'] == player_name for player in roster):
                 school_slug = slug
                 break
+                
     if not school_slug:
         return "Player not found in any school", 404
+        
     school = schools.get(school_slug)
     if not school:
         return "School not found", 404
@@ -1621,37 +1623,38 @@ def player_stats(player_name):
     if not player_info:
         return "Player not found", 404
 
-    cap_number = player_info['cap_number']
-
-    # Process stats only from this team's games
-    team_name = school['name']
+    cap_number = str(player_info['cap_number'])
     team_file = f'teams/CCS/SCVAL/team_{team_name.replace(" ", "_")}.json'
+
     try:
         with open(team_file, 'r') as file:
             team_data = json.load(file)
+            
             for game in team_data.get('games', []):
                 if not game.get('is_scored'):
                     continue
-                    
-                # If home team
-                if game['home_away'] == 'Home':
-                    box = game.get('home_box', {})
-                else:
-                    box = game.get('away_box', {})
-                    
-                try:
-                    if 'Player' not in box:
+                
+                # Check both home and away boxes for stats
+                for box_key in ['home_box', 'away_box']:
+                    box = game.get(box_key, {})
+                    if not box or 'Player' not in box:
                         continue
-                    player_index = box['Player'].index(str(cap_number))
-                    # Add stats if player found
-                    for key in combined_stats:
-                        if key in box and isinstance(box[key], list):
-                            combined_stats[key] += box[key][player_index]
-                except (ValueError, KeyError, IndexError):
-                    continue
-                    
-    except (FileNotFoundError, json.JSONDecodeError):
-        print(f"Error loading team file: {team_file}")
+                        
+                    try:
+                        # Find player's index in this box score
+                        player_index = box['Player'].index(cap_number)
+                        
+                        # Add up all stats from this game
+                        for stat_key in combined_stats:
+                            if stat_key in box and isinstance(box[stat_key], list):
+                                combined_stats[stat_key] += box[stat_key][player_index]
+                    except (ValueError, IndexError):
+                        # Player not found in this box score, skip it
+                        continue
+                        
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"Error loading team file {team_file}: {str(e)}")
+        return f"Error loading team statistics: {str(e)}", 500
 
     return render_template('player_stats.html', player_name=player_name, stats=combined_stats, school_slug=school_slug)
 
