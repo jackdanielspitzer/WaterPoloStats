@@ -755,6 +755,18 @@ def extract_key_phrases(text):
                 # If it's just an assist
                 events.append((all_numbers[0], 'Assists', current_team))
                 return events
+        elif token in steal_keywords or 'stole' in doc_text or 'stolen' in doc_text:
+            # Handle steals
+            if all_numbers:
+                first_event['event'] = 'Steals'
+                first_event['player'] = all_numbers[0]
+                first_event['team'] = current_team
+                # Add turnover for the other team if there's another player number
+                if len(all_numbers) >= 2:
+                    second_event['event'] = 'Turnovers'
+                    second_event['player'] = all_numbers[1]
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                break
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
             if 'ball under on' in doc_text:
