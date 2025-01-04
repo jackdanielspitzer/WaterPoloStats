@@ -1909,6 +1909,7 @@ def quick_score(school_slug, game_index):
             home_box = {
                 'Player': [str(p['cap_number']) for p in home_roster],
                 'Shot': [0] * len(home_roster),
+                'Shot Attempt': [0] * len(home_roster),
                 'Assists': [0] * len(home_roster),
                 'Blocks': [0] * len(home_roster),
                 'Steals': [0] * len(home_roster),
@@ -1921,6 +1922,7 @@ def quick_score(school_slug, game_index):
             away_box = {
                 'Player': [str(p['cap_number']) for p in away_roster],
                 'Shot': [0] * len(away_roster),
+                'Shot Attempt': [0] * len(away_roster),
                 'Assists': [0] * len(away_roster),
                 'Blocks': [0] * len(away_roster),
                 'Steals': [0] * len(away_roster),
