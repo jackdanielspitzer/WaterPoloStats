@@ -1605,6 +1605,7 @@ def player_stats(player_name):
     # Initialize combined stats
     combined_stats = {
         'Shot': 0,
+        'Shot Attempt': 0,
         'Blocks': 0,
         'Steals': 0,
         'Exclusions': 0,
