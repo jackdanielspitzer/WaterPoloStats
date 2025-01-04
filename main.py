@@ -1654,9 +1654,24 @@ def player_stats(player_name):
         except (FileNotFoundError, json.JSONDecodeError):
             continue
             
-    # After ALL stats are collected from ALL games, divide by 2
-    for key in combined_stats:
-        combined_stats[key] = combined_stats[key] // 2
+    # Get player's team type (home/away) from game data
+    team_name = school['name']
+    for team_school in schools.values():
+        team_file = f'teams/CCS/SCVAL/team_{team_school["name"].replace(" ", "_")}.json'
+        try:
+            with open(team_file, 'r') as file:
+                team_data = json.load(file)
+                for game in team_data.get('games', []):
+                    if not game.get('is_scored'):
+                        continue
+                    # If this player is on away team, divide by 2
+                    if (game['home_away'] == 'Away' and team_school['name'] == team_name) or \
+                       (game['home_away'] == 'Home' and game['opponent'] == team_name):
+                        for key in combined_stats:
+                            combined_stats[key] = combined_stats[key] // 2
+                        break
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
 
     return render_template('player_stats.html', player_name=player_name, stats=combined_stats, school_slug=school_slug)
 
