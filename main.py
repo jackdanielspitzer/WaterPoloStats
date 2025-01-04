@@ -1634,23 +1634,24 @@ def player_stats(player_name):
                 if not game.get('is_scored'):
                     continue
                 
-                # Check both home and away boxes for stats
-                for box_key in ['home_box', 'away_box']:
-                    box = game.get(box_key, {})
-                    if not box or 'Player' not in box:
-                        continue
-                        
-                    try:
-                        # Find player's index in this box score
-                        player_index = box['Player'].index(cap_number)
-                        
-                        # Add up all stats from this game
-                        for stat_key in combined_stats:
-                            if stat_key in box and isinstance(box[stat_key], list):
-                                combined_stats[stat_key] += box[stat_key][player_index]
-                    except (ValueError, IndexError):
-                        # Player not found in this box score, skip it
-                        continue
+                # Determine which box to check based on whether team was home or away
+                box_key = 'home_box' if game['home_away'] == 'Home' else 'away_box'
+                box = game.get(box_key, {})
+                
+                if not box or 'Player' not in box:
+                    continue
+                    
+                try:
+                    # Find player's index in this box score
+                    player_index = box['Player'].index(cap_number)
+                    
+                    # Add up all stats from this game
+                    for stat_key in combined_stats:
+                        if stat_key in box and isinstance(box[stat_key], list):
+                            combined_stats[stat_key] += box[stat_key][player_index]
+                except (ValueError, IndexError):
+                    # Player not found in this box score, skip it
+                    continue
                         
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error loading team file {team_file}: {str(e)}")
