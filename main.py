@@ -1653,8 +1653,8 @@ def player_stats(player_name):
     except (ValueError, KeyError, IndexError):
                             continue
 
-                except (FileNotFoundError, json.JSONDecodeError):
-                    continue
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
             
     # After ALL stats are collected from ALL games, divide by 2
     for key in combined_stats:
