@@ -1649,9 +1649,6 @@ def player_stats(player_name):
                                     combined_stats[key] += stats_box[key][player_index]
                         except (ValueError, KeyError, IndexError):
                             continue
-                            
-    except (ValueError, KeyError, IndexError):
-                            continue
 
         except (FileNotFoundError, json.JSONDecodeError):
             continue
