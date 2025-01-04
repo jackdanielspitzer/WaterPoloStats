@@ -1654,7 +1654,7 @@ def player_stats(player_name):
         except (FileNotFoundError, json.JSONDecodeError):
             continue
             
-    # Process the stats based on each game's context
+    # Process stats from all games
     team_name = school['name']
     for team_school in schools.values():
         team_file = f'teams/CCS/SCVAL/team_{team_school["name"].replace(" ", "_")}.json'
@@ -1664,27 +1664,21 @@ def player_stats(player_name):
                 for game in team_data.get('games', []):
                     if not game.get('is_scored'):
                         continue
-                        
-                    # Determine if this player is in home or away box
-                    if (game['home_away'] == 'Home' and team_school['name'] == team_name) or \
-                       (game['home_away'] == 'Away' and game['opponent'] == team_name):
-                        # Player is in home box, divide by 4
-                        for key in combined_stats:
-                            if key in game.get('home_box', {}) and isinstance(game['home_box'][key], list):
-                                try:
-                                    player_index = game['home_box']['Player'].index(str(cap_number))
-                                    combined_stats[key] = combined_stats[key] + (game['home_box'][key][player_index] // 4)
-                                except (ValueError, KeyError, IndexError):
-                                    continue
-                    else:
-                        # Player is in away box, divide by 2
-                        for key in combined_stats:
-                            if key in game.get('away_box', {}) and isinstance(game['away_box'][key], list):
-                                try:
-                                    player_index = game['away_box']['Player'].index(str(cap_number))
-                                    combined_stats[key] = combined_stats[key] + (game['away_box'][key][player_index] // 2)
-                                except (ValueError, KeyError, IndexError):
-                                    continue
+
+                    # Check both home and away boxes
+                    for box_key in ['home_box', 'away_box']:
+                        box = game.get(box_key, {})
+                        try:
+                            if 'Player' not in box:
+                                continue
+                            player_index = box['Player'].index(str(cap_number))
+                            # Add stats if player found
+                            for key in combined_stats:
+                                if key in box and isinstance(box[key], list):
+                                    combined_stats[key] += box[key][player_index]
+                        except (ValueError, KeyError, IndexError):
+                            continue
+
         except (FileNotFoundError, json.JSONDecodeError):
             continue
 
