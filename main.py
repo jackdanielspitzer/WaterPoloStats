@@ -758,15 +758,16 @@ def extract_key_phrases(text):
                 second_event['player'] = all_numbers[1]
                 second_event['team'] = 'light' if current_team == 'dark' else 'dark'
 
-        elif token in turnover_keywords or any(phrase in doc_text for phrase in [
+        elif 'turnover' in doc_text or 'turned over' in doc_text or token in turnover_keywords or any(phrase in doc_text for phrase in [
             'lost the ball', 'turned the ball over', 'offensive foul', 
             'foul on offense', 'lost possession', 'dropped the ball'
         ]):
             # Handle single player turnover events
-            if len(all_numbers) == 1:
+            if all_numbers:
                 first_event['event'] = 'Turnovers'
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
+                break
         elif ('assist' in doc_text or 'assisted' in doc_text):
             if len(all_numbers) >= 2 and ('scored' in doc_text or 'goal' in doc_text):
                 # Handle goal and assist in any order
