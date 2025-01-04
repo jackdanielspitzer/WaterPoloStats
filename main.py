@@ -807,7 +807,12 @@ def extract_key_phrases(text):
                 break
         elif token in steal_keywords or 'stole from' in doc_text or 'steal from' in doc_text or 'under water' in doc_text or 'underwater' in doc_text or 'drew under' in doc_text or 'forced under' in doc_text or 'committed a ball under' in doc_text or 'put a ball under' in doc_text or 'forced a ball under' in doc_text or 'forced the ball under' in doc_text or 'ball under on' in doc_text or 'ball under by' in doc_text:
             # Check if it's a ball under scenario with specified players
-            if 'ball under on' in doc_text:
+            if 'ball under by' in doc_text:
+                first_event = {'event': 'Steals', 'player': all_numbers[0], 'team': current_team}
+                if len(all_numbers) >= 2:
+                    second_event = {'event': 'Turnovers', 'player': all_numbers[1], 'team': 'light' if current_team == 'dark' else 'dark'}
+                break
+            elif 'ball under on' in doc_text:
                 if 'by' in doc_text or 'forced' in doc_text:
                     # First player gets steal
                     first_event = {'event': 'Steals', 'player': all_numbers[0], 'team': current_team}
@@ -1261,7 +1266,7 @@ def phrase(number, action, team):
     elif action == 'Blocks':
         return f"The {team} team {number} blocked the shot"
     elif action == 'Steals':
-        return f"The {team} team {number} stole the ball"
+        return f"Steal by {team} {number}"
     elif action == 'Exclusions Drawn':
         return f"The {team} team {number} drew an exclusion"
     elif action == 'Exclusions':
