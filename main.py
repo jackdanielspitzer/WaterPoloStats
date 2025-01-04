@@ -1651,7 +1651,7 @@ def player_stats(player_name):
                             continue
                             
     except (ValueError, KeyError, IndexError):
-            continue
+                            continue
 
         except (FileNotFoundError, json.JSONDecodeError):
             continue
