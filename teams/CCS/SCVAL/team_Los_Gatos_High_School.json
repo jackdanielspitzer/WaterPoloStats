@@ -183,6 +183,184 @@
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
             "time": null,
+            "date": "2025-01-06",
+            "game_type": "Non-League Game",
+            "is_scored": true,
+            "formatted_date": "January 6th, 2025",
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 1
+            }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
             "date": "2025-01-08",
             "game_type": "League Game",
             "is_scored": true,
