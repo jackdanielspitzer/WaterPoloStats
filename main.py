@@ -1669,7 +1669,12 @@ def player_stats(player_name):
                        (game['home_away'] == 'Home' and game['opponent'] == team_name):
                         for key in combined_stats:
                             combined_stats[key] = combined_stats[key] // 2
-                        break
+                    # If this player is on home team, divide by 4
+                    elif (game['home_away'] == 'Home' and team_school['name'] == team_name) or \
+                         (game['home_away'] == 'Away' and game['opponent'] == team_name):
+                        for key in combined_stats:
+                            combined_stats[key] = combined_stats[key] // 4
+                    break
         except (FileNotFoundError, json.JSONDecodeError):
             continue
 
