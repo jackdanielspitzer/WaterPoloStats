@@ -65,6 +65,7 @@ def is_team_private(school_slug):
 
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.login_message = "Please sign in to view or score games."
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -2092,6 +2093,7 @@ def scoring_page(school_slug, game_index):
 from flask import render_template
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
+@login_required
 def view_scoring(school_slug, game_index):
     # Get manager info but don't block access
     manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
