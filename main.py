@@ -1623,64 +1623,35 @@ def player_stats(player_name):
 
     cap_number = player_info['cap_number']
 
-    # Load all SCVAL team files to check for games where this player participated
-    for team_school in schools.values():
-        team_file = f'teams/CCS/SCVAL/team_{team_school["name"].replace(" ", "_")}.json'
-        try:
-            with open(team_file, 'r') as file:
-                team_data = json.load(file)
-                
-                # Check each scored game
-                for game in team_data.get('games', []):
-                    if not game.get('is_scored'):
-                        continue
-
-                    # Check both home and away boxes for the player's stats
-                    for box_key in ['home_box', 'away_box']:
-                        stats_box = game.get(box_key, {})
-                        if 'Player' not in stats_box:
-                            continue
-                            
-                        try:
-                            # Find player in this box score
-                            player_index = stats_box['Player'].index(str(cap_number))
-                            # Add up stats
-                            for key in combined_stats:
-                                if key in stats_box and isinstance(stats_box[key], list):
-                                    combined_stats[key] += stats_box[key][player_index]
-                        except (ValueError, KeyError, IndexError):
-                            continue
-
-        except (FileNotFoundError, json.JSONDecodeError):
-            continue
-            
-    # Process stats from all games
+    # Process stats only from this team's games
     team_name = school['name']
-    for team_school in schools.values():
-        team_file = f'teams/CCS/SCVAL/team_{team_school["name"].replace(" ", "_")}.json'
-        try:
-            with open(team_file, 'r') as file:
-                team_data = json.load(file)
-                for game in team_data.get('games', []):
-                    if not game.get('is_scored'):
+    team_file = f'teams/CCS/SCVAL/team_{team_name.replace(" ", "_")}.json'
+    try:
+        with open(team_file, 'r') as file:
+            team_data = json.load(file)
+            for game in team_data.get('games', []):
+                if not game.get('is_scored'):
+                    continue
+                    
+                # If home team
+                if game['home_away'] == 'Home':
+                    box = game.get('home_box', {})
+                else:
+                    box = game.get('away_box', {})
+                    
+                try:
+                    if 'Player' not in box:
                         continue
-
-                    # Check both home and away boxes
-                    for box_key in ['home_box', 'away_box']:
-                        box = game.get(box_key, {})
-                        try:
-                            if 'Player' not in box:
-                                continue
-                            player_index = box['Player'].index(str(cap_number))
-                            # Add stats if player found
-                            for key in combined_stats:
-                                if key in box and isinstance(box[key], list):
-                                    combined_stats[key] += box[key][player_index]
-                        except (ValueError, KeyError, IndexError):
-                            continue
-
-        except (FileNotFoundError, json.JSONDecodeError):
-            continue
+                    player_index = box['Player'].index(str(cap_number))
+                    # Add stats if player found
+                    for key in combined_stats:
+                        if key in box and isinstance(box[key], list):
+                            combined_stats[key] += box[key][player_index]
+                except (ValueError, KeyError, IndexError):
+                    continue
+                    
+    except (FileNotFoundError, json.JSONDecodeError):
+        print(f"Error loading team file: {team_file}")
 
     return render_template('player_stats.html', player_name=player_name, stats=combined_stats, school_slug=school_slug)
 
