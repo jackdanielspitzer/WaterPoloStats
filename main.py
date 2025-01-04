@@ -2178,103 +2178,75 @@ def view_scoring(school_slug, game_index):
 
 @app.route('/end_game', methods=['POST'])
 def end_game():
-    print("Received request to /end_game")
-
     try:
+        game_id = request.form.get('game_index')
         white_team_name = request.form.get('white_team_name')
         black_team_name = request.form.get('black_team_name')
         game_index = int(request.form.get('game_index'))
 
-        print(f"White Team Name: {white_team_name}")
-        print(f"Black Team Name: {black_team_name}")
+        if not white_team_name or not black_team_name or game_id not in game_data:
+            raise ValueError("Missing required data")
 
-        if not white_team_name or not black_team_name:
-            raise ValueError("Team names must be provided!")
-
-        # Initialize team files if they don't exist
+        # Initialize team files
         initialize_team_file(white_team_name)
         initialize_team_file(black_team_name)
 
-        # Load both teams' data
+        # Load team data
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
 
-        # Calculate scores from game-specific data
-        game_id = request.form.get('game_index')
-        if game_id in game_data:
-            white_team_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
-            black_team_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
-        else:
-            white_team_score = sum(dataWhite.get('Shot', []))
-            black_team_score = sum(dataBlack.get('Shot', []))
-        print(f"Calculated scores -> White: {white_team_score}, Black: {black_team_score}")
-
-        # Function to find corresponding game in other team's data
-        def find_matching_game(games, opponent, date):
-            for idx, game in enumerate(games):
-                if game["opponent"] == opponent and game["date"] == date:
-                    return idx
-            return None
-
-        # Update white team's game
         if game_index < len(white_team_data["games"]):
             white_game = white_team_data["games"][game_index]
             white_game_date = white_game["date"]
 
-            # Find corresponding game in black team's data
-            black_game_index = find_matching_game(black_team_data["games"], white_team_name, white_game_date)
+            # Find corresponding black team game
+            black_game_index = next((i for i, g in enumerate(black_team_data["games"]) 
+                                   if g["opponent"] == white_team_name and g["date"] == white_game_date), None)
 
             if black_game_index is not None:
-                # Get both games
                 black_game = black_team_data["games"][black_game_index]
 
-                # Mark both games as scored
+                # Mark games as scored
                 white_game["is_scored"] = True
                 black_game["is_scored"] = True
 
-                # Always put dataWhite in the away_box for white team's game
-                # and dataBlack in the home_box for black team's game
-                white_game["away_box"] = dataWhite
-                white_game["home_box"] = dataBlack
-                black_game["home_box"] = dataBlack
-                black_game["away_box"] = dataWhite
+                # Save current game stats
+                white_game["away_box"] = game_data[game_id]['dataWhite']
+                white_game["home_box"] = game_data[game_id]['dataBlack']
+                black_game["home_box"] = game_data[game_id]['dataBlack']
+                black_game["away_box"] = game_data[game_id]['dataWhite']
 
-                # Add scores to both games
+                # Calculate and save scores
+                white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
+                black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
+                
                 white_game["score"] = {
-                    "white_team_score": white_team_score,
-                    "black_team_score": black_team_score
+                    "white_team_score": white_score,
+                    "black_team_score": black_score
                 }
                 black_game["score"] = {
-                    "white_team_score": white_team_score,
-                    "black_team_score": black_team_score
+                    "white_team_score": white_score,
+                    "black_team_score": black_score
                 }
 
-                # Save both teams' data
+                # Save updated data
                 save_team_data(white_team_name, white_team_data)
                 save_team_data(black_team_name, black_team_data)
 
-                print(f"Successfully updated game data for both {white_team_name} and {black_team_name}")
-            else:
-                print(f"Could not find matching game for {black_team_name}")
+        # Clear game data
+        if game_id in game_data:
+            del game_data[game_id]
 
-        # Reset stats for next game
-        reset_team_stats()
-
-        # Redirect to /home after processing
         school_slug = request.form.get('school_slug')
-
         if not school_slug:
-            for slug, school in schools.items():
-                if school['name'] == white_team_name:
-                    school_slug = slug
-                    break
+            school_slug = next((slug for slug, school in schools.items() 
+                              if school['name'] == white_team_name), None)
 
-        # Redirect to the original team's page
         return redirect(url_for('team_page', school_slug=school_slug))
 
     except Exception as e:
-        print(f"Exception during end_game processing: {str(e)}")
-        return jsonify({'response': f'Error occurred during processing: {str(e)}'}), 500
+        print(f"Error in end_game: {str(e)}")
+        return jsonify({'error': str(e)}), 500
 
 # File path for storing rosters
 ROSTER_FILE = 'team_rosters.json'
