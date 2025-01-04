@@ -1650,12 +1650,15 @@ def player_stats(player_name):
                         except (ValueError, KeyError, IndexError):
                             continue
                             
+    except (ValueError, KeyError, IndexError):
+                            continue
+
+        except (FileNotFoundError, json.JSONDecodeError):
+            continue
+            
     # After ALL stats are collected from ALL games, divide by 2
     for key in combined_stats:
         combined_stats[key] = combined_stats[key] // 2
-                            
-        except (FileNotFoundError, json.JSONDecodeError):
-            continue
 
     return render_template('player_stats.html', player_name=player_name, stats=combined_stats, school_slug=school_slug)
 
