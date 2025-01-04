@@ -65,7 +65,7 @@ def is_team_private(school_slug):
 
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-login_manager.login_message = "Please sign in to view or score games."
+login_manager.login_message = "Please sign in to view or score games and player statistics."
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -1581,7 +1581,7 @@ def game_details(game_id):
 
 
 @app.route('/player_stats/<string:player_name>', methods=['GET'])
-@login_required
+@login_required 
 def player_stats(player_name):
     school_slug = request.args.get('school_slug')
     # Check if stats are private
