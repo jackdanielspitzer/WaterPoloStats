@@ -74,35 +74,35 @@
             </tr>
             <tr>
                 <td>Goals</td>
-                <td>{{ stats.Shot }}</td>
+                <td>{{ (stats.Shot / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Shot Attempts</td>
-                <td>{{ stats['Shot Attempt'] }}</td>
+                <td>{{ (stats['Shot Attempt'] / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Blocks</td>
-                <td>{{ stats.Blocks }}</td>
+                <td>{{ (stats.Blocks / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Steals</td>
-                <td>{{ stats.Steals }}</td>
+                <td>{{ (stats.Steals / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Exclusions</td>
-                <td>{{ stats.Exclusions }}</td>
+                <td>{{ (stats.Exclusions / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Exclusions Drawn</td>
-                <td>{{ stats['Exclusions Drawn'] }}</td>
+                <td>{{ (stats['Exclusions Drawn'] / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Penalties</td>
-                <td>{{ stats.Penalties }}</td>
+                <td>{{ (stats.Penalties / 4)|int }}</td>
             </tr>
             <tr>
                 <td>Turnovers</td>
-                <td>{{ stats.Turnovers }}</td>
+                <td>{{ (stats.Turnovers / 4)|int }}</td>
             </tr>
         </table>
         <a href="{{ url_for('team_page', school_slug=school_slug) }}" class="back-link">Back to Team</a>
