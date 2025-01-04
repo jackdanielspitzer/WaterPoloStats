@@ -1933,11 +1933,13 @@ def quick_score(school_slug, game_index):
             }
 
             # Update stats from form data
-            for stat in ['Shot', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
+            for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers']:
                 for i in range(len(home_roster)):
-                    home_box[stat][i] = int(request.form.get(f'home_{stat}_{i}', 0))
+                    form_value = request.form.get(f'home_{stat.replace(" ", "")}_{i}', 0)
+                    home_box[stat][i] = int(form_value)
                 for i in range(len(away_roster)):
-                    away_box[stat][i] = int(request.form.get(f'away_{stat}_{i}', 0))
+                    form_value = request.form.get(f'away_{stat.replace(" ", "")}_{i}', 0)
+                    away_box[stat][i] = int(form_value)
 
             # Load and update both teams' data
             initialize_team_file(home_team)
