@@ -2294,16 +2294,17 @@ def edit_roster(school_slug):
     if not school:
         return "School not found", 404
 
-    if not current_user.account_type == 'team_manager':
+    if not current_user.is_admin and not current_user.account_type == 'team_manager':
         flash('Only team managers can edit rosters')
         return redirect(url_for('team_page', school_slug=school_slug))
         
-    if not current_user.managed_team:
-        flash('You are not assigned to manage any team')
-        return redirect(url_for('team_page', school_slug=school_slug))
-    if current_user.managed_team != school_slug:
-        flash(f'Not permitted - you can only edit the roster for {schools[current_user.managed_team]["name"]}')
-        return redirect(url_for('team_page', school_slug=school_slug))
+    if not current_user.is_admin:
+        if not current_user.managed_team:
+            flash('You are not assigned to manage any team')
+            return redirect(url_for('team_page', school_slug=school_slug))
+        if current_user.managed_team != school_slug:
+            flash(f'Not permitted - you can only edit the roster for {schools[current_user.managed_team]["name"]}')
+            return redirect(url_for('team_page', school_slug=school_slug))
 
     team_name = school['name']  # Fetch team name
     roster = get_team_roster(team_name)  # Load the team's roster
