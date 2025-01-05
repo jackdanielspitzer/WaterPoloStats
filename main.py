@@ -2313,8 +2313,35 @@ def edit_roster(school_slug):
     if request.method == 'POST':
         if 'delete_cap_number' in request.form:  # Handle delete request
             delete_cap_number = request.form.get('delete_cap_number')
+            
+            # Update game data to preserve stats when removing player
+            team_data = load_team_data(team_name)
+            for game in team_data.get('games', []):
+                if game.get('is_scored'):
+                    box_key = 'home_box' if game['home_away'] == 'Home' else 'away_box'
+                    if box_key in game:
+                        box = game[box_key]
+                        if 'Player' in box:
+                            try:
+                                # Find index of player to delete
+                                del_idx = box['Player'].index(delete_cap_number)
+                                
+                                # Remove player's stats while preserving other players' stats
+                                for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals',
+                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
+                                    if stat in box and isinstance(box[stat], list):
+                                        box[stat].pop(del_idx)
+                                
+                                # Remove player from Player list
+                                box['Player'].pop(del_idx)
+                            except ValueError:
+                                pass  # Player not found in this game's box score
+            
+            # Update roster and save
             roster = [player for player in roster if player['cap_number'] != delete_cap_number]
-            save_roster(team_name, sorted(roster, key=lambda x: sort_cap_number(x['cap_number'])))  # Save updated and sorted roster
+            save_roster(team_name, sorted(roster, key=lambda x: sort_cap_number(x['cap_number'])))
+            save_team_data(team_name, team_data)
+            
             return redirect(url_for('edit_roster', school_slug=school_slug))
 
         else:  # Handle adding a player
