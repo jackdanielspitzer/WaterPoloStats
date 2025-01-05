@@ -2340,6 +2340,26 @@ def edit_roster(school_slug):
             # Sort the roster and save
             roster = sorted(roster, key=lambda x: sort_cap_number(x['cap_number']))
             save_roster(team_name, roster)  # Save the updated and sorted roster
+            
+            # Update existing games' box scores
+            team_data = load_team_data(team_name)
+            for game in team_data.get('games', []):
+                if game.get('is_scored'):
+                    # Update home or away box based on game location
+                    box_key = 'home_box' if game['home_away'] == 'Home' else 'away_box'
+                    if box_key in game:
+                        game[box_key]['Player'] = [p['cap_number'] for p in roster]
+                        for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
+                            if stat in game[box_key]:
+                                # Extend or trim stats list to match new roster length
+                                current_len = len(game[box_key][stat])
+                                new_len = len(roster)
+                                if current_len < new_len:
+                                    game[box_key][stat].extend([0] * (new_len - current_len))
+                                elif current_len > new_len:
+                                    game[box_key][stat] = game[box_key][stat][:new_len]
+            
+            save_team_data(team_name, team_data)
 
             # Redirect to the same page to refresh the roster
             return redirect(url_for('edit_roster', school_slug=school_slug))
