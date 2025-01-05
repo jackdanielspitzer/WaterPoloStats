@@ -2298,6 +2298,9 @@ def edit_roster(school_slug):
         flash('Only team managers can edit rosters')
         return redirect(url_for('team_page', school_slug=school_slug))
         
+    if not current_user.managed_team:
+        flash('You are not assigned to manage any team')
+        return redirect(url_for('team_page', school_slug=school_slug))
     if current_user.managed_team != school_slug:
         flash(f'Not permitted - you can only edit the roster for {schools[current_user.managed_team]["name"]}')
         return redirect(url_for('team_page', school_slug=school_slug))
