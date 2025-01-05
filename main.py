@@ -2341,23 +2341,39 @@ def edit_roster(school_slug):
             roster = sorted(roster, key=lambda x: sort_cap_number(x['cap_number']))
             save_roster(team_name, roster)  # Save the updated and sorted roster
             
-            # Update existing games' box scores
+            # Update game data
             team_data = load_team_data(team_name)
             for game in team_data.get('games', []):
                 if game.get('is_scored'):
-                    # Update home or away box based on game location
                     box_key = 'home_box' if game['home_away'] == 'Home' else 'away_box'
                     if box_key in game:
-                        game[box_key]['Player'] = [p['cap_number'] for p in roster]
-                        for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
-                            if stat in game[box_key]:
-                                # Extend or trim stats list to match new roster length
-                                current_len = len(game[box_key][stat])
-                                new_len = len(roster)
-                                if current_len < new_len:
-                                    game[box_key][stat].extend([0] * (new_len - current_len))
-                                elif current_len > new_len:
-                                    game[box_key][stat] = game[box_key][stat][:new_len]
+                        old_box = game[box_key].copy()
+                        old_players = old_box.get('Player', [])
+                        
+                        # Initialize new box with updated roster
+                        new_box = {
+                            'Player': [p['cap_number'] for p in roster],
+                            'Shot': [0] * len(roster),
+                            'Shot Attempt': [0] * len(roster),
+                            'Assists': [0] * len(roster),
+                            'Blocks': [0] * len(roster),
+                            'Steals': [0] * len(roster),
+                            'Exclusions': [0] * len(roster),
+                            'Exclusions Drawn': [0] * len(roster),
+                            'Penalties': [0] * len(roster),
+                            'Turnovers': [0] * len(roster)
+                        }
+                        
+                        # Map existing stats to new roster positions
+                        for new_idx, cap_number in enumerate(new_box['Player']):
+                            if cap_number in old_players:
+                                old_idx = old_players.index(cap_number)
+                                for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals',
+                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
+                                    if stat in old_box and old_idx < len(old_box[stat]):
+                                        new_box[stat][new_idx] = old_box[stat][old_idx]
+                        
+                        game[box_key] = new_box
             
             save_team_data(team_name, team_data)
 
