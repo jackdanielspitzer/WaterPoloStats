@@ -2092,6 +2092,16 @@ def scoring_page(school_slug, game_index):
 
 from flask import render_template
 
+@app.route('/admin/users', methods=['GET'])
+@login_required
+def view_users():
+    if not current_user.is_admin:
+        flash('Only administrators can view user list')
+        return redirect(url_for('home'))
+        
+    users = User.query.all()
+    return render_template('admin_users.html', users=users)
+
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
 @login_required
 def view_scoring(school_slug, game_index):
