@@ -167,6 +167,174 @@
                 "white_team_score": 0,
                 "black_team_score": 2
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-21",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "January 21st, 2025",
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 1
+            }
         }
     ]
 }

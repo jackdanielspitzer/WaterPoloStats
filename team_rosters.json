@@ -159,6 +159,12 @@
             "position": "Center"
         },
         {
+            "cap_number": "7",
+            "name": "Fred",
+            "grade": "9",
+            "position": "Center"
+        },
+        {
             "cap_number": "8",
             "name": "James",
             "grade": "12",
