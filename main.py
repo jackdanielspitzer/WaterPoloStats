@@ -2094,9 +2094,13 @@ from flask import render_template
 
 @app.route('/admin/users', methods=['GET'])
 def view_users():
-    users = User.query.order_by(User.created_at.desc()).all()
+    users = User.query.all()
+    print("\nAll registered users:")
     for user in users:
-        print(f"User: {user.email}, Type: {user.account_type}, Created: {user.created_at}")
+        print(f"Email: {user.email}")
+        print(f"Account type: {user.account_type}")
+        print(f"Created: {user.created_at}")
+        print("-" * 40)
     return render_template('admin_users.html', users=users)
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
