@@ -2093,13 +2093,10 @@ def scoring_page(school_slug, game_index):
 from flask import render_template
 
 @app.route('/admin/users', methods=['GET'])
-@login_required
 def view_users():
-    if not current_user.is_admin:
-        flash('Only administrators can view user list')
-        return redirect(url_for('home'))
-        
     users = User.query.order_by(User.created_at.desc()).all()
+    for user in users:
+        print(f"User: {user.email}, Type: {user.account_type}, Created: {user.created_at}")
     return render_template('admin_users.html', users=users)
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
