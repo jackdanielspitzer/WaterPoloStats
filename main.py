@@ -2099,7 +2099,7 @@ def view_users():
         flash('Only administrators can view user list')
         return redirect(url_for('home'))
         
-    users = User.query.all()
+    users = User.query.order_by(User.created_at.desc()).all()
     return render_template('admin_users.html', users=users)
 
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
