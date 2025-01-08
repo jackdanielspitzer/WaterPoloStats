@@ -151,8 +151,9 @@
         <div class="quarter-display" style="font-size: 1.5em; margin-bottom: 10px;">Quarter: <span id="currentQuarter">1</span></div>
         <div class="timer-display" style="font-size: 2em; margin-bottom: 10px;"><span id="minutes">7</span>:<span id="seconds">00</span></div>
         <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
-        <button id="resetTimer" style="padding: 10px 20px; margin-right: 10px;">Reset</button>
-        <button id="endQuarter" style="padding: 10px 20px;">End Quarter</button>
+        <button id="rewindTimer" style="padding: 10px 20px; margin-right: 10px;">Rewind 10s</button>
+        <button id="endQuarter" style="padding: 10px 20px; margin-right: 10px;">End Quarter</button>
+        <button id="overtime" style="padding: 10px 20px;">Overtime</button>
     </div>
     <div class="score-container">
         <div class="team-score away-team">
@@ -302,20 +303,29 @@
             }
         }
 
-        function resetTimer() {
+        function rewindTimer() {
+            const newTime = Math.min(420, timeRemaining + 10);
+            if (newTime !== timeRemaining) {
+                timeRemaining = newTime;
+                updateTimerDisplay();
+            }
+        }
+
+        function startOvertime() {
             clearInterval(timerInterval);
             isTimerRunning = false;
-            isPaused = false; // Reset paused flag
-            timeRemaining = 420;
-            currentQuarter = 1;
+            isPaused = false;
+            timeRemaining = 180; // 3 minutes overtime
+            currentQuarter = 'OT';
             document.getElementById('startPauseTimer').textContent = 'Start';
             document.getElementById('startPauseTimer').disabled = false;
             updateTimerDisplay();
         }
 
         document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
-        document.getElementById('resetTimer').addEventListener('click', resetTimer);
+        document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
         document.getElementById('endQuarter').addEventListener('click', endQuarter);
+        document.getElementById('overtime').addEventListener('click', startOvertime);
 
 
         // Reset stats when page loads
