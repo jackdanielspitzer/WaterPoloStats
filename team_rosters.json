@@ -240,5 +240,19 @@
             "grade": "10",
             "position": "Driver"
         }
+    ],
+    "Harker High School": [
+        {
+            "cap_number": "1",
+            "name": "Joe",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "6",
+            "name": "John",
+            "grade": "10",
+            "position": "Attacker"
+        }
     ]
 }

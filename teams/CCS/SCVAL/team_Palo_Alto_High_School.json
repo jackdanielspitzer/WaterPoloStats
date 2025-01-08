@@ -714,13 +714,13 @@
         },
         {
             "home_away": "Home",
-            "opponent": "Harker High School",
-            "opponent_logo": "images/Harker High School.png",
-            "time": "15:15",
-            "date": "2025-03-20",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": "15:02",
+            "date": "2025-03-03",
             "game_type": "League Game",
             "is_scored": false,
-            "formatted_date": "March 20th, 2025"
+            "formatted_date": "March 3rd, 2025"
         }
     ]
 }
