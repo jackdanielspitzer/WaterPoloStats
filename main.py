@@ -747,7 +747,12 @@ def extract_key_phrases(text):
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
         elif token in shot_keywords or any(word in doc_text.lower() for word in ['hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
             first_event['player'] = all_numbers[0] if all_numbers else None
-            first_event['team'] = current_team
+            
+            # If blocked or missed, it should be for the opposing team if only one team color is mentioned
+            if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
+                first_event['team'] = 'light' if current_team == 'dark' else 'dark'
+            else:
+                first_event['team'] = current_team
             
             # If it's a goal (scored)
             if 'scored' in doc_text or 'score' in doc_text:
@@ -760,7 +765,18 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Shot Attempt'
         elif token in block_keywords:
             # Check for block scenarios
-            if len(all_numbers) >= 2:
+            if 'goalie' in doc_text.lower():
+                # First event is the block by goalie
+                first_event['event'] = 'Blocks'
+                first_event['player'] = '1'  # Goalie is always number 1
+                first_event['team'] = current_team
+                
+                # Second event is shot attempt by the opposing team
+                if len(all_numbers) >= 1:
+                    second_event['event'] = 'Shot Attempt'
+                    second_event['player'] = all_numbers[0]
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+            elif len(all_numbers) >= 2:
                 # First event is the block
                 first_event['event'] = 'Blocks'
                 first_event['player'] = all_numbers[0]
@@ -770,6 +786,11 @@ def extract_key_phrases(text):
                 second_event['event'] = 'Shot Attempt'
                 second_event['player'] = all_numbers[1]
                 second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+            elif len(all_numbers) == 1:
+                # If only one number, assume it's the blocker and the shot was from opposing team
+                first_event['event'] = 'Blocks'
+                first_event['player'] = all_numbers[0]
+                first_event['team'] = current_team
 
         elif 'turnover' in doc_text or 'turned over' in doc_text or token in turnover_keywords or any(phrase in doc_text for phrase in [
             'lost the ball', 'turned the ball over', 'offensive foul', 
