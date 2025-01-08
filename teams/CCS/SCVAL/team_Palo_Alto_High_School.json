@@ -711,6 +711,16 @@
                 "white_team_score": 0,
                 "black_team_score": 1
             }
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Harker High School",
+            "opponent_logo": "images/Harker High School.png",
+            "time": "15:15",
+            "date": "2025-03-20",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 20th, 2025"
         }
     ]
 }
