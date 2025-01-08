@@ -147,6 +147,12 @@
     <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Water Polo Statistics Tracker</h1>
 
     <!-- Score Display -->
+    <div class="timer-container" style="text-align: center; margin-bottom: 20px;">
+        <div class="quarter-display" style="font-size: 1.5em; margin-bottom: 10px;">Quarter: <span id="currentQuarter">1</span></div>
+        <div class="timer-display" style="font-size: 2em; margin-bottom: 10px;"><span id="minutes">7</span>:<span id="seconds">00</span></div>
+        <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
+        <button id="resetTimer" style="padding: 10px 20px;">Reset</button>
+    </div>
     <div class="score-container">
         <div class="team-score away-team">
             <img src="{{ url_for('static', filename=away_team_logo) }}" alt="{{ away_team }} Logo" style="width: 80px; height: 80px; margin-bottom: 10px;">
@@ -230,6 +236,67 @@
     </form>
 
     <script>
+        // Timer functionality
+        let timerInterval;
+        let timeRemaining = 420; // 7 minutes in seconds
+        let currentQuarter = 1;
+        let isTimerRunning = false;
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            document.getElementById('currentQuarter').textContent = currentQuarter;
+        }
+
+        function startPauseTimer() {
+            const button = document.getElementById('startPauseTimer');
+            if (!isTimerRunning) {
+                // Start timer
+                timerInterval = setInterval(() => {
+                    if (timeRemaining > 0) {
+                        timeRemaining--;
+                        updateTimerDisplay();
+                    } else {
+                        if (currentQuarter < 4) {
+                            currentQuarter++;
+                            timeRemaining = 420;
+                            updateTimerDisplay();
+                            clearInterval(timerInterval);
+                            isTimerRunning = false;
+                            button.textContent = 'Start';
+                        } else {
+                            clearInterval(timerInterval);
+                            isTimerRunning = false;
+                            button.textContent = 'Game Over';
+                            button.disabled = true;
+                        }
+                    }
+                }, 1000);
+                isTimerRunning = true;
+                button.textContent = 'Pause';
+            } else {
+                // Pause timer
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                button.textContent = 'Start';
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            timeRemaining = 420;
+            currentQuarter = 1;
+            document.getElementById('startPauseTimer').textContent = 'Start';
+            document.getElementById('startPauseTimer').disabled = false;
+            updateTimerDisplay();
+        }
+
+        document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
+        document.getElementById('resetTimer').addEventListener('click', resetTimer);
+
         // Reset stats when page loads
         window.onload = async function() {
             try {
