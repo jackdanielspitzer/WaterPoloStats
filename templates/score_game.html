@@ -484,22 +484,23 @@
                 const awayTableBody = document.querySelector('#awayTeamTable tbody');
                 awayTableBody.innerHTML = ''; // Clear the current rows
 
-                (data.away_box?.Player || []).forEach((player, index) => {
-                    const row = `
-                        <tr>
-                            <td>${player || ''}</td>
-                            <td>${data.away_box?.Shot?.[index] || 0}</td>
-                            <td>${data.away_box?.['Shot Attempt']?.[index] || 0}</td>
-                            <td>${data.away_box?.Assists?.[index] || 0}</td>
-                            <td>${data.away_box?.Blocks?.[index] || 0}</td>
-                            <td>${data.away_box?.Steals?.[index] || 0}</td>
-                            <td>${data.away_box?.Exclusions?.[index] || 0}</td>
-                            <td>${data.away_box?.['Exclusions Drawn']?.[index] || 0}</td>
-                            <td>${data.away_box?.Penalties?.[index] || 0}</td>
-                            <td>${data.away_box?.Turnovers?.[index] || 0}</td>
-                        </tr>`;
-                    awayTableBody.innerHTML += row;
-                });
+                const awayPlayers = data.away_box?.Player || [];
+                for (let i = 0; i < awayPlayers.length; i++) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${awayPlayers[i] || ''}</td>
+                        <td>${data.away_box?.Shot?.[i] || 0}</td>
+                        <td>${data.away_box?.['Shot Attempt']?.[i] || 0}</td>
+                        <td>${data.away_box?.Assists?.[i] || 0}</td>
+                        <td>${data.away_box?.Blocks?.[i] || 0}</td>
+                        <td>${data.away_box?.Steals?.[i] || 0}</td>
+                        <td>${data.away_box?.Exclusions?.[i] || 0}</td>
+                        <td>${data.away_box?.['Exclusions Drawn']?.[i] || 0}</td>
+                        <td>${data.away_box?.Penalties?.[i] || 0}</td>
+                        <td>${data.away_box?.Turnovers?.[i] || 0}</td>
+                    `;
+                    awayTableBody.appendChild(row);
+                }
 
                 // Update the Home Team Table
                 const homeTableBody = document.querySelector('#homeTeamTable tbody');
