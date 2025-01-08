@@ -136,6 +136,18 @@
             cursor: pointer;
             margin-top: 20px;
         }
+        #gameLog {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            overflow-y: auto;
+            height: 200px; /* Adjust as needed */
+        }
+        #gameLogEntry {
+            margin-bottom: 5px;
+        }
+
     </style>
 </head>
 <body>
@@ -236,6 +248,10 @@
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
         <button type="submit">Finish Game</button>
     </form>
+
+    <div id="gameLog">
+        </div>
+
 
     <script>
         // Timer functionality
@@ -364,7 +380,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('result').innerText = data.response || 'Success';
+                    const resultText = data.response || 'Success';
+                    document.getElementById('result').innerText = resultText;
+                    addEventToLog(resultText);
                 } else {
                     console.error("Error in response:", response.status);
                     document.getElementById('result').innerText = 'Error processing text.';
@@ -416,7 +434,9 @@
 
                 if (response.ok) {
                     const data = await response.json();
-                    document.getElementById('result').innerText = data.response || 'Success';
+                    const resultText = data.response || 'Success';
+                    document.getElementById('result').innerText = resultText;
+                    addEventToLog(resultText);
                 } else {
                     console.error("Error in response:", response.status);
                     document.getElementById('result').innerText = 'Error processing text.';
@@ -534,6 +554,14 @@
             setTimeout(updateTables, 500); // Update shortly after submission
         });
         updateTables(); // Initial update
+
+        function addEventToLog(eventText) {
+            const timestamp = new Date().toLocaleString();
+            const logEntry = document.createElement('div');
+            logEntry.id = "gameLogEntry";
+            logEntry.innerHTML = `<strong>${timestamp}:</strong> ${eventText}`;
+            document.getElementById('gameLog').appendChild(logEntry);
+        }
 
 
     </script>
