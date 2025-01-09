@@ -695,10 +695,11 @@ def extract_key_phrases(text):
                     # For "X was excluded by Y", X gets excluded, Y drew it
                     first_player = all_numbers[0]  # Player who was excluded
                     second_player = all_numbers[1]  # Player who drew it
-                    return [
-                        (first_player, 'Exclusions', current_team),  # First player gets excluded
-                        (second_player, 'Exclusions Drawn', 'light' if current_team == 'dark' else 'dark')  # Second player drew it
+                    events = [
+                        (first_player, 'Exclusions', current_team),
+                        (second_player, 'Exclusions Drawn', 'light' if current_team == 'dark' else 'dark')
                     ]
+                    return events
                 elif 'excluded' in doc_text:
                     # Handle "X excluded Y" pattern - first player drew it, second player got excluded
                     first_event['player'] = all_numbers[0]
@@ -1347,10 +1348,9 @@ def phrase(number, action, team):
     elif action == 'Exclusions Drawn':
         return f"The {team} team {number} drew an exclusion"
     elif action == 'Exclusions':
-        if action == 'Exclusions':
-            return f"The {team} team {number} was excluded"
-        elif action == 'Exclusions Drawn':
-            return f"The {team} team {number} drew an exclusion"
+        return f"{team} {number} was excluded"
+    elif action == 'Exclusions Drawn':
+        return f"{team} {number} drew an exclusion"
     elif action == 'Turnovers':
         return f"Turnover on {team} {number}"
     elif action == 'Penalties':
