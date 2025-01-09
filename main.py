@@ -479,43 +479,14 @@ def extract_key_phrases(text):
     doc = nlp(text.lower())
     doc_text = doc.text
     events = []
-    
-    # Event type keywords
-    event_types = {
-        'Shot': ['goal', 'shot', 'score', 'point', 'scored', 'scores'],
-        'Block': ['block', 'blocked', 'blocks', 'save', 'saved'],
-        'Steal': ['steal', 'stole', 'took', 'steals'],
-        'Exclusion': ['exclusion', 'kickout', 'excluded', 'kicked out', 'kick out', 'kicked'],
-        'Turnover': ['turnover', 'foul', 'lost', 'loses', 'underwater', 'put the ball under', 'fouled'],
-        'Penalty': ['penalty', 'five meter', '5 meter', '5-meter', '5m']
-    }
-    
-    # Team identification
-    dark_keywords = ['dark', 'black', 'blue']
-    light_keywords = ['light', 'white']
-    
-    # First, determine the primary event type
-    primary_event = None
-    for event_type, keywords in event_types.items():
-        if any(keyword in doc_text for keyword in keywords):
-            primary_event = event_type
-            break
-            
-    if not primary_event:
-        return [(None, None, None)]
-        
-    # Event-specific team assignment rules
-    def get_teams_for_event(event_type, current_team):
-        opposing_team = 'light' if current_team == 'dark' else 'dark'
-        rules = {
-            'Shot': (current_team, None),  # Shot is always by acting team
-            'Block': (current_team, opposing_team),  # Block by current, shot attempt by opposing
-            'Steal': (current_team, opposing_team),  # Steal by current, turnover by opposing
-            'Exclusion': (opposing_team, current_team),  # Exclusion on opposing, drawn by current
-            'Turnover': (current_team, None),  # Turnover is always by acting team
-            'Penalty': (opposing_team, current_team)  # Penalty on opposing, drawn by current
-        }
-        return rules.get(primary_event, (current_team, None))
+    dark_keywords = ['dark','black','blue']
+    light_keywords = ['light','white']
+    shot_keywords = ['goal', 'shot', 'score', 'point','scored','scores']
+    block_keywords = ['block', 'blocked','blocks']
+    steal_keywords = ['steal','stole','took','steals']
+    exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
+    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under', 'fouled']
+    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
     
     # Extract all player numbers first
     all_numbers = []
@@ -549,47 +520,15 @@ def extract_key_phrases(text):
 
     tokens = [token.text for token in doc]
     
-    # Find primary team
+    # Find team first
     current_team = None
-    for token in tokens:
+    for i, token in enumerate(tokens):
         if token in dark_keywords:
             current_team = 'dark'
             break
         elif token in light_keywords:
             current_team = 'light'
             break
-            
-    if not current_team:
-        return [(None, None, None)]
-        
-    # Get team assignments based on event type
-    primary_team, secondary_team = get_teams_for_event(primary_event, current_team)
-    
-    # Get sentiment to determine success/failure
-    sentiment = predict_connotation(text)
-    
-    # Initialize events based on primary action
-    first_event = {'team': primary_team, 'player': None, 'event': None}
-    second_event = {'team': secondary_team, 'player': None, 'event': None} if secondary_team else None
-    
-    # Extract player numbers
-    all_numbers = []
-    for token in doc:
-        try:
-            if token.text != "five":
-                num = w2n.word_to_num(token.text)
-                if 1 <= num <= 13:
-                    all_numbers.append(str(num))
-        except ValueError:
-            continue
-            
-    # Special handling for goalie
-    if 'goalie' in doc_text:
-        first_event['player'] = '1'
-    elif all_numbers:
-        first_event['player'] = all_numbers[0]
-        if second_event and len(all_numbers) > 1:
-            second_event['player'] = all_numbers[1]
             
     if current_team is None:
         # Look for team mentions in larger context
