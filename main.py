@@ -983,13 +983,15 @@ def extract_key_phrases(text):
     # Handle sprint events
     if any(word in doc_text for word in sprint_keywords):
         if 'won' in doc_text:
-            first_event['event'] = 'Sprints'
+            first_event['event'] = 'Sprint Won'
             if all_numbers:
                 first_event['player'] = all_numbers[0]
+                events.append((first_event['player'], first_event['event'], first_event['team']))
+                events.append((first_event['player'], 'Sprint Attempt', first_event['team']))
                 if len(all_numbers) >= 2:
-                    # Add lost sprint for opposing player
+                    # Add attempt for opposing player
                     second_event['player'] = all_numbers[1]
-                    second_event['event'] = 'Sprints'
+                    second_event['event'] = 'Sprint Attempt'
                     second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
 
     # Add complete events to the list
