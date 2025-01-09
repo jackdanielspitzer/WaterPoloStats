@@ -595,7 +595,17 @@ def extract_key_phrases(text):
             
         # Extract event type for penalties and exclusions
         if any(phrase in doc_text for phrase in penalty_keywords):
-            if 'drew' in doc_text or 'drawn' in doc_text:
+            if '5 m by' in doc_text or 'five meter by' in doc_text:
+                # Player who drew gets penalty, other player gets exclusion
+                if len(all_numbers) >= 2:
+                    first_event['player'] = all_numbers[0]
+                    first_event['event'] = 'Penalties'
+                    first_event['team'] = current_team
+
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Exclusions'
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+            elif 'drew' in doc_text or 'drawn' in doc_text:
                 # First event is who drew the penalty
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Penalties Drawn'
