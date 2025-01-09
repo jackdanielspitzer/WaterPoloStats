@@ -369,13 +369,19 @@
             console.log("Game ID:", gameId); //Added gameId
 
 
+            // Get current game time and quarter
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
+
             try {
                 const response = await fetch('/process', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}` //Added gameId
+                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
                 });
 
                 if (response.ok) {
@@ -422,6 +428,12 @@
             const transcript = event.results[0][0].transcript;
             document.getElementById('inputText').value = transcript;
 
+            // Get current game time and quarter
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
+
             // Immediately process the recognized text
             try {
                 const response = await fetch('/process', {
@@ -429,7 +441,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}` //Added gameId
+                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
                 });
 
                 if (response.ok) {
