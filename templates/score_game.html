@@ -477,9 +477,21 @@
         // Update tables with live data
         async function updateTables() {
             try {
-                const gameId = document.getElementById('form').getAttribute('data-game-id');
+                const form = document.getElementById('form');
+                if (!form) {
+                    console.error('Form element not found');
+                    return;
+                }
+                const gameId = form.getAttribute('data-game-id');
+                if (!gameId) {
+                    console.error('Game ID not found');
+                    return;
+                }
+                
                 // Fetch updated data from the server with game ID
-                const response = await fetch(`/get_data?home_team={{ home_team }}&away_team={{ away_team }}&game_id=${gameId}`);
+                const response = await fetch(`/get_data?home_team={{ home_team }}&away_team={{ away_team }}&game_id=${gameId}`, {
+                    credentials: 'same-origin'
+                });
 
                 if (!response.ok) {
                     console.error(`Error fetching data: ${response.status}`);

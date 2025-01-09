@@ -1534,10 +1534,16 @@ def get_data():
         home_team_name = request.args.get('home_team')
         away_team_name = request.args.get('away_team')
         game_id = request.args.get('game_id')
+
+        if not all([home_team_name, away_team_name, game_id]):
+            return jsonify({'error': 'Missing required parameters'}), 400
         
         # Get rosters for both teams
         home_roster = team_rosters.get(home_team_name, [])
         away_roster = team_rosters.get(away_team_name, [])
+
+        if not home_roster or not away_roster:
+            return jsonify({'error': 'Team rosters not found'}), 404
 
         if game_id not in game_data:
             game_data[game_id] = {
