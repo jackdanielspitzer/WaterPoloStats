@@ -494,12 +494,16 @@ def extract_key_phrases(text):
     all_numbers = []
     for i, token in enumerate(doc):
         try:
-            # Skip numbers that are part of penalty phrases
+            # Skip penalty phrase variations like "5 m", "five meter", etc.
             next_token = doc[i + 1].text.lower() if i + 1 < len(doc) else ''
-            if (token.text == '5' and next_token in ['m', 'meter', 'meters', '-meter', '-meters']) or \
-               token.text.lower() in ["five", "5m", "5meter", "5-meter", "5meters", "5-meters"]:
+            is_penalty_phrase = (
+                (token.text == '5' and next_token in ['m', 'meter', 'meters', '-meter', '-meters']) or
+                (token.text.lower() == 'five' and next_token in ['m', 'meter', 'meters']) or
+                token.text.lower() in ["5m", "5meter", "5-meter", "5meters", "5-meters"]
+            )
+            if is_penalty_phrase:
                 continue
-            # Convert token to number if valid
+            # Convert token to number if valid player number
             num = w2n.word_to_num(token.text)
             if 1 <= num <= 13:
                 all_numbers.append(str(num))
