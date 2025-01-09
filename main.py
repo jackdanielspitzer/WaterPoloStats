@@ -986,8 +986,9 @@ def extract_key_phrases(text):
             first_event['event'] = 'Sprint Won'
             if all_numbers:
                 first_event['player'] = all_numbers[0]
-                events.append((first_event['player'], first_event['event'], first_event['team']))
-                events.append((first_event['player'], 'Sprint Attempt', first_event['team']))
+                # Only add Sprint Won and Sprint Attempt events here
+                # The events will be added at the end of the function
+                first_event['team'] = current_team
                 if len(all_numbers) >= 2:
                     # Add attempt for opposing player
                     second_event['player'] = all_numbers[1]
