@@ -215,7 +215,7 @@
                     <th>Exclusions Drawn</th>
                     <th>Penalties</th>
                     <th>Turnovers</th>
-                    <th>Sprints</th>
+                    <th>Sprints (Won/Att)</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -235,7 +235,7 @@
                     <th>Exclusions Drawn</th>
                     <th>Penalties</th>
                     <th>Turnovers</th>
-                    <th>Sprints</th>
+                    <th>Sprints (Won/Att)</th>
                 </tr>
             </thead>
             <tbody></tbody>
@@ -524,7 +524,7 @@
                         <td>${data.away_box?.['Exclusions Drawn']?.[i] || 0}</td>
                         <td>${data.away_box?.Penalties?.[i] || 0}</td>
                         <td>${data.away_box?.Turnovers?.[i] || 0}</td>
-                        <td>${data.away_box?.Sprints?.[i] || 0}</td>
+                        <td>${(data.away_box?.['Sprint Won']?.[i] || 0)}/${(data.away_box?.['Sprint Attempt']?.[i] || 0)}</td>
                     `;
                     awayTableBody.appendChild(row);
                 }
@@ -546,7 +546,7 @@
                             <td>${data.home_box?.['Exclusions Drawn']?.[index] || 0}</td>
                             <td>${data.home_box?.Penalties?.[index] || 0}</td>
                             <td>${data.home_box?.Turnovers?.[index] || 0}</td>
-                            <td>${data.home_box?.Sprints?.[index] || 0}</td>
+                            <td>${(data.away_box?.['Sprint Won']?.[index] || 0)}/${(data.away_box?.['Sprint Attempt']?.[index] || 0)}</td>
                         </tr>`;
                     homeTableBody.innerHTML += row;
                 });
