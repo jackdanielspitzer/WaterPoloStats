@@ -987,8 +987,10 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Sprint Won'
                 first_event['team'] = current_team
-                events.append((first_event['player'], 'Sprint Won', current_team))
-                events.append((first_event['player'], 'Sprint Attempt', current_team))
+                # Only add Sprint Won and Sprint Attempt once
+                if not events:  # Only add if no events recorded yet
+                    events.append((first_event['player'], 'Sprint Won', current_team))
+                    events.append((first_event['player'], 'Sprint Attempt', current_team))
                 
                 if len(all_numbers) >= 2:
                     # Add attempt for opposing player
