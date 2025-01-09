@@ -488,7 +488,7 @@ def extract_key_phrases(text):
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under', 'fouled']
-    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
+    penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter', 'five-meter']
     
     # Extract all player numbers first
     all_numbers = []
@@ -592,8 +592,8 @@ def extract_key_phrases(text):
                     first_event['event'] = 'Penalties'
             
         # Extract event type for penalties and exclusions
-        if any(phrase in doc_text for phrase in penalty_keywords) and 'penalty' in doc_text.lower():
-            if 'drew' in doc_text:
+        if any(phrase in doc_text for phrase in penalty_keywords):
+            if 'drew' in doc_text or 'drawn' in doc_text:
                 # First event is who drew the penalty
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Penalties Drawn'
