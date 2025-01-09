@@ -1378,7 +1378,7 @@ def home():
     upcoming_games.sort(key=lambda x: x['date'])
     upcoming_games = upcoming_games[:6]
 
-    return render_template('home.html, upcoming_games=upcoming_games, schools=schools)
+    return render_template('home.html', upcoming_games=upcoming_games, schools=schools)
 
 # Render HTML page with two tables (initial zeros)
 
