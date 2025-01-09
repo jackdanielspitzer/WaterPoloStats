@@ -476,7 +476,9 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
-    doc = nlp(text.lower())
+    # Convert 'goalie' to '1' at the start
+    text = text.lower().replace('goalie', '1')
+    doc = nlp(text)
     doc_text = doc.text
     events = []
     dark_keywords = ['dark','black','blue']
