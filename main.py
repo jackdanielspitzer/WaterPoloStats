@@ -778,22 +778,25 @@ def extract_key_phrases(text):
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
         elif token in shot_keywords or any(word in doc_text.lower() for word in ['hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
             # Handle goalie scoring specifically
-            if 'goalie' in doc_text and ('scored' in doc_text or 'score' in doc_text):
+            if 'goalie' in doc_text or (all_numbers and all_numbers[0] == '1'):
                 first_event['player'] = '1'  # Goalie is always number 1
                 first_event['team'] = current_team
-                first_event['event'] = 'Shot'
-                # Add shot attempt for goalie
-                second_event['event'] = 'Shot Attempt'
-                second_event['player'] = '1'
-                second_event['team'] = current_team
+                
+                if 'scored' in doc_text or 'score' in doc_text:
+                    first_event['event'] = 'Shot'
+                    # Add shot attempt for goalie
+                    second_event['event'] = 'Shot Attempt'
+                    second_event['player'] = '1'
+                    second_event['team'] = current_team
+                else:
+                    first_event['event'] = 'Shot Attempt'
+                    first_event['team'] = current_team
             else:
                 first_event['player'] = all_numbers[0] if all_numbers else None
+                first_event['team'] = current_team
                 
-                # If blocked or missed, it should be for the opposing team if only one team color is mentioned
-                if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
-                    first_event['team'] = 'light' if current_team == 'dark' else 'dark'
-                else:
-                    first_event['team'] = current_team
+                if any(word in doc_text.lower() for word in ['missed', 'miss']):
+                    first_event['event'] = 'Shot Attempt'
                 
                 # If it's a goal (scored)
                 if 'scored' in doc_text or 'score' in doc_text:
