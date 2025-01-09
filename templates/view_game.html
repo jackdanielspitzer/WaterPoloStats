@@ -54,6 +54,7 @@
                     <th>Exclusions Drawn</th>
                     <th>Penalties</th>
                     <th>Turnovers</th>
+                    <th>Sprints</th>
                 </tr>
             </thead>
             <tbody>
@@ -69,6 +70,7 @@
                     <td>{{ game.home_box['Exclusions Drawn'][loop.index0] }}</td>
                     <td>{{ game.home_box['Penalties'][loop.index0] }}</td>
                     <td>{{ game.home_box['Turnovers'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Sprints'][loop.index0] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -97,6 +99,7 @@
                     <th>Exclusions Drawn</th>
                     <th>Penalties</th>
                     <th>Turnovers</th>
+                    <th>Sprints</th>
                 </tr>
             </thead>
             <tbody>
@@ -112,6 +115,7 @@
                     <td>{{ game.away_box['Exclusions Drawn'][loop.index0] }}</td>
                     <td>{{ game.away_box['Penalties'][loop.index0] }}</td>
                     <td>{{ game.away_box['Turnovers'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Sprints'][loop.index0] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -128,7 +132,7 @@
                 <div class="log-entry">{{ entry }}</div>
             {% endfor %}
         </div>
-        
+
         <button onclick="downloadGameLog()" style="margin-right: 10px;">Download Game Log</button>
         <button onclick="window.location.href='/team/{{ school_slug }}'">Back to Main School Page</button>
     </div>
