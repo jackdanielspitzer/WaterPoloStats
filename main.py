@@ -485,7 +485,7 @@ def extract_key_phrases(text):
     block_keywords = ['block', 'blocked','blocks']
     steal_keywords = ['steal','stole','took','steals']
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
-    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under']
+    turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under', 'fouled']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter']
     
     # Extract all player numbers first
@@ -805,13 +805,17 @@ def extract_key_phrases(text):
         elif 'turnover' in doc_text or 'turned over' in doc_text or token in turnover_keywords or any(phrase in doc_text for phrase in [
             'lost the ball', 'turned the ball over', 'offensive foul', 
             'foul on offense', 'lost possession', 'dropped the ball'
-        ]):
+        ]) or 'foul' in doc_text:
             # Handle single player turnover events
-            if all_numbers:
+            if 'goalie' in doc_text:
+                first_event['event'] = 'Turnovers'
+                first_event['player'] = '1'  # Goalie is always number 1
+                first_event['team'] = current_team
+            elif all_numbers:
                 first_event['event'] = 'Turnovers'
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
-                break
+            break
         elif ('assist' in doc_text or 'assisted' in doc_text):
             if len(all_numbers) >= 2 and ('scored' in doc_text or 'goal' in doc_text):
                 # Handle goal and assist in any order
