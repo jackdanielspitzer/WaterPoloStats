@@ -754,24 +754,23 @@ def extract_key_phrases(text):
                 break
                 
         if 'block' in doc_text.lower() or 'blocked' in doc_text.lower() or 'save' in doc_text.lower():
-            # For goalie blocks
-            if 'goalie' in doc_text.lower():
-                first_event['player'] = '1'  # Goalie is always number 1
-                first_event['event'] = 'Blocks'
+            was_blocked = any(word in doc_text.lower() for word in ['was blocked', 'blocked by'])
+            if was_blocked:
+                # Player was blocked by someone - first player attempted shot, second player blocked
+                first_event['event'] = 'Shot Attempt'
+                first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['team'] = current_team
-                
-                # Add shot attempt for the player who shot
-                if len(all_numbers) >= 1:
-                    second_event['player'] = all_numbers[0]
-                    second_event['event'] = 'Shot Attempt'
+
+                if len(all_numbers) >= 2:
+                    second_event['event'] = 'Blocks'
+                    second_event['player'] = all_numbers[1]
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
-            # For field player blocks
             else:
+                # Standard block - first player blocks, second player attempted
                 first_event['event'] = 'Blocks'
                 first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['team'] = current_team
 
-                # Add shot attempt for opposing player if mentioned
                 if len(all_numbers) >= 2:
                     second_event['event'] = 'Shot Attempt'
                     second_event['player'] = all_numbers[1]
