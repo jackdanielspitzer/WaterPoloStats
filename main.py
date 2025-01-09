@@ -746,23 +746,33 @@ def extract_key_phrases(text):
                     second_event['player'] = all_numbers[1]
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
         elif token in shot_keywords or any(word in doc_text.lower() for word in ['hit the bar', 'hit the crossbar', 'bar', 'crossbar', 'missed', 'miss']):
-            first_event['player'] = all_numbers[0] if all_numbers else None
-            
-            # If blocked or missed, it should be for the opposing team if only one team color is mentioned
-            if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
-                first_event['team'] = 'light' if current_team == 'dark' else 'dark'
-            else:
+            # Handle goalie scoring specifically
+            if 'goalie' in doc_text and ('scored' in doc_text or 'score' in doc_text):
+                first_event['player'] = '1'  # Goalie is always number 1
                 first_event['team'] = current_team
-            
-            # If it's a goal (scored)
-            if 'scored' in doc_text or 'score' in doc_text:
                 first_event['event'] = 'Shot'
-                # Add second event for shot attempt
+                # Add shot attempt for goalie
                 second_event['event'] = 'Shot Attempt'
-                second_event['player'] = first_event['player']
-                second_event['team'] = first_event['team']
+                second_event['player'] = '1'
+                second_event['team'] = current_team
             else:
-                first_event['event'] = 'Shot Attempt'
+                first_event['player'] = all_numbers[0] if all_numbers else None
+                
+                # If blocked or missed, it should be for the opposing team if only one team color is mentioned
+                if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
+                    first_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                else:
+                    first_event['team'] = current_team
+                
+                # If it's a goal (scored)
+                if 'scored' in doc_text or 'score' in doc_text:
+                    first_event['event'] = 'Shot'
+                    # Add second event for shot attempt
+                    second_event['event'] = 'Shot Attempt'
+                    second_event['player'] = first_event['player']
+                    second_event['team'] = first_event['team']
+                else:
+                    first_event['event'] = 'Shot Attempt'
         elif token in block_keywords:
             # Check for block scenarios
             if 'goalie' in doc_text.lower():
