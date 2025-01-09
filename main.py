@@ -165,7 +165,7 @@ def start_scoring(school_slug, game_index):
     game = open_game(team_name, game_index)
     if not game:
         return "Game not found", 404
-        
+
     home_team = team_name if game['home_away'] == 'Home' else game['opponent']
     away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
 
@@ -217,29 +217,29 @@ def open_game(team_name, game_index):
     # Get the file path for the team's data
     team_file_path = get_team_file_path(team_name)
     print(f"Looking for game {game_index} in {team_file_path}")
-    
+
     # Check if the team file exists
     if not os.path.exists(team_file_path):
         print(f"Team file not found: {team_file_path}")
         initialize_team_file(team_name)
         return None
-        
+
     try:
         with open(team_file_path, 'r') as file:
             team_data = json.load(file)
             if "games" not in team_data:
                 print("No games array found in team data")
                 return None
-                
+
             if not isinstance(game_index, int):
                 game_index = int(game_index)
-                
+
             if game_index < 0 or game_index >= len(team_data["games"]):
                 print(f"Game index {game_index} out of bounds (0-{len(team_data['games'])-1})")
                 return None
-                
+
             return team_data["games"][game_index]
-                
+
     except (json.JSONDecodeError, ValueError) as e:
         print(f"Error loading game data: {str(e)}")
         return None
@@ -489,7 +489,7 @@ def extract_key_phrases(text):
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under', 'fouled']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter', 'five-meter']
-    
+
     # Extract all player numbers first
     all_numbers = []
     for i, token in enumerate(doc):
@@ -501,20 +501,19 @@ def extract_key_phrases(text):
                 (token.text.lower() == 'five' and next_token in ['m', 'meter', 'meters']) or
                 token.text.lower() in ["5m", "5meter", "5-meter", "5meters", "5-meters"]
             )
-            if is_penalty_phrase:
-                continue
-            # Convert token to number if valid player number
-            num = w2n.word_to_num(token.text)
-            if 1 <= num <= 13:
-                all_numbers.append(str(num))
+            if not is_penalty_phrase:
+                # Convert token to number if valid player number
+                num = w2n.word_to_num(token.text)
+                if 1 <= num <= 13:
+                    all_numbers.append(str(num))
         except (ValueError, IndexError):
             continue
-            
+
     # Initialize event tracking variables
     first_event = {'team': None, 'player': None, 'event': None}
     second_event = {'team': None, 'player': None, 'event': None}
     events = []
-    
+
     # Extract all numbers first
     all_numbers = []
     for token in doc:
@@ -527,7 +526,7 @@ def extract_key_phrases(text):
             continue
 
     tokens = [token.text for token in doc]
-    
+
     # Find team first
     current_team = None
     for i, token in enumerate(tokens):
@@ -537,7 +536,7 @@ def extract_key_phrases(text):
         elif token in light_keywords:
             current_team = 'light'
             break
-            
+
     if current_team is None:
         # Look for team mentions in larger context
         doc_text = doc.text.lower()
@@ -549,7 +548,7 @@ def extract_key_phrases(text):
     # Initialize first and second events
     first_event = {'team': current_team, 'player': None, 'event': None}
     second_event = {'team': None, 'player': None, 'event': None}
-    
+
     # Assign first player number found
     if all_numbers:
         first_event['player'] = all_numbers[0]
@@ -563,7 +562,7 @@ def extract_key_phrases(text):
                 if 1 <= num <= 13 and first_event['player'] is None:
                     first_event['player'] = str(num)
                     first_event['team'] = current_team
-                    
+
                     # Check for single event keywords right after the number
                     if i + 1 < len(tokens):
                         if tokens[i+1] in exclusion_keywords or 'excluded' in doc_text:
@@ -574,7 +573,7 @@ def extract_key_phrases(text):
                             break
         except ValueError:
             pass
-            
+
         # Check for goalie mentions and team assignments
         if token == 'goalie' or (token == '1' and 'goalie' in doc_text):
             if not first_event['player']:
@@ -588,7 +587,7 @@ def extract_key_phrases(text):
                         elif tokens[t_idx] in dark_keywords:
                             first_event['team'] = 'dark'
                             break
-                
+
                 # Check for event type in surrounding context
                 if 'exclusion' in doc_text or 'excluded' in doc_text or 'kicked out' in doc_text:
                     first_event['event'] = 'Exclusions'
@@ -596,7 +595,7 @@ def extract_key_phrases(text):
                     first_event['event'] = 'Blocks'
                 elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
                     first_event['event'] = 'Penalties'
-            
+
         # Extract event type for penalties and exclusions
         if any(phrase in doc_text for phrase in penalty_keywords):
             if '5 m by' in doc_text or 'five meter by' in doc_text:
@@ -614,7 +613,7 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Penalties Drawn'
                 first_event['team'] = current_team
-                
+
                 if len(all_numbers) >= 2:
                     # Second event is who got the penalty/exclusion
                     second_event['player'] = all_numbers[1]
@@ -627,12 +626,12 @@ def extract_key_phrases(text):
                         first_event['player'] = '1'
                     else:
                         first_event['player'] = all_numbers[0] if all_numbers else None
-                
+
                 if len(all_numbers) >= 2:
                     # First player gets exclusion
                     first_event['event'] = 'Exclusions'
                     first_event['team'] = current_team
-                    
+
                     # Second player gets penalties drawn
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Penalties Drawn'
@@ -657,7 +656,7 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions Drawn'
                 first_event['team'] = current_team
-                
+
                 if len(all_numbers) >= 2:
                     # Second player gets exclusion
                     second_event['player'] = all_numbers[1]
@@ -668,7 +667,7 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions Drawn'
                 first_event['team'] = current_team
-                
+
                 if len(all_numbers) >= 2:
                     # Second player gets exclusion
                     second_event['player'] = all_numbers[1]
@@ -685,7 +684,7 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0]
                 first_event['event'] = 'Exclusions Drawn'
                 first_event['team'] = current_team
-                
+
                 second_event['player'] = all_numbers[1]
                 second_event['event'] = 'Exclusions'
                 second_event['team'] = 'light' if current_team == 'dark' else 'dark'
@@ -702,7 +701,7 @@ def extract_key_phrases(text):
                     first_event['player'] = all_numbers[0]
                     first_event['event'] = 'Exclusions Drawn'
                     first_event['team'] = current_team
-                    
+
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Exclusions'
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
@@ -720,23 +719,23 @@ def extract_key_phrases(text):
                     # Find indices of key words
                     on_idx = words.index('on')
                     for_idx = words.index('for')
-                    
+
                     # Parse first team (before 'for')
                     if any(word in words[on_idx:for_idx] for word in dark_keywords):
                         first_event['team'] = 'dark'
                     elif any(word in words[on_idx:for_idx] for word in light_keywords):
                         first_event['team'] = 'light'
-                        
+
                     # Parse second team (after 'for')
                     if any(word in words[for_idx:] for word in dark_keywords):
                         second_event['team'] = 'dark'
                     elif any(word in words[for_idx:] for word in light_keywords):
                         second_event['team'] = 'light'
-                    
+
                     # First event is the exclusion
                     first_event['player'] = all_numbers[0]
                     first_event['event'] = 'Exclusions'
-                    
+
                     # Second event is who drew it
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Exclusions Drawn'
@@ -750,14 +749,14 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
                 break
-                
+
         if 'block' in doc_text.lower() or 'blocked' in doc_text.lower() or 'save' in doc_text.lower():
             # For goalie blocks
             if 'goalie' in doc_text.lower():
                 first_event['player'] = '1'  # Goalie is always number 1
                 first_event['event'] = 'Blocks'
                 first_event['team'] = current_team
-                
+
                 # Add shot attempt for the player who shot
                 if len(all_numbers) >= 1:
                     second_event['player'] = all_numbers[0]
@@ -786,13 +785,13 @@ def extract_key_phrases(text):
                 second_event['team'] = current_team
             else:
                 first_event['player'] = all_numbers[0] if all_numbers else None
-                
+
                 # If blocked or missed, it should be for the opposing team if only one team color is mentioned
                 if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
                     first_event['team'] = 'light' if current_team == 'dark' else 'dark'
                 else:
                     first_event['team'] = current_team
-                
+
                 # If it's a goal (scored)
                 if 'scored' in doc_text or 'score' in doc_text:
                     first_event['event'] = 'Shot'
@@ -809,7 +808,7 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Blocks'
                 first_event['player'] = '1'  # Goalie is always number 1
                 first_event['team'] = current_team
-                
+
                 # Second event is shot attempt by the opposing team
                 if len(all_numbers) >= 1:
                     second_event['event'] = 'Shot Attempt'
@@ -820,7 +819,7 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Blocks'
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
-                
+
                 # Second event is the shot attempt
                 second_event['event'] = 'Shot Attempt'
                 second_event['player'] = all_numbers[1]
@@ -850,18 +849,18 @@ def extract_key_phrases(text):
                 # Handle goal and assist in any order
                 scorer = None
                 assister = None
-                
+
                 # Find which number is mentioned closer to 'scored' or 'goal'
                 scorer_idx = doc_text.find(all_numbers[0])
                 goal_idx = max(doc_text.find('scored'), doc_text.find('goal'))
-                
+
                 if abs(scorer_idx - goal_idx) < abs(doc_text.find(all_numbers[1]) - goal_idx):
                     scorer = all_numbers[0]
                     assister = all_numbers[1]
                 else:
                     scorer = all_numbers[1]
                     assister = all_numbers[0]
-                
+
                 events.append((scorer, 'Shot', current_team))
                 events.append((scorer, 'Shot Attempt', current_team))
                 events.append((assister, 'Assists', current_team))
@@ -921,9 +920,9 @@ def extract_key_phrases(text):
                         second_event['event'] = 'Turnovers'
                         second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 break
-            
+
             first_event['event'] = 'Steals'
-            
+
             # Handle underwater ball scenarios
             if any(phrase in doc_text for phrase in ['under water', 'underwater', 'drew under', 'forced under', 'put under']):
                 if numbers:
@@ -935,7 +934,7 @@ def extract_key_phrases(text):
                         second_event['event'] = 'Turnovers'
                         second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 break
-            
+
             # Check if steal was from goalie
             if 'goalie' in doc_text.lower():
                 second_event['player'] = '1'  # Goalie is always number 1
@@ -954,7 +953,7 @@ def extract_key_phrases(text):
                                     numbers.append(str(num))
                             except ValueError:
                                 continue
-                    
+
                     if numbers and len(numbers) > 0:
                         if len(numbers) >= 2:
                             # For underwater ball scenarios, first number is the stealer
@@ -966,20 +965,20 @@ def extract_key_phrases(text):
                         second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
                 except ValueError:
                     pass
-            
+
     # Add events if complete
     if first_event['team'] and first_event['player'] and first_event['event']:
         events.append((first_event['player'], first_event['event'], first_event['team']))
-        
+
     if second_event['team'] and second_event['player'] and second_event['event']:
         events.append((second_event['player'], second_event['event'], second_event['team']))
-        
+
     return events if events else [(None, None, None)]
 
 
     if current_event['player'] and current_event['event'] and current_event['team']:
         events.append((current_event['player'], current_event['event'], current_event['team']))
-    
+
     # Look for second event in the same sentence
     # Common patterns like "but was" indicate a second event
     second_half_markers = ["but", "and", "then", "while"]
@@ -991,7 +990,7 @@ def extract_key_phrases(text):
             doc2 = nlp(second_text)
             tokens2 = [token.text for token in doc2]
             current_event = {'team': None, 'player': None, 'event': None}
-            
+
             # Process second event similar to first
             for token in tokens2:
                 try:
@@ -1000,15 +999,15 @@ def extract_key_phrases(text):
                         current_event['player'] = player
                 except:
                     pass
-                
+
                 if token in dark_keywords:
                     current_event['team'] = 'dark'
                 elif token in light_keywords:
                     current_event['team'] = 'light'
-                    
+
                 if token == 'goalie':
                     current_event['player'] = '1'
-                    
+
                 if token in shot_keywords and current_event['event'] != "Blocks":
                     current_event['event'] = "Shot"
                 elif token in block_keywords:
@@ -1021,10 +1020,10 @@ def extract_key_phrases(text):
                     current_event['event'] = "Turnovers"
                 elif token in penalty_keywords:
                     current_event['event'] = "Penalties"
-                    
+
             if current_event['player'] and current_event['event'] and current_event['team']:
                 events.append((current_event['player'], current_event['event'], current_event['team']))
-            
+
     return events if events else [(None, None, None)]
 
 
@@ -1039,7 +1038,7 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
     print(f"Away team name: '{away_team_name}'")
     if not home_team_name or not away_team_name:
         print("ERROR: Team names are missing!")
-    
+
     try:
         # Load team rosters
         with open('team_rosters.json', 'r') as file:
@@ -1059,13 +1058,13 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
 
         print(f"Home roster: {home_roster}")
         print(f"Away roster: {away_roster}")
-        
+
         print(f"Home roster cap numbers: {[str(p['cap_number']).strip() for p in home_roster]}")
         print(f"Away roster cap numbers: {[str(p['cap_number']).strip() for p in away_roster]}")
     except Exception as e:
         print(f"Error loading rosters: {str(e)}")
         return False
-    
+
     if team == 'light':
         # Find the player in the away roster by cap number (light team)
         try:
@@ -1073,11 +1072,11 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             print(f"Searching away roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(away_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            
+
             # Initialize the event array if it doesn't exist or is not a list
             if event not in game_data[game_id]['dataWhite'] or not isinstance(game_data[game_id]['dataWhite'][event], list):
                 game_data[game_id]['dataWhite'][event] = [0] * len(away_roster)
-                
+
             game_data[game_id]['dataWhite'][event][player_index] += 1  # Light/away team uses dataWhite
             return True
         except (StopIteration, ValueError, IndexError) as e:
@@ -1090,11 +1089,11 @@ def sort_data(player, event, team, home_team_name, away_team_name, game_id):
             print(f"Searching home roster for cap number: '{player_str.strip()}'")
             player_index = next(i for i, p in enumerate(home_roster) if str(p['cap_number']).strip() == player_str.strip())
             print(f"Found player at index: {player_index}")
-            
+
             # Initialize the event array if it doesn't exist or is not a list
             if event not in game_data[game_id]['dataBlack'] or not isinstance(game_data[game_id]['dataBlack'][event], list):
                 game_data[game_id]['dataBlack'][event] = [0] * len(home_roster)
-                
+
             game_data[game_id]['dataBlack'][event][player_index] += 1  # Dark/home team uses dataBlack
             return True
         except (StopIteration, ValueError, IndexError) as e:
@@ -1361,14 +1360,14 @@ def run(text):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    
+
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
                 responses.append(phrase(player, event, team))
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
-    
+
     return " and ".join(responses) if responses else "Could not parse the input."
 
 @app.route('/')
@@ -1376,19 +1375,19 @@ def home():
     upcoming_games = []
     seen_games = set()
     today = datetime.now().date()
-    
+
     # Get user's followed teams if logged in
     followed_teams = []
     if current_user.is_authenticated:
         followed_teams = json.loads(current_user.followed_teams)
-    
+
     for school in schools.values():
         # Skip if user is logged in and this school's slug is not in followed_teams
         if current_user.is_authenticated:
             school_slug = next((slug for slug, s in schools.items() if s['name'] == school['name']), None)
             if school_slug not in followed_teams:
                 continue
-            
+
         team_data = load_team_data(school['name'])
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
@@ -1396,14 +1395,14 @@ def home():
                 game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
                 if game_key not in seen_games:
                     game['school_name'] = school['name']
-                    game['school_logo'] = school['logo']
+                                        game['school_logo'] = school['logo']
                     upcoming_games.append(game)
                     seen_games.add(game_key)
-    
+
     # Sort games by date and get the 6 most recent
     upcoming_games.sort(key=lambda x: x['date'])
     upcoming_games = upcoming_games[:6]
-    
+
     return render_template('home.html', upcoming_games=upcoming_games, schools=schools)
 
 # Render HTML page with two tables (initial zeros)
@@ -1522,22 +1521,22 @@ def run(text, game_id):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
     game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
-    
+
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name, game_id):
                 log_entry = phrase(player, event, team)
                 responses.append(log_entry)
-                
+
                 # Initialize game logs if needed
                 if 'game_log' not in game_data[game_id]:
                     game_data[game_id]['game_log'] = []
-                    
+
                 # Add game time and log entry
                 game_data[game_id]['game_log'].append(f"{game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
-    
+
     return " and ".join(responses) if responses else "Could not parse the input."
 
 # Helper function to load team rosters
@@ -1554,7 +1553,7 @@ def get_data():
     try:
         # Load team rosters
         team_rosters = load_team_rosters()
-        
+
         # Get team names and game ID from query parameters
         home_team_name = request.args.get('home_team')
         away_team_name = request.args.get('away_team')
@@ -1562,7 +1561,7 @@ def get_data():
 
         if not all([home_team_name, away_team_name, game_id]):
             return jsonify({'error': 'Missing required parameters'}), 400
-        
+
         # Get rosters for both teams
         home_roster = team_rosters.get(home_team_name, [])
         away_roster = team_rosters.get(away_team_name, [])
@@ -1597,7 +1596,7 @@ def get_data():
                     'Turnovers': [0] * len(home_roster)
                 }
             }
-        
+
         if not home_team_name or not away_team_name:
             return jsonify({'error': 'Missing team names'}), 400
 
@@ -1678,7 +1677,7 @@ def player_stats(player_name):
     if manager and manager.stats_private and (not current_user.is_authenticated or manager.id != current_user.id):
         flash('These statistics are private')
         return redirect(url_for('team_page', school_slug=school_slug))
-    
+
     if not school_slug:
         # Search all schools for the player
         for slug, school_data in schools.items():
@@ -1686,10 +1685,10 @@ def player_stats(player_name):
             if any(player['name'] == player_name for player in roster):
                 school_slug = slug
                 break
-                
+
     if not school_slug:
         return "Player not found in any school", 404
-        
+
     school = schools.get(school_slug)
     if not school:
         return "School not found", 404
@@ -1719,22 +1718,22 @@ def player_stats(player_name):
     try:
         with open(team_file, 'r') as file:
             team_data = json.load(file)
-            
+
             for game in team_data.get('games', []):
                 if not game.get('is_scored'):
                     continue
-                
+
                 # Determine which box to check based on whether team was home or away
                 box_key = 'home_box' if game['home_away'] == 'Home' else 'away_box'
                 box = game.get(box_key, {})
-                
+
                 if not box or 'Player' not in box:
                     continue
-                    
+
                 try:
                     # Find player's index in this box score
                     player_index = box['Player'].index(cap_number)
-                    
+
                     # Add up all stats from this game
                     for stat_key in combined_stats:
                         if stat_key in box and isinstance(box[stat_key], list):
@@ -1742,7 +1741,7 @@ def player_stats(player_name):
                 except (ValueError, IndexError):
                     # Player not found in this box score, skip it
                     continue
-                        
+
     except (FileNotFoundError, json.JSONDecodeError) as e:
         print(f"Error loading team file {team_file}: {str(e)}")
         return f"Error loading team statistics: {str(e)}", 500
@@ -2043,7 +2042,7 @@ def quick_score(school_slug, game_index):
                 home_game["is_scored"] = True
                 home_game["home_box" if game['home_away'] == 'Home' else "away_box"] = home_box
                 home_game["away_box" if game['home_away'] == 'Home' else "home_box"] = away_box
-                
+
                 # Calculate and add score
                 home_score = sum(home_box['Shot'])
                 away_score = sum(away_box['Shot'])
@@ -2119,7 +2118,7 @@ def scoring_page(school_slug, game_index):
 
     team_name = school['name']
     team_data = load_team_data(team_name)
-    
+
     if not team_data or "games" not in team_data or game_index >= len(team_data["games"]):
         return "Game not found", 404
 
@@ -2256,7 +2255,7 @@ def view_scoring(school_slug, game_index):
         home_manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
         away_team_slug = next((slug for slug, s in schools.items() if s['name'] == away_team_name), None)
         away_manager = User.query.filter_by(managed_team=away_team_slug, account_type='team_manager').first()
-        
+
         home_stats_private = home_manager.stats_private if home_manager else False
         away_stats_private = away_manager.stats_private if away_manager else False
 
@@ -2331,7 +2330,7 @@ def end_game():
                 # Calculate and save scores
                 white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
                 black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
-                
+
                 white_game["score"] = {
                     "white_team_score": white_score,
                     "black_team_score": black_score
@@ -2399,7 +2398,7 @@ def edit_roster(school_slug):
     if not current_user.is_admin and not current_user.account_type == 'team_manager':
         flash('Only team managers can edit rosters')
         return redirect(url_for('team_page', school_slug=school_slug))
-        
+
     if not current_user.is_admin:
         if not current_user.managed_team:
             flash('You are not assigned to manage any team')
@@ -2415,7 +2414,7 @@ def edit_roster(school_slug):
     if request.method == 'POST':
         if 'delete_cap_number' in request.form:  # Handle delete request
             delete_cap_number = request.form.get('delete_cap_number')
-            
+
             # Update game data to preserve stats when removing player
             team_data = load_team_data(team_name)
             for game in team_data.get('games', []):
@@ -2427,23 +2426,23 @@ def edit_roster(school_slug):
                             try:
                                 # Find index of player to delete
                                 del_idx = box['Player'].index(delete_cap_number)
-                                
+
                                 # Remove player's stats while preserving other players' stats
                                 for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals',
                                            'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
                                     if stat in box and isinstance(box[stat], list):
                                         box[stat].pop(del_idx)
-                                
+
                                 # Remove player from Player list
                                 box['Player'].pop(del_idx)
                             except ValueError:
                                 pass  # Player not found in this game's box score
-            
+
             # Update roster and save
             roster = [player for player in roster if player['cap_number'] != delete_cap_number]
             save_roster(team_name, sorted(roster, key=lambda x: sort_cap_number(x['cap_number'])))
             save_team_data(team_name, team_data)
-            
+
             return redirect(url_for('edit_roster', school_slug=school_slug))
 
         else:  # Handle adding a player
@@ -2469,7 +2468,7 @@ def edit_roster(school_slug):
             # Sort the roster and save
             roster = sorted(roster, key=lambda x: sort_cap_number(x['cap_number']))
             save_roster(team_name, roster)  # Save the updated and sorted roster
-            
+
             # Update game data
             team_data = load_team_data(team_name)
             for game in team_data.get('games', []):
@@ -2478,7 +2477,7 @@ def edit_roster(school_slug):
                     if box_key in game:
                         old_box = game[box_key].copy()
                         old_players = old_box.get('Player', [])
-                        
+
                         # Initialize new box with updated roster
                         new_box = {
                             'Player': [p['cap_number'] for p in roster],
@@ -2492,7 +2491,7 @@ def edit_roster(school_slug):
                             'Penalties': [0] * len(roster),
                             'Turnovers': [0] * len(roster)
                         }
-                        
+
                         # Map existing stats to new roster positions
                         for new_idx, cap_number in enumerate(new_box['Player']):
                             if cap_number in old_players:
@@ -2501,9 +2500,9 @@ def edit_roster(school_slug):
                                            'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers']:
                                     if stat in old_box and old_idx < len(old_box[stat]):
                                         new_box[stat][new_idx] = old_box[stat][old_idx]
-                        
+
                         game[box_key] = new_box
-            
+
             save_team_data(team_name, team_data)
 
             # Redirect to the same page to refresh the roster
@@ -2568,7 +2567,7 @@ def register():
         if User.query.filter_by(email=email).first():
             flash('Email already registered')
             return redirect(url_for('register'))
-        
+
         followed_teams = request.form.getlist('followed_teams')
         user = User(
             email=email,
@@ -2580,16 +2579,16 @@ def register():
             account_type=request.form['account_type'],
             followed_teams=json.dumps(followed_teams)
         )
-        
+
         if user.account_type == 'team_manager':
             user.role = request.form['role']
             user.phone = request.form['phone']
             user.managed_team = request.form['managed_team']
-            
+
         user.confirmation_token = secrets.token_urlsafe(32)
         db.session.add(user)
         db.session.commit()
-        
+
         # Send confirmation email
         confirm_url = url_for('confirm_email', token=user.confirmation_token, _external=True)
         msg = Message('Confirm Your Account',
@@ -2605,10 +2604,10 @@ def register():
         </div>
         '''
         mail.send(msg)
-        
+
         flash('Registration successful. Please check your email to confirm your account.')
         return redirect(url_for('login'))
-        
+
     return render_template('register.html', schools=schools)
 
 @app.route('/confirm/<token>')
@@ -2667,7 +2666,7 @@ def profile():
                         manager.stats_private = new_setting
                         db.session.add(manager)
                         db.session.commit()
-                        
+
                         # Update team_permissions.json
                         permissions = load_team_permissions()
                         if slug in permissions:
@@ -2694,13 +2693,13 @@ def profile():
         elif 'selected_logo' in request.form and request.form['selected_logo']:
             current_user.profile_image = request.form['selected_logo']
             db.session.commit()
-        
+
         followed_teams = request.form.getlist('followed_teams')
         current_user.followed_teams = json.dumps(followed_teams)
         db.session.commit()
         flash('Profile updated successfully')
         return redirect(url_for('home'))
-    
+
     return render_template('profile.html', 
                          schools=schools,
                          followed_teams=json.loads(current_user.followed_teams),
@@ -2722,7 +2721,7 @@ def forgot_password():
                 user.reset_token = reset_token
                 user.reset_token_expiry = datetime.utcnow() + timedelta(hours=1)
                 db.session.commit()
-                
+
                 try:
                     # Send reset email
                     reset_url = url_for('reset_password', token=reset_token, _external=True)
@@ -2759,21 +2758,21 @@ def reset_password(token):
     if not user or not user.reset_token_expiry or user.reset_token_expiry < datetime.utcnow():
         flash('Invalid or expired reset link.')
         return redirect(url_for('login'))
-    
+
     if request.method == 'POST':
         password = request.form['password']
         confirm_password = request.form['confirm_password']
-        
+
         if password != confirm_password:
             flash('Passwords do not match.')
             return render_template('reset_password.html')
-            
+
         user.password = generate_password_hash(password)
         user.reset_token = None
         user.reset_token_expiry = None
         db.session.commit()
-        
+
         flash('Your password has been reset. Please login with your new password.')
         return redirect(url_for('login'))
-        
+
     return render_template('reset_password.html')
