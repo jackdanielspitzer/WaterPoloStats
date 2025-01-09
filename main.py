@@ -606,15 +606,26 @@ def extract_key_phrases(text):
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Exclusions'
                     second_event['team'] = 'light' if current_team == 'dark' else 'dark'
-            elif 'on' in doc_text or 'against' in doc_text:
-                # Treat "penalty on/against" as exclusion
+            elif 'on' in doc_text or 'against' in doc_text or 'by' in doc_text:
+                # Handle exclusion vs penalty
                 if first_event['player'] is None:
                     if 'goalie' in doc_text:
                         first_event['player'] = '1'
                     else:
                         first_event['player'] = all_numbers[0] if all_numbers else None
-                first_event['event'] = 'Exclusions'
-                first_event['team'] = current_team
+                
+                if len(all_numbers) >= 2:
+                    # First player gets exclusion
+                    first_event['event'] = 'Exclusions'
+                    first_event['team'] = current_team
+                    
+                    # Second player gets penalties drawn
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Penalties Drawn'
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                else:
+                    first_event['event'] = 'Exclusions'
+                    first_event['team'] = current_team
             else:
                 # Default penalty event
                 if first_event['player'] is None:
