@@ -546,7 +546,7 @@
                             <td>${data.home_box?.['Exclusions Drawn']?.[index] || 0}</td>
                             <td>${data.home_box?.Penalties?.[index] || 0}</td>
                             <td>${data.home_box?.Turnovers?.[index] || 0}</td>
-                            <td>${(data.away_box?.['Sprint Won']?.[index] || 0)}/${(data.away_box?.['Sprint Attempt']?.[index] || 0)}</td>
+                            <td>${(data.home_box?.['Sprint Won']?.[index] || 0)}/${(data.home_box?.['Sprint Attempt']?.[index] || 0)}</td>
                         </tr>`;
                     homeTableBody.innerHTML += row;
                 });
