@@ -1393,7 +1393,7 @@ def home():
     for school in schools.values():
         # Skip if user is logged in and this school's slug is not in followed_teams
         if current_user.is_authenticated:
-            school_slug = next((slug for slug, s inschools.items() if s['name'] == school['name']), None)
+            school_slug = next((slug for slug, s in schools.items() if s['name'] == school['name']), None)
             if school_slug not in followed_teams:
                 continue
 
