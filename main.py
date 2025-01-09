@@ -493,6 +493,7 @@ def extract_key_phrases(text):
     exclusion_keywords = ['exclusion', 'kickout','excluded', 'kicked out', 'kick out', 'kicked']
     turnover_keywords = ['turnover', 'foul', 'lost', 'loses', 'offensive foul', 'lost the ball', 'turned the ball over', 'offensive foul', 'committed offensive foul', 'committed foul', 'committed a foul', 'under water', 'underwater', 'put the ball under', 'fouled']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m', 'five m', '5meter', 'five-meter']
+    sprint_keywords = ['sprint', 'won sprint', 'won the sprint']
 
     # Extract all player numbers first
     all_numbers = []
@@ -1029,6 +1030,17 @@ def extract_key_phrases(text):
                     current_event['event'] = "Turnovers"
                 elif token in penalty_keywords:
                     current_event['event'] = "Penalties"
+    elif any(word in doc_text for word in sprint_keywords):
+        if 'won' in doc_text:
+            first_event['event'] = 'Sprints'
+            if all_numbers:
+                first_event['player'] = all_numbers[0]
+                if len(all_numbers) >= 2:
+                    # Add lost sprint for opposing player
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Sprints'
+                    second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
+                break
 
             if current_event['player'] and current_event['event'] and current_event['team']:
                 events.append((current_event['player'], current_event['event'], current_event['team']))
