@@ -492,16 +492,18 @@ def extract_key_phrases(text):
     
     # Extract all player numbers first
     all_numbers = []
-    for token in doc:
+    for i, token in enumerate(doc):
         try:
-            # Skip penalty-related tokens
-            if token.text.lower() in ["five", "5m", "5meter", "5-meter", "5meters", "5-meters"]:
+            # Skip numbers that are part of penalty phrases
+            next_token = doc[i + 1].text.lower() if i + 1 < len(doc) else ''
+            if (token.text == '5' and next_token in ['m', 'meter', 'meters', '-meter', '-meters']) or \
+               token.text.lower() in ["five", "5m", "5meter", "5-meter", "5meters", "5-meters"]:
                 continue
             # Convert token to number if valid
             num = w2n.word_to_num(token.text)
             if 1 <= num <= 13:
                 all_numbers.append(str(num))
-        except ValueError:
+        except (ValueError, IndexError):
             continue
             
     # Initialize event tracking variables
@@ -863,18 +865,16 @@ def extract_key_phrases(text):
                     second_event = {'event': 'Turnovers', 'player': all_numbers[1], 'team': 'light' if current_team == 'dark' else 'dark'}
                 break
             elif 'ball under on' in doc_text:
-                if 'by' in doc_text or 'forced' in doc_text:
-                    # First player gets steal
-                    first_event = {'event': 'Steals', 'player': all_numbers[0], 'team': current_team}
-                    # Second player gets turnover
-                    if len(all_numbers) >= 2:
-                        second_event = {'event': 'Turnovers', 'player': all_numbers[1], 'team': 'light' if current_team == 'dark' else 'dark'}
-                    break
-                else:
-                    first_event = {'event': 'Turnovers', 'player': None, 'team': current_team}
-                    if all_numbers:
-                        first_event['player'] = all_numbers[0]
-                    second_event = {'event': None, 'player': None, 'team': None}
+                if len(all_numbers) >= 1:
+                    if 'by' in doc_text or 'forced' in doc_text:
+                        # First player gets steal, second gets turnover
+                        first_event = {'event': 'Steals', 'player': all_numbers[0], 'team': current_team}
+                        # Second player gets turnover
+                        if len(all_numbers) >= 2:
+                            second_event = {'event': 'Turnovers', 'player': all_numbers[1], 'team': 'light' if current_team == 'dark' else 'dark'}
+                    else:
+                        # Single player gets turnover
+                        first_event = {'event': 'Turnovers', 'player': all_numbers[0], 'team': current_team}
                 break
             elif 'ball under by' in doc_text:
                 # First player mentioned gets the steal
