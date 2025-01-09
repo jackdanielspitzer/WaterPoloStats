@@ -788,12 +788,7 @@ def extract_key_phrases(text):
                 second_event['team'] = current_team
             else:
                 first_event['player'] = all_numbers[0] if all_numbers else None
-                
-                # If blocked or missed, it should be for the opposing team if only one team color is mentioned
-                if any(word in doc_text.lower() for word in block_keywords + ['missed', 'miss']):
-                    first_event['team'] = 'light' if current_team == 'dark' else 'dark'
-                else:
-                    first_event['team'] = current_team
+                first_event['team'] = current_team
                 
                 # If it's a goal (scored)
                 if 'scored' in doc_text or 'score' in doc_text:
@@ -802,6 +797,9 @@ def extract_key_phrases(text):
                     second_event['event'] = 'Shot Attempt'
                     second_event['player'] = first_event['player']
                     second_event['team'] = first_event['team']
+                # If it's a miss, only record shot attempt
+                elif 'missed' in doc_text.lower() or 'miss' in doc_text.lower():
+                    first_event['event'] = 'Shot Attempt'
                 else:
                     first_event['event'] = 'Shot Attempt'
         elif token in block_keywords:
