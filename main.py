@@ -976,61 +976,8 @@ def extract_key_phrases(text):
                 except ValueError:
                     pass
 
-    # Add events if complete
-    if first_event['team'] and first_event['player'] and first_event['event']:
-        events.append((first_event['player'], first_event['event'], first_event['team']))
-
-    if second_event['team'] and second_event['player'] and second_event['event']:
-        events.append((second_event['player'], second_event['event'], second_event['team']))
-
-    return events if events else [(None, None, None)]
-
-
-    if current_event['player'] and current_event['event'] and current_event['team']:
-        events.append((current_event['player'], current_event['event'], current_event['team']))
-
-    # Look for second event in the same sentence
-    # Common patterns like "but was" indicate a second event
-    second_half_markers = ["but", "and", "then", "while"]
-    for marker in second_half_markers:
-        if marker in tokens:
-            idx = tokens.index(marker)
-            # Process second half of sentence separately
-            second_text = " ".join(tokens[idx:])
-            doc2 = nlp(second_text)
-            tokens2 = [token.text for token in doc2]
-            current_event = {'team': None, 'player': None, 'event': None}
-
-            # Process second event similar to first
-            for token in tokens2:
-                try:
-                    if token != "point":
-                        player = str(w2n.word_to_num(token))
-                        current_event['player'] = player
-                except:
-                    pass
-
-                if token in dark_keywords:
-                    current_event['team'] = 'dark'
-                elif token in light_keywords:
-                    current_event['team'] = 'light'
-
-                if token == 'goalie':
-                    current_event['player'] = '1'
-
-                if token in shot_keywords and current_event['event'] != "Blocks":
-                    current_event['event'] = "Shot"
-                elif token in block_keywords:
-                    current_event['event'] = "Blocks"
-                elif token in steal_keywords:
-                    current_event['event'] = "Steals"
-                elif token in exclusion_keywords:
-                    current_event['event'] = "Exclusions"
-                elif token in turnover_keywords:
-                    current_event['event'] = "Turnovers"
-                elif token in penalty_keywords:
-                    current_event['event'] = "Penalties"
-    elif any(word in doc_text for word in sprint_keywords):
+    # Handle sprint events
+    if any(word in doc_text for word in sprint_keywords):
         if 'won' in doc_text:
             first_event['event'] = 'Sprints'
             if all_numbers:
@@ -1040,10 +987,13 @@ def extract_key_phrases(text):
                     second_event['player'] = all_numbers[1]
                     second_event['event'] = 'Sprints'
                     second_event['team'] = 'light' if first_event['team'] == 'dark' else 'dark'
-                break
 
-            if current_event['player'] and current_event['event'] and current_event['team']:
-                events.append((current_event['player'], current_event['event'], current_event['team']))
+    # Add complete events to the list
+    if first_event['team'] and first_event['player'] and first_event['event']:
+        events.append((first_event['player'], first_event['event'], first_event['team']))
+
+    if second_event['team'] and second_event['player'] and second_event['event']:
+        events.append((second_event['player'], second_event['event'], second_event['team']))
 
     return events if events else [(None, None, None)]
 
@@ -2156,7 +2106,7 @@ def scoring_page(school_slug, game_index):
 
     game = team_data["games"][game_index]
     home_team = team_name if game['home_away'] == 'Home' else game['opponent']
-    away_team = game['opponent'] if game['home_away'] == 'Home' else team_name
+    away_team =game['opponent'] if game['home_away'] == 'Home' else team_name
 
     # Get team colors and logos
     home_school = next((school for school in schools.values() if school['name'] == home_team), None)
