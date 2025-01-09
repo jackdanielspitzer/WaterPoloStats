@@ -82,7 +82,7 @@
         {% endif %}
 
         <h2>{{ home_team }} Stats</h2>
-        {% if not away_stats_private or (current_user_id == away_manager_id) %}
+        {% if not home_stats_private or (current_user_id == home_manager_id) %}
         <table>
             <thead>
                 <tr>
@@ -100,26 +100,26 @@
                 </tr>
             </thead>
             <tbody>
-                {% for player in away_players %}
+                {% for player in home_players %}
                 <tr>
                     <td>{{ player.cap_number }}</td>
                     <td>{{ player.name }}</td>
-                    <td>{{ game.away_box['Shot'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Shot Attempt'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Blocks'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Steals'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Exclusions'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Exclusions Drawn'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Penalties'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Turnovers'][loop.index0] }}</td>
-                    <td>{{ game.away_box['Sprint Won'][loop.index0] }}/{{ game.away_box['Sprint Attempt'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Shot'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Shot Attempt'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Blocks'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Steals'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Exclusions'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Exclusions Drawn'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Penalties'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Turnovers'][loop.index0] }}</td>
+                    <td>{{ game.home_box['Sprint Won'][loop.index0] }}/{{ game.home_box['Sprint Attempt'][loop.index0] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
         <div class="private-message">
-            Statistics for {{ away_team }} are not available for public viewing.
+            Statistics for {{ home_team }} are not available for public viewing.
         </div>
         {% endif %}
 
