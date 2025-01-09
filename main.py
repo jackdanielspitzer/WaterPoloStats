@@ -994,6 +994,12 @@ def extract_key_phrases(text):
                 if len(all_numbers) >= 2:
                     # Add attempt for opposing player
                     events.append((all_numbers[1], 'Sprint Attempt', 'light' if current_team == 'dark' else 'dark'))
+        elif 'lost' in doc_text:
+            if all_numbers:
+                # Only record a Sprint Attempt for the player who lost
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Sprint Attempt'
+                first_event['team'] = current_team
 
     # Add complete events to the list
     if first_event['team'] and first_event['player'] and first_event['event']:
