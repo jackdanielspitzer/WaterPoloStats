@@ -279,7 +279,8 @@ def reset_team_stats():
         'Exclusions Drawn': [0] * 10,
         'Penalties': [0] * 10,
         'Turnovers': [0] * 10,
-        'Sprints': [0] * 10
+        'Sprint Won': [0] * 10,
+        'Sprint Attempt': [0] * 10
     }
 
     dataBlack = {
@@ -293,7 +294,8 @@ def reset_team_stats():
         'Exclusions Drawn': [0] * 10,
         'Penalties': [0] * 10,
         'Turnovers': [0] * 10,
-        'Sprints': [0] * 10
+        'Sprint Won': [0] * 10,
+        'Sprint Attempt': [0] * 10
     }
 
 @app.route('/reset_stats', methods=['POST'])
@@ -461,7 +463,8 @@ dataWhite = {
     'Penalties': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Turnovers': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Assists': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    'Sprints': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    'Sprint Won': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'Sprint Attempt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 
 dataBlack = {
@@ -475,7 +478,8 @@ dataBlack = {
     'Penalties': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Turnovers': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     'Assists': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    'Sprints': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    'Sprint Won': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    'Sprint Attempt': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 }
 
 
@@ -1374,7 +1378,7 @@ def home():
     upcoming_games.sort(key=lambda x: x['date'])
     upcoming_games = upcoming_games[:6]
 
-    return render_template('home.html', upcoming_games=upcoming_games, schools=schools)
+    return render_template('home.html, upcoming_games=upcoming_games, schools=schools)
 
 # Render HTML page with two tables (initial zeros)
 
@@ -1412,7 +1416,8 @@ def score_game(school_slug, game_index):
         'Exclusions Drawn': [0] * len(home_players),
         'Penalties': [0] * len(home_players),
         'Turnovers': [0] * len(home_players),
-        'Sprints': [0] * len(home_players)
+        'Sprint Won': [0] * len(home_players),
+        'Sprint Attempt': [0] * len(home_players)
     }
 
     away_box = {
@@ -1424,7 +1429,8 @@ def score_game(school_slug, game_index):
         'Exclusions Drawn': [0] * len(away_players),
         'Penalties': [0] * len(away_players),
         'Turnovers': [0] * len(away_players),
-        'Sprints': [0] * len(away_players)
+        'Sprint Won': [0] * len(away_players),
+        'Sprint Attempt': [0] * len(away_players)
     }
 
     # Pass box scores and other game data to the template
@@ -1477,9 +1483,9 @@ def process_text():
             # Initialize game data if it doesn't exist
             game_data[game_id] = {
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprints': []},
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprints': []}
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
 
         response = run(text, game_id)
@@ -1555,7 +1561,8 @@ def get_data():
                     'Exclusions Drawn': [0] * len(away_roster),
                     'Penalties': [0] * len(away_roster),
                     'Turnovers': [0] * len(away_roster),
-                    'Sprints': [0] * len(away_roster)
+                    'Sprint Won': [0] * len(away_roster),
+                    'Sprint Attempt': [0] * len(away_roster)
                 },
                 'dataBlack': {
                     'Player': [str(player['cap_number']) for player in home_roster],
@@ -1568,7 +1575,8 @@ def get_data():
                     'Exclusions Drawn': [0] * len(home_roster),
                     'Penalties': [0] * len(home_roster),
                     'Turnovers': [0] * len(home_roster),
-                    'Sprints': [0] * len(home_roster)
+                    'Sprint Won': [0] * len(home_roster),
+                    'Sprint Attempt': [0] * len(home_roster)
                 }
             }
 
@@ -1597,7 +1605,8 @@ def get_data():
                     'Exclusions Drawn': [0] * len(away_roster),
                     'Penalties': [0] * len(away_roster),
                     'Turnovers': [0] * len(away_roster),
-                    'Sprints': [0] * len(away_roster)
+                    'Sprint Won': [0] * len(away_roster),
+                    'Sprint Attempt': [0] * len(away_roster)
                 },
                 'dataBlack': {
                     'Player': [player['cap_number'] for player in home_roster],
@@ -1610,7 +1619,8 @@ def get_data():
                     'Exclusions Drawn': [0] * len(home_roster),
                     'Penalties': [0] * len(home_roster),
                     'Turnovers': [0] * len(home_roster),
-                    'Sprints': [0] * len(home_roster)
+                    'Sprint Won': [0] * len(home_roster),
+                    'Sprint Attempt': [0] * len(home_roster)
                 }
             }
             home_box = game_data[game_id]['dataBlack']
@@ -1680,7 +1690,8 @@ def player_stats(player_name):
         'Exclusions Drawn': 0,
         'Penalties': 0,
         'Turnovers': 0,
-        'Sprints': 0
+        'Sprint Won': 0,
+        'Sprint Attempt': 0
     }
 
     # Get the player's info from roster
@@ -1984,7 +1995,8 @@ def quick_score(school_slug, game_index):
                 'Exclusions Drawn': [0] * len(home_roster),
                 'Penalties': [0] * len(home_roster),
                 'Turnovers': [0] * len(home_roster),
-                'Sprints': [0] * len(home_roster)
+                'Sprint Won': [0] * len(home_roster),
+                'Sprint Attempt': [0] * len(home_roster)
             }
 
             away_box = {
@@ -1998,11 +2010,12 @@ def quick_score(school_slug, game_index):
                 'Exclusions Drawn': [0] * len(away_roster),
                 'Penalties': [0] * len(away_roster),
                 'Turnovers': [0] * len(away_roster),
-                'Sprints': [0] * len(away_roster)
+                'Sprint Won': [0] * len(away_roster),
+                'Sprint Attempt': [0] * len(away_roster)
             }
 
             # Update stats from form data
-            for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers', 'Sprints']:
+            for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 'Exclusions', 'Exclusions Drawn', 'Turnovers', 'Sprint Won', 'Sprint Attempt']:
                 for i in range(len(home_roster)):
                     form_value = request.form.get(f'home_{stat.replace(" ", "")}_{i}', 0)
                     home_box[stat][i] = int(form_value)
@@ -2064,7 +2077,8 @@ def quick_score(school_slug, game_index):
         'Exclusions Drawn': [0] * len(home_roster),
         'Penalties': [0] * len(home_roster),
         'Turnovers': [0] * len(home_roster),
-        'Sprints': [0] * len(home_roster)
+        'Sprint Won': [0] * len(home_roster),
+        'Sprint Attempt': [0] * len(home_roster)
     }
 
     away_box = {
@@ -2077,7 +2091,8 @@ def quick_score(school_slug, game_index):
         'Exclusions Drawn': [0] * len(away_roster),
         'Penalties': [0] * len(away_roster),
         'Turnovers': [0] * len(away_roster),
-        'Sprints': [0] * len(away_roster)
+        'Sprint Won': [0] * len(away_roster),
+        'Sprint Attempt': [0] * len(away_roster)
     }
 
     return render_template('quick_score.html',
@@ -2131,7 +2146,8 @@ def scoring_page(school_slug, game_index):
         'Exclusions Drawn': [0] * len(home_roster),
         'Penalties': [0] * len(home_roster),
         'Turnovers': [0] * len(home_roster),
-        'Sprints': [0] * len(home_roster)
+        'Sprint Won': [0] * len(home_roster),
+        'Sprint Attempt': [0] * len(home_roster)
     }
 
     away_box = {
@@ -2145,7 +2161,8 @@ def scoring_page(school_slug, game_index):
         'Exclusions Drawn': [0] * len(away_roster),
         'Penalties': [0] * len(away_roster),
         'Turnovers': [0] * len(away_roster),
-        'Sprints': [0] * len(away_roster)
+        'Sprint Won': [0] * len(away_roster),
+        'Sprint Attempt': [0] * len(away_roster)
     }
 
     return render_template("score_game.html",
@@ -2225,9 +2242,9 @@ def view_scoring(school_slug, game_index):
 
         # Fill missing stats with empty lists
         if not white_team_stats or 'Player' not in white_team_stats:
-            white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprints': []}
+            white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
         if not black_team_stats or 'Player' not in black_team_stats:
-            black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprints': []}
+            black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
 
         # Calculate scores based on correct home/away assignment
         game['score'] = {
@@ -2413,7 +2430,7 @@ def edit_roster(school_slug):
 
                                 # Remove player's stats while preserving other players' stats
                                 for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals',
-                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 'Sprints']:
+                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 'Sprint Won', 'Sprint Attempt']:
                                     if stat in box and isinstance(box[stat], list):
                                         box[stat].pop(del_idx)
 
@@ -2474,7 +2491,8 @@ def edit_roster(school_slug):
                             'Exclusions Drawn': [0] * len(roster),
                             'Penalties': [0] * len(roster),
                             'Turnovers': [0] * len(roster),
-                            'Sprints': [0] * len(roster)
+                            'Sprint Won': [0] * len(roster),
+                            'Sprint Attempt': [0] * len(roster)
                         }
 
                         # Map existing stats to new roster positions
@@ -2482,7 +2500,7 @@ def edit_roster(school_slug):
                             if cap_number in old_players:
                                 old_idx = old_players.index(cap_number)
                                 for stat in ['Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals',
-                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 'Sprints']:
+                                           'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 'Sprint Won', 'Sprint Attempt']:
                                     if stat in old_box and old_idx < len(old_box[stat]):
                                         new_box[stat][new_idx] = old_box[stat][old_idx]
 

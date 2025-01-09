@@ -104,6 +104,10 @@
                 <td>Turnovers</td>
                 <td>{{ stats.Turnovers }}</td>
             </tr>
+            <tr>
+                <td>Sprints</td>
+                <td>{{ stats['Sprint Won'] }}/{{ stats['Sprint Attempt'] }}</td>
+            </tr>
         </table>
         <a href="{{ url_for('team_page', school_slug=school_slug) }}" class="back-link">Back to Team</a>
     </div>

@@ -50,7 +50,7 @@
 </head>
 <body>
     <h1>Quick Score: {{ home_team }} vs {{ away_team }}</h1>
-    
+
     <form method="POST">
         <div class="score-container">
             <div class="team-section home-team">
@@ -67,6 +67,7 @@
                         <th>Drawn</th>
                         <th>Penalties</th>
                         <th>Turnovers</th>
+                        <th>Sprints</th>
                     </tr>
                     {% for player in home_box['Player'] %}
                     <tr>
@@ -80,6 +81,10 @@
                         <td><input type="number" class="stat-input" name="home_Exclusions Drawn_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="home_Penalties_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="home_Turnovers_{{ loop.index0 }}" value="0" min="0"></td>
+                        <td>
+                            <input type="number" class="stat-input" name="home_SprintWon_{{ loop.index0 }}" value="0" min="0" style="width:40px"> / 
+                            <input type="number" class="stat-input" name="home_SprintAttempt_{{ loop.index0 }}" value="0" min="0" style="width:40px">
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -99,6 +104,7 @@
                         <th>Drawn</th>
                         <th>Penalties</th>
                         <th>Turnovers</th>
+                        <th>Sprints</th>
                     </tr>
                     {% for player in away_box['Player'] %}
                     <tr>
@@ -112,6 +118,10 @@
                         <td><input type="number" class="stat-input" name="away_Exclusions Drawn_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="away_Penalties_{{ loop.index0 }}" value="0" min="0"></td>
                         <td><input type="number" class="stat-input" name="away_Turnovers_{{ loop.index0 }}" value="0" min="0"></td>
+                        <td>
+                            <input type="number" class="stat-input" name="away_SprintWon_{{ loop.index0 }}" value="0" min="0" style="width:40px"> / 
+                            <input type="number" class="stat-input" name="away_SprintAttempt_{{ loop.index0 }}" value="0" min="0" style="width:40px">
+                        </td>
                     </tr>
                     {% endfor %}
                 </table>
