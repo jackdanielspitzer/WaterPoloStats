@@ -692,12 +692,13 @@ def extract_key_phrases(text):
                 break
             elif len(all_numbers) >= 2 and ('excluded' in doc_text or 'kicked out' in doc_text or 'kicked' in doc_text):
                 if 'was excluded by' in doc_text.lower():
-                    # For "X was excluded by Y", X gets excluded (first player), Y drew it (second player)
-                    # First player gets the exclusion
-                    events.append((all_numbers[0], 'Exclusions', current_team))
-                    # Second player drew it, so gets Exclusions Drawn for the other team
-                    events.append((all_numbers[1], 'Exclusions Drawn', 'light' if current_team == 'dark' else 'dark'))
-                    return events
+                    # For "X was excluded by Y", X gets excluded, Y drew it
+                    first_player = all_numbers[0]  # Player who was excluded
+                    second_player = all_numbers[1]  # Player who drew it
+                    return [
+                        (first_player, 'Exclusions', current_team),  # First player gets excluded
+                        (second_player, 'Exclusions Drawn', 'light' if current_team == 'dark' else 'dark')  # Second player drew it
+                    ]
                 elif 'excluded' in doc_text:
                     # Handle "X excluded Y" pattern - first player drew it, second player got excluded
                     first_event['player'] = all_numbers[0]
@@ -1346,9 +1347,10 @@ def phrase(number, action, team):
     elif action == 'Exclusions Drawn':
         return f"The {team} team {number} drew an exclusion"
     elif action == 'Exclusions':
-        return f"{team} {number} was excluded"
-    elif action == 'Exclusions Drawn':
-        return f"{team} {number} drew an exclusion"
+        if action == 'Exclusions':
+            return f"The {team} team {number} was excluded"
+        elif action == 'Exclusions Drawn':
+            return f"The {team} team {number} drew an exclusion"
     elif action == 'Turnovers':
         return f"Turnover on {team} {number}"
     elif action == 'Penalties':
