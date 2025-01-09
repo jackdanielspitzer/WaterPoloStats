@@ -2113,7 +2113,7 @@ def quick_score(school_slug, game_index):
         'Steals': [0] * len(away_roster),
         'Exclusions': [0] * len(away_roster),
         'Exclusions Drawn': [0] * len(away_roster),
-        'Penalties': [0] * lenaway_roster),
+        'Penalties': [0] * len(away_roster),
         'Turnovers': [0] * len(away_roster),
         'Sprints': [0] * len(away_roster)
     }
