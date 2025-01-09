@@ -39,8 +39,8 @@
         <p><strong>Date:</strong> {{ game.date }}</p>
         <p><strong>Score:</strong> {{ game.score.white_team_score }} - {{ game.score.black_team_score }}</p>
 
-        <h2>{{ home_team }} Stats</h2>
-        {% if not home_stats_private or (current_user_id == home_manager_id) %}
+        <h2>{{ away_team }} Stats</h2>
+        {% if not away_stats_private or (current_user_id == away_manager_id) %}
         <table>
             <thead>
                 <tr>
@@ -58,33 +58,30 @@
                 </tr>
             </thead>
             <tbody>
-                {% for player in home_players %}
+                {% for player in away_players %}
                 <tr>
                     <td>{{ player.cap_number }}</td>
                     <td>{{ player.name }}</td>
-                    <td>{{ game.home_box['Shot'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Shot Attempt'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Blocks'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Steals'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Exclusions'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Exclusions Drawn'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Penalties'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Turnovers'][loop.index0] }}</td>
-                    <td>{{ game.home_box['Sprint Won'][loop.index0] }}/{{ game.home_box['Sprint Attempt'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Shot'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Shot Attempt'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Blocks'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Steals'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Exclusions'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Exclusions Drawn'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Penalties'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Turnovers'][loop.index0] }}</td>
+                    <td>{{ game.away_box['Sprint Won'][loop.index0] }}/{{ game.away_box['Sprint Attempt'][loop.index0] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
         {% else %}
         <div class="private-message">
-            <i class="fas fa-lock"></i>
-            <h3>Statistics Hidden</h3>
-            <p>The team manager has set these statistics to private.</p>
-            <p>Only team managers can view these statistics.</p>
+            Statistics for {{ away_team }} are not available for public viewing.
         </div>
         {% endif %}
 
-        <h2>{{ away_team }} Stats</h2>
+        <h2>{{ home_team }} Stats</h2>
         {% if not away_stats_private or (current_user_id == away_manager_id) %}
         <table>
             <thead>
