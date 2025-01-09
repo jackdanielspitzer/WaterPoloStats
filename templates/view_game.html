@@ -122,7 +122,31 @@
         </div>
         {% endif %}
 
+        <h2>Game Log</h2>
+        <div id="gameLog" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: auto; background: #f9f9f9;">
+            {% for entry in game.game_log %}
+                <div class="log-entry">{{ entry }}</div>
+            {% endfor %}
+        </div>
+        
+        <button onclick="downloadGameLog()" style="margin-right: 10px;">Download Game Log</button>
         <button onclick="window.location.href='/team/{{ school_slug }}'">Back to Main School Page</button>
     </div>
+
+    <script>
+    function downloadGameLog() {
+        const gameLog = {{ game.game_log|tojson|safe }};
+        const content = gameLog.join('\n');
+        const blob = new Blob([content], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = '{{ home_team }}_vs_{{ away_team }}_{{ game.date }}.txt';
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+    }
+    </script>
 </body>
 </html>

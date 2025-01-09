@@ -1484,7 +1484,16 @@ def run(text, game_id):
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name, game_id):
-                responses.append(phrase(player, event, team))
+                log_entry = phrase(player, event, team)
+                responses.append(log_entry)
+                
+                # Initialize game logs if needed
+                if 'game_log' not in game_data[game_id]:
+                    game_data[game_id]['game_log'] = []
+                    
+                # Add timestamp and log entry
+                timestamp = datetime.now().strftime('%I:%M:%S %p')
+                game_data[game_id]['game_log'].append(f"{timestamp}: {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
     
@@ -2267,8 +2276,10 @@ def end_game():
                 # Save current game stats
                 white_game["away_box"] = game_data[game_id]['dataWhite']
                 white_game["home_box"] = game_data[game_id]['dataBlack']
+                white_game["game_log"] = game_data[game_id].get('game_log', [])
                 black_game["home_box"] = game_data[game_id]['dataBlack']
                 black_game["away_box"] = game_data[game_id]['dataWhite']
+                black_game["game_log"] = game_data[game_id].get('game_log', [])
 
                 # Calculate and save scores
                 white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
