@@ -1480,6 +1480,7 @@ def run(text, game_id):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
+    game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
     
     for player, event, team in events:
         if player and event and team:
@@ -1492,7 +1493,6 @@ def run(text, game_id):
                     game_data[game_id]['game_log'] = []
                     
                 # Add game time and log entry
-                game_time = request.form.get('game_time', 'Q1 7:00')  # Default to start of game if not provided
                 game_data[game_id]['game_log'].append(f"{game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")

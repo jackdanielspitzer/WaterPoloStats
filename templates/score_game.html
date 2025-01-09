@@ -569,10 +569,13 @@
         updateTables(); // Initial update
 
         function addEventToLog(eventText) {
-            const timestamp = new Date().toLocaleString();
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
-            logEntry.innerHTML = `<strong>${timestamp}:</strong> ${eventText}`;
+            logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
             document.getElementById('gameLog').appendChild(logEntry);
         }
 
