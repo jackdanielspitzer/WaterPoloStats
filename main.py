@@ -689,17 +689,17 @@ def extract_key_phrases(text):
                 first_event['event'] = 'Exclusions'
                 first_event['team'] = current_team
                 break
-            elif 'excluded by' in doc_text.lower() and len(all_numbers) >= 2:
-                # For "X was excluded by Y", X gets excluded (negative), Y drew it (positive)
-                first_event['player'] = all_numbers[0]
-                first_event['event'] = 'Exclusions'
-                first_event['team'] = current_team
-
-                second_event['player'] = all_numbers[1]
-                second_event['event'] = 'Exclusions Drawn'
-                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
-                break
             elif 'by' in doc_text and len(all_numbers) >= 2:
+                if 'excluded by' in doc_text.lower():
+                    # For "X was excluded by Y", X gets excluded, Y drew it
+                    first_event['player'] = all_numbers[0]
+                    first_event['event'] = 'Exclusions'
+                    first_event['team'] = current_team
+
+                    second_event['player'] = all_numbers[1]
+                    second_event['event'] = 'Exclusions Drawn'
+                    second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                else:
                     # Regular "by" case - first player drew it, second got excluded
                     first_event['player'] = all_numbers[0]
                     first_event['event'] = 'Exclusions Drawn'
