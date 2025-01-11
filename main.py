@@ -2415,17 +2415,25 @@ def end_game():
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
 
-                # Calculate and save scores
+                # Calculate regular scores
                 white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
                 black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
 
+                # Round to 1 decimal place to handle shootout scores properly
+                white_score = round(float(white_score), 1)
+                black_score = round(float(black_score), 1)
+
+                # Save scores and include game type
+                game_type = request.form.get('current_quarter')
                 white_game["score"] = {
                     "white_team_score": white_score,
-                    "black_team_score": black_score
+                    "black_team_score": black_score,
+                    "game_type": "(SO)" if game_type == "SO" else "(OT)" if "OT" in str(game_type) else ""
                 }
                 black_game["score"] = {
                     "white_team_score": white_score,
-                    "black_team_score": black_score
+                    "black_team_score": black_score,
+                    "game_type": "(SO)" if game_type == "SO" else "(OT)" if "OT" in str(game_type) else ""
                 }
 
                 # Save updated data
