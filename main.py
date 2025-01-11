@@ -2142,6 +2142,9 @@ def quick_score(school_slug, game_index):
                 'Sprint Attempt': [0] * len(home_roster)
             }
         except Exception as e:
+            print(f"Error initializing home box: {str(e)}")
+            return f"Error initializing home box: {str(e)}", 500
+        except Exception as e:
             print(f"Error processing game data: {str(e)}")
             return f"Error processing game data: {str(e)}", 500
 
