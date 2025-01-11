@@ -484,8 +484,18 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
-    # Convert 'goalie' to '1' at the start
+    # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
+    
+    # Replace various 5 meter/5 m variations with 'penalty'
+    import re
+    text = re.sub(r'5[\s-]meter', 'penalty', text)
+    text = re.sub(r'5[\s-]metres', 'penalty', text)
+    text = re.sub(r'5[\s-]m\s', 'penalty ', text)  # Space after m to avoid matching other words
+    text = re.sub(r'five[\s-]meter', 'penalty', text)
+    text = re.sub(r'five[\s-]metres', 'penalty', text)
+    text = re.sub(r'five[\s-]m\s', 'penalty ', text)
+    
     doc = nlp(text)
     doc_text = doc.text
     events = []
