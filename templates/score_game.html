@@ -435,13 +435,15 @@
         document.getElementById('form').addEventListener('submit', async function(e) {
             if (isShootout) {
                 e.preventDefault();
+                e.stopPropagation();
                 const inputText = document.getElementById('inputText').value;
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     // For shootout goals, increment score by 0.1
                     const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
                     const scoreElement = document.getElementById(team + 'Score');
                     const currentScore = parseFloat(scoreElement.textContent || '0');
-                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                    const newScore = currentScore + 0.1;
+                    scoreElement.textContent = newScore.toFixed(1);
                     document.getElementById('inputText').value = '';
                     document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
                 } else if (inputText) {
@@ -450,7 +452,6 @@
                 }
                 return false;
             }
-            // Continue with normal form submission if not in shootout
         });
 
         // Initialize button event listeners when DOM is loaded
