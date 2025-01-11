@@ -1539,27 +1539,20 @@ def process_text():
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
 
-        try:
-            if game_id not in game_data:
-                # Initialize game data if it doesn't exist
-                game_data[game_id] = {
-                    'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                                'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
-                    'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                                'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
-                }
-
-            response = run(text)
-            return jsonify({'response': response})
-        except Exception as e:
-            app.logger.error(f"Error processing text: {str(e)}")
-            return jsonify({'error': f'Error processing text: {str(e)}'}), 500
+        # Initialize game data if it doesn't exist
+        if game_id not in game_data:
             game_data[game_id] = {
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                            'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                            'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
+
+        response = run(text)
+        return jsonify({'response': response})
+    except Exception as e:
+        app.logger.error(f"Error processing text: {str(e)}")
+        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
 
         response = run(text)
         return jsonify({'response': response})
@@ -2155,9 +2148,6 @@ def quick_score(school_slug, game_index):
                 'Sprint Won': [0] * len(home_roster),
                 'Sprint Attempt': [0] * len(home_roster)
             }
-        except Exception as e:
-            print(f"Error initializing game data: {str(e)}")
-            return f"Error initializing game data: {str(e)}", 500
 
             away_box = {
                 'Player': [str(p['cap_number']) for p in away_roster],
