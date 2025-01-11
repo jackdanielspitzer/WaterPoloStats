@@ -1530,7 +1530,6 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
-        game_time = request.form.get('game_time', '')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1548,45 +1547,8 @@ def process_text():
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
 
-        # Special handling for shootout
-        if game_time == 'SO':
-            try:
-                # Load team rosters
-                with open('team_rosters.json', 'r') as file:
-                    team_rosters = json.load(file)
-                
-                events = extract_key_phrases(text)
-                responses = []
-                for player, event, team in events:
-                    if player and 'score' in text.lower():
-                        # Increment score by 0.1 for shootout goals
-                        box_key = 'dataWhite' if team == 'light' else 'dataBlack'
-                        away_team = request.form.get('away_team')
-                        home_team = request.form.get('home_team')
-                        roster = team_rosters.get(away_team if team == 'light' else home_team, [])
-                    
-                    try:
-                        player_index = next(i for i, p in enumerate(roster) if str(p['cap_number']).strip() == str(player).strip())
-                        if 'Shot' not in game_data[game_id][box_key]:
-                            game_data[game_id][box_key]['Shot'] = [0] * len(roster)
-                        game_data[game_id][box_key]['Shot'][player_index] += 0.1
-                        
-                        response_text = f"The {team} team {player} scored in shootout"
-                        responses.append(response_text)
-                        
-                        # Add to game log
-                        if 'game_log' not in game_data[game_id]:
-                            game_data[game_id]['game_log'] = []
-                        game_data[game_id]['game_log'].append(f"SO - {response_text} [SHOOTOUT GOAL]")
-                    except (StopIteration, ValueError, IndexError) as e:
-                        print(f"Error processing shootout: {str(e)}")
-                        return jsonify({'error': f'Player {player} not found in roster'}), 400
-
-            return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
-        else:
-            response = run(text, game_id)
-            return jsonify({'response': response})
-            
+        response = run(text, game_id)
+        return jsonify({'response': response})
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
         return jsonify({'error': f'Error processing text: {str(e)}'}), 500

@@ -424,54 +424,28 @@
             document.querySelector('div[style*="position: fixed"]')?.remove();
             document.getElementById('minutes').textContent = '-';
             document.getElementById('seconds').textContent = '--';
-
-            // Set form values for shootout
-            document.querySelector('input[name="white_team_name"]').value = '{{ away_team }}';
-            document.querySelector('input[name="black_team_name"]').value = '{{ home_team }}';
-            document.querySelector('input[name="game_index"]').value = '{{ game_index }}';
         }
 
         // Handle shootout goals
         document.getElementById('form').addEventListener('submit', async function(e) {
             if (isShootout) {
                 e.preventDefault();
-                e.stopPropagation();
                 const inputText = document.getElementById('inputText').value;
-                const homeTeam = document.querySelector('input[name="home_team"]').value;
-                const awayTeam = document.querySelector('input[name="away_team"]').value;
-                const gameId = document.querySelector('input[name="game_id"]').value;
-
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     // For shootout goals, increment score by 0.1
-                    try {
-                        const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
-                        const scoreElement = document.getElementById(team + 'Score');
-                        const currentScore = parseFloat(scoreElement.textContent || '0');
-                        scoreElement.textContent = (currentScore + 0.1).toFixed(1);
-
-                        // Process the shootout event
-                        const response = await fetch('/process', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                        });
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        const data = await response.json();
-                        document.getElementById('result').innerText = data.response || 'Success';
-                        addEventToLog(`${team.toUpperCase()} team scored in shootout [SHOOTOUT GOAL]`);
-                        updateTables();
-                    } catch (error) {
-                        console.error('Error:', error);
-                        document.getElementById('result').innerText = 'Error recording shootout goal';
-                    }
+                    const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
+                    const scoreElement = document.getElementById(team + 'Score');
+                    const currentScore = parseFloat(scoreElement.textContent || '0');
+                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                    document.getElementById('inputText').value = '';
+                    document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                } else if (inputText) {
+                    document.getElementById('inputText').value = '';
+                    document.getElementById('result').innerText = `Attempt recorded`;
                 }
-                document.getElementById('inputText').value = '';
                 return false;
             }
+            // Continue with normal form submission if not in shootout
         });
 
         // Initialize button event listeners when DOM is loaded
@@ -768,31 +742,16 @@
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
-                const gameLog = document.getElementById('gameLog');
-                const recentEvents = Array.from(gameLog.children).slice(-3); // Look at last 3 events
-
-                // Check for recent penalty drawn by same player
-                const scoringPlayerMatch = eventText.match(/\b\d+\b/);  // Get player number
-                const scoringPlayer = scoringPlayerMatch ? scoringPlayerMatch[0] : null;
-
-                const recentPenalty = recentEvents.some(event => {
-                    const eventText = event.textContent.toLowerCase();
-                    const penaltyTeam = eventText.includes('dark') ? 'dark' : 'light';
-                    return (eventText.includes('penalty') || 
-                           eventText.includes('5 meter') ||
-                           eventText.includes('5-meter')) &&
-                           penaltyTeam === scoringTeam;
-                });
-
+                
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
-
-                if (recentPenalty) {
-                    eventText += ' [PENALTY GOAL]';
-                } else if (hasAdvantage) {
+                
+                if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
-                    // Reset all exclusions after advantage goal
-                    activeExclusions = [];
+                } else if (eventText.toLowerCase().includes('penalty') || 
+                          eventText.toLowerCase().includes('5 meter') || 
+                          eventText.toLowerCase().includes('5-meter')) {
+                    eventText += ' [PENALTY GOAL]';
                 } else {
                     eventText += ' [NATURAL GOAL]';
                 }
@@ -802,7 +761,7 @@
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
-
+            
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
                 logEntry.style.color = '#e74c3c';
@@ -811,9 +770,9 @@
             } else if (eventText.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
             }
-
+            
             document.getElementById('gameLog').appendChild(logEntry);
-
+            
             // Auto-scroll to bottom
             const gameLog = document.getElementById('gameLog');
             gameLog.scrollTop = gameLog.scrollHeight;
