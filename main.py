@@ -2126,22 +2126,20 @@ def quick_score(school_slug, game_index):
 
     # Process form submission
     if request.method == 'POST':
-        try:
-            # Initialize game data
-            home_box = {
-                'Player': [str(p['cap_number']) for p in home_roster],
-                'Shot': [0] * len(home_roster),
-                'Shot Attempt': [0] * len(home_roster),
-                'Assists': [0] * len(home_roster),
-                'Blocks': [0] * len(home_roster),
-                'Steals': [0] * len(home_roster),
-                'Exclusions': [0] * len(home_roster),
-                'Exclusions Drawn': [0] * len(home_roster),
-                'Penalties': [0] * len(home_roster),
-                'Turnovers': [0] * len(home_roster),
-                'Sprint Won': [0] * len(home_roster),
-                'Sprint Attempt': [0] * len(home_roster)
-            }
+        home_box = {
+            'Player': [str(p['cap_number']) for p in home_roster],
+            'Shot': [0] * len(home_roster),
+            'Shot Attempt': [0] * len(home_roster),
+            'Assists': [0] * len(home_roster),
+            'Blocks': [0] * len(home_roster),
+            'Steals': [0] * len(home_roster),
+            'Exclusions': [0] * len(home_roster),
+            'Exclusions Drawn': [0] * len(home_roster),
+            'Penalties': [0] * len(home_roster),
+            'Turnovers': [0] * len(home_roster),
+            'Sprint Won': [0] * len(home_roster),
+            'Sprint Attempt': [0] * len(home_roster)
+        }
 
             away_box = {
                 'Player': [str(p['cap_number']) for p in away_roster],
