@@ -561,7 +561,7 @@ def extract_key_phrases(text):
         frame = inspect.currentframe()
         line_num = frame.f_lineno
         print(f"[Line {line_num}] EVENT ASSIGNMENT: Team={event_dict['team']}, Player={event_dict['player']}, Event={event_dict['event']} at {location}")
-        frame.f_back = None
+        del frame  # Clean up frame reference instead of modifying f_back
 
     # Initialize first and second events
     first_event = {'team': current_team, 'player': None, 'event': None}
