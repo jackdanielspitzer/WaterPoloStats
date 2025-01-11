@@ -426,10 +426,10 @@
             document.getElementById('seconds').textContent = '--';
         }
 
-        // Modify the form submission to handle shootout goals differently
+        // Handle shootout goals
         document.getElementById('form').addEventListener('submit', async function(e) {
             const inputText = document.getElementById('inputText').value;
-            if (isShootout && inputText && inputText.toLowerCase().includes('goal')) {
+            if (isShootout && inputText && inputText.toLowerCase().includes('scored')) {
                 e.preventDefault();
                 // For shootout goals, increment score by 0.1
                 const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
@@ -437,8 +437,10 @@
                 const currentScore = parseFloat(scoreElement.textContent || '0');
                 scoreElement.textContent = (currentScore + 0.1).toFixed(1);
                 document.getElementById('inputText').value = '';
+                document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
                 return false;
             }
+            // Continue with normal form submission if not a shootout goal
         });
 
         // Initialize button event listeners when DOM is loaded
