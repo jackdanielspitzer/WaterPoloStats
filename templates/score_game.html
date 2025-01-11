@@ -424,6 +424,11 @@
             document.querySelector('div[style*="position: fixed"]')?.remove();
             document.getElementById('minutes').textContent = '-';
             document.getElementById('seconds').textContent = '--';
+
+            // Set form values for shootout
+            document.querySelector('input[name="white_team_name"]').value = '{{ away_team }}';
+            document.querySelector('input[name="black_team_name"]').value = '{{ home_team }}';
+            document.querySelector('input[name="game_index"]').value = '{{ game_index }}';
         }
 
         // Handle shootout goals
@@ -742,10 +747,10 @@
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
-                
+
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
-                
+
                 if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
                     // Reset all exclusions after advantage goal
@@ -763,7 +768,7 @@
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
-            
+
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
                 logEntry.style.color = '#e74c3c';
@@ -772,9 +777,9 @@
             } else if (eventText.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
             }
-            
+
             document.getElementById('gameLog').appendChild(logEntry);
-            
+
             // Auto-scroll to bottom
             const gameLog = document.getElementById('gameLog');
             gameLog.scrollTop = gameLog.scrollHeight;
