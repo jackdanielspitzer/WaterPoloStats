@@ -1539,8 +1539,21 @@ def process_text():
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
 
-        if game_id not in game_data:
-            # Initialize game data if it doesn't exist
+        try:
+            if game_id not in game_data:
+                # Initialize game data if it doesn't exist
+                game_data[game_id] = {
+                    'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                                'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                    'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                                'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                }
+
+            response = run(text)
+            return jsonify({'response': response})
+        except Exception as e:
+            app.logger.error(f"Error processing text: {str(e)}")
+            return jsonify({'error': f'Error processing text: {str(e)}'}), 500
             game_data[game_id] = {
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
