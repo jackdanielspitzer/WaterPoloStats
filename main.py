@@ -2141,6 +2141,9 @@ def quick_score(school_slug, game_index):
                 'Sprint Won': [0] * len(home_roster),
                 'Sprint Attempt': [0] * len(home_roster)
             }
+        except Exception as e:
+            print(f"Error processing game data: {str(e)}")
+            return f"Error processing game data: {str(e)}", 500
 
             away_box = {
                 'Player': [str(p['cap_number']) for p in away_roster],
