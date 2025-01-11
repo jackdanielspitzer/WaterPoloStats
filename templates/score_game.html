@@ -319,10 +319,6 @@
                     currentQuarter = 'OT' + currentOTQuarter;
                     timeRemaining = parseInt(document.getElementById('otMinutes').value) * 60;
                     updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
-                    document.getElementById('startPauseTimer').disabled = false;
-                    document.getElementById('rewindTimer').disabled = false;
-                    document.getElementById('endQuarter').disabled = false;
                 } else {
                     // Show overtime options again after current OT periods are complete
                     showEndGameOptions();
@@ -331,6 +327,14 @@
                 currentQuarter++;
                 timeRemaining = 420;
                 updateTimerDisplay();
+            } else {
+                showEndGameOptions();
+            }
+            
+            document.getElementById('startPauseTimer').textContent = 'Start';
+            document.getElementById('startPauseTimer').disabled = false;
+            document.getElementById('rewindTimer').disabled = false;
+            document.getElementById('endQuarter').disabled = false;
                 document.getElementById('startPauseTimer').textContent = 'Start';
                 document.getElementById('startPauseTimer').disabled = false;
                 document.getElementById('rewindTimer').disabled = false;
