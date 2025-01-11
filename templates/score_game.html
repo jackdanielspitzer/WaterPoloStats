@@ -428,19 +428,24 @@
 
         // Handle shootout goals
         document.getElementById('form').addEventListener('submit', async function(e) {
-            const inputText = document.getElementById('inputText').value;
-            if (isShootout && inputText && inputText.toLowerCase().includes('scored')) {
+            if (isShootout) {
                 e.preventDefault();
-                // For shootout goals, increment score by 0.1
-                const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
-                const scoreElement = document.getElementById(team + 'Score');
-                const currentScore = parseFloat(scoreElement.textContent || '0');
-                scoreElement.textContent = (currentScore + 0.1).toFixed(1);
-                document.getElementById('inputText').value = '';
-                document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                const inputText = document.getElementById('inputText').value;
+                if (inputText && inputText.toLowerCase().includes('scored')) {
+                    // For shootout goals, increment score by 0.1
+                    const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
+                    const scoreElement = document.getElementById(team + 'Score');
+                    const currentScore = parseFloat(scoreElement.textContent || '0');
+                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                    document.getElementById('inputText').value = '';
+                    document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                } else if (inputText) {
+                    document.getElementById('inputText').value = '';
+                    document.getElementById('result').innerText = `Attempt recorded`;
+                }
                 return false;
             }
-            // Continue with normal form submission if not a shootout goal
+            // Continue with normal form submission if not in shootout
         });
 
         // Initialize button event listeners when DOM is loaded
