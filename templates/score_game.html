@@ -437,33 +437,16 @@
                 const awayTeam = form.querySelector('input[name="away_team"]').value;
 
                 if (inputText && inputText.toLowerCase().includes('scored')) {
+                    // For shootout goals, increment score by 0.1
+                    const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
+                    const scoreElement = document.getElementById(team + 'Score');
+                    let currentScore = 0;
+
                     try {
-                        // For shootout goals, increment score by 0.1
-                        const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
-                        const scoreElement = document.getElementById(team + 'Score');
-                        const currentScore = parseFloat(scoreElement.textContent || '0');
+                        currentScore = parseFloat(scoreElement.textContent || '0');
+                        // Round to 1 decimal place to avoid floating point issues
                         const newScore = Math.round((currentScore + 0.1) * 10) / 10;
-                        
-                        const response = await fetch('/process', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams({
-                                text: inputText,
-                                home_team: homeTeam,
-                                away_team: awayTeam,
-                                game_id: gameId,
-                                game_time: 'SO'
-                            })
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
                         scoreElement.textContent = newScore.toFixed(1);
-                        document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
 
                         const response = await fetch('/process', {
                             method: 'POST',
