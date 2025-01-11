@@ -422,7 +422,7 @@
         document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
         document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
         document.getElementById('endQuarter').addEventListener('click', function() {
-            if (currentQuarter.startsWith('OT')) {
+            if (typeof currentQuarter === 'string' && currentQuarter.indexOf('OT') === 0) {
                 if (currentOTQuarter < overtimeQuarters) {
                     currentOTQuarter++;
                     currentQuarter = 'OT' + currentOTQuarter;
