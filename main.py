@@ -555,6 +555,14 @@ def extract_key_phrases(text):
         elif any(word in doc_text for word in light_keywords):
             current_team = 'light'
 
+    import inspect
+
+    def debug_event(event_dict, location):
+        frame = inspect.currentframe()
+        line_num = frame.f_lineno
+        print(f"[Line {line_num}] EVENT ASSIGNMENT: Team={event_dict['team']}, Player={event_dict['player']}, Event={event_dict['event']} at {location}")
+        frame.f_back = None
+
     # Initialize first and second events
     first_event = {'team': current_team, 'player': None, 'event': None}
     second_event = {'team': None, 'player': None, 'event': None}
@@ -562,6 +570,7 @@ def extract_key_phrases(text):
     # Assign first player number found
     if all_numbers:
         first_event['player'] = all_numbers[0]
+        debug_event(first_event, "initial player assignment")
 
     # Second pass - find player and event
     for i, token in enumerate(tokens):
@@ -1009,9 +1018,11 @@ def extract_key_phrases(text):
 
     # Add complete events to the list
     if first_event['team'] and first_event['player'] and first_event['event']:
+        debug_event(first_event, "final first event")
         events.append((first_event['player'], first_event['event'], first_event['team']))
 
     if second_event['team'] and second_event['player'] and second_event['event']:
+        debug_event(second_event, "final second event")
         events.append((second_event['player'], second_event['event'], second_event['team']))
 
     return events if events else [(None, None, None)]
