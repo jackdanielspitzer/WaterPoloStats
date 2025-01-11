@@ -447,7 +447,7 @@
                     const scoreElement = document.getElementById(team + 'Score');
                     const currentScore = parseFloat(scoreElement.textContent || '0');
                     scoreElement.textContent = (currentScore + 0.1).toFixed(1);
-                    
+
                     // Process the shootout event
                     fetch('/process', {
                         method: 'POST',
@@ -775,7 +775,7 @@
                 // Check for recent penalty drawn by same player
                 const scoringPlayerMatch = eventText.match(/\b\d+\b/);  // Get player number
                 const scoringPlayer = scoringPlayerMatch ? scoringPlayerMatch[0] : null;
-                
+
                 const recentPenalty = recentEvents.some(event => {
                     const eventText = event.textContent.toLowerCase();
                     const penaltyTeam = eventText.includes('dark') ? 'dark' : 'light';
