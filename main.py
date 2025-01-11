@@ -1582,7 +1582,10 @@ def process_text():
                         print(f"Error processing shootout: {str(e)}")
                         return jsonify({'error': f'Player {player} not found in roster'}), 400
 
-            return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
+            try:
+        return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
         else:
             response = run(text, game_id)
             return jsonify({'response': response})
