@@ -892,13 +892,36 @@ def extract_key_phrases(text):
                 # If it's just an assist
                 events.append((all_numbers[0], 'Assists', current_team))
                 return events
+        # Handle negative events with "by"
+        if 'by' in doc_text and len(all_numbers) >= 2:
+            if any(word in doc_text for word in ['excluded', 'kicked out']):
+                # First player gets exclusion (negative)
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Exclusions'
+                first_event['team'] = current_team
+                
+                # Second player (after "by") gets drawn (positive)
+                second_event['player'] = all_numbers[1]
+                second_event['event'] = 'Exclusions Drawn'
+                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                break
+            elif 'stolen' in doc_text or 'stole' in doc_text:
+                # First player loses ball (negative)
+                first_event['player'] = all_numbers[0]
+                first_event['event'] = 'Turnovers'
+                first_event['team'] = current_team
+                
+                # Second player gets steal (positive)
+                second_event['player'] = all_numbers[1]
+                second_event['event'] = 'Steals'
+                second_event['team'] = 'light' if current_team == 'dark' else 'dark'
+                break
         elif token in steal_keywords or 'stole' in doc_text or 'stolen' in doc_text:
-            # Handle steals
+            # Handle steals without "by"
             if all_numbers:
                 first_event['event'] = 'Steals'
                 first_event['player'] = all_numbers[0]
                 first_event['team'] = current_team
-                # Add turnover for the other team if there's another player number
                 if len(all_numbers) >= 2:
                     second_event['event'] = 'Turnovers'
                     second_event['player'] = all_numbers[1]
