@@ -439,16 +439,15 @@
                     // For shootout goals, increment score by 0.1
                     const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
                     const scoreElement = document.getElementById(team + 'Score');
-                    let currentScore = scoreElement.textContent || '0';
-                    // Handle existing decimal scores
-                    if (currentScore.includes('.')) {
-                        const newScore = parseFloat(currentScore) + 0.1;
-                        scoreElement.textContent = newScore.toFixed(1);
-                    } else {
-                        // Add 0.1 to the current integer score
-                        const newScore = parseFloat(currentScore) + 0.1;
-                        scoreElement.textContent = newScore.toFixed(1);
+                    const currentScoreText = scoreElement.textContent || '0';
+                    const currentScore = parseFloat(currentScoreText);
+                    if (isNaN(currentScore)) {
+                        console.error('Invalid current score');
+                        return;
                     }
+                    // Add 0.1 to the current score and ensure precision
+                    const newScore = Math.round((currentScore + 0.1) * 10) / 10;
+                    scoreElement.textContent = newScore.toFixed(1);
 
                     // Update game data
                     try {
