@@ -2126,20 +2126,21 @@ def quick_score(school_slug, game_index):
 
     # Process form submission
     if request.method == 'POST':
-        home_box = {
-            'Player': [str(p['cap_number']) for p in home_roster],
-            'Shot': [0] * len(home_roster),
-            'Shot Attempt': [0] * len(home_roster),
-            'Assists': [0] * len(home_roster),
-            'Blocks': [0] * len(home_roster),
-            'Steals': [0] * len(home_roster),
-            'Exclusions': [0] * len(home_roster),
-            'Exclusions Drawn': [0] * len(home_roster),
-            'Penalties': [0] * len(home_roster),
-            'Turnovers': [0] * len(home_roster),
-            'Sprint Won': [0] * len(home_roster),
-            'Sprint Attempt': [0] * len(home_roster)
-        }
+        try:
+            home_box = {
+                'Player': [str(p['cap_number']) for p in home_roster],
+                'Shot': [0] * len(home_roster),
+                'Shot Attempt': [0] * len(home_roster),
+                'Assists': [0] * len(home_roster),
+                'Blocks': [0] * len(home_roster),
+                'Steals': [0] * len(home_roster),
+                'Exclusions': [0] * len(home_roster),
+                'Exclusions Drawn': [0] * len(home_roster),
+                'Penalties': [0] * len(home_roster),
+                'Turnovers': [0] * len(home_roster),
+                'Sprint Won': [0] * len(home_roster),
+                'Sprint Attempt': [0] * len(home_roster)
+            }
 
             away_box = {
                 'Player': [str(p['cap_number']) for p in away_roster],
@@ -2205,8 +2206,8 @@ def quick_score(school_slug, game_index):
 
             return redirect(url_for('team_page', school_slug=school_slug))
         except Exception as e:
-            print(f"Error saving game data: {str(e)}")
-            return f"Error saving game data: {str(e)}", 500
+            print(f"Error processing game data: {str(e)}")
+            return f"Error processing game data: {str(e)}", 500
 
     # Initialize box scores
     home_box = {
