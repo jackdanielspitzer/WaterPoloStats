@@ -248,6 +248,11 @@
         <input type="hidden" name="black_team_name" value="{{ away_team }}">
         <input type="hidden" name="game_index" value="{{ game_index }}">
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
+        <input type="hidden" id="currentQuarterInput" name="currentQuarter">
+        <input type="hidden" id="awayFinalScore" name="awayFinalScore">
+        <input type="hidden" id="homeFinalScore" name="homeFinalScore">
+        <input type="hidden" id="gameType" name="gameType">
+
         <button type="submit">Finish Game</button>
     </form>
 
@@ -787,7 +792,15 @@
             gameLog.scrollTop = gameLog.scrollHeight;
         }
 
-
+        document.getElementById('endGameForm').addEventListener('submit', function(e) {
+            const awayScore = parseFloat(document.getElementById('awayScore').textContent);
+            const homeScore = parseFloat(document.getElementById('homeScore').textContent);
+            const gameType = isShootout ? '(SO)' : (currentQuarter.startsWith('OT') ? '(OT)' : '');
+            document.getElementById('awayFinalScore').value = awayScore;
+            document.getElementById('homeFinalScore').value = homeScore;
+            document.getElementById('gameType').value = gameType;
+            document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent;
+        });
     </script>
 </body>
 </html>
