@@ -1583,12 +1583,13 @@ def process_text():
                         return jsonify({'error': f'Player {player} not found in roster'}), 400
 
             try:
-        return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
-        else:
-            response = run(text, game_id)
-            return jsonify({'response': response})
+                if responses:
+                    return jsonify({'response': ' and '.join(responses)})
+                else:
+                    response = run(text, game_id)
+                    return jsonify({'response': response})
+            except Exception as e:
+                return jsonify({'error': str(e)}), 500
             
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
