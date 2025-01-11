@@ -715,8 +715,10 @@
         });
         updateTables(); // Initial update
 
-        // Track exclusions with timing
+        // Track exclusions and penalties
         let activeExclusions = [];
+        let lastPenaltyTime = null;
+        let lastPenaltyQuarter = null;
 
         function addEventToLog(eventText) {
             const minutes = parseInt(document.getElementById('minutes').textContent);
@@ -744,6 +746,16 @@
                 eventText += ' [20 SEC EXCLUSION]';
             }
 
+            // Track penalties
+            if (eventText.toLowerCase().includes('penalty') || 
+                eventText.toLowerCase().includes('5 meter') || 
+                eventText.toLowerCase().includes('5-meter') || 
+                eventText.toLowerCase().includes('5m') || 
+                eventText.toLowerCase().includes('5 m')) {
+                lastPenaltyTime = currentTime;
+                lastPenaltyQuarter = quarter;
+            }
+
             // Handle goals and add appropriate tags
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
@@ -752,14 +764,18 @@
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
 
-                if (hasAdvantage) {
+                // Check if this is a penalty goal
+                const isPenaltyGoal = lastPenaltyTime !== null && 
+                                    lastPenaltyQuarter === quarter && 
+                                    Math.abs(currentTime - lastPenaltyTime) <= 5;
+
+                if (isPenaltyGoal) {
+                    eventText += ' [PENALTY GOAL]';
+                    lastPenaltyTime = null;  // Reset penalty tracker
+                } else if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
                     // Reset all exclusions after advantage goal
                     activeExclusions = [];
-                } else if (eventText.toLowerCase().includes('penalty') || 
-                          eventText.toLowerCase().includes('5 meter') || 
-                          eventText.toLowerCase().includes('5-meter')) {
-                    eventText += ' [PENALTY GOAL]';
                 } else {
                     eventText += ' [NATURAL GOAL]';
                 }
