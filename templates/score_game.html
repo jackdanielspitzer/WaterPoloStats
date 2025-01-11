@@ -422,7 +422,8 @@
             document.getElementById('endQuarter').disabled = true;
             currentQuarter = 'SO';
             document.querySelector('div[style*="position: fixed"]')?.remove();
-            updateTimerDisplay();
+            document.getElementById('minutes').textContent = '-';
+            document.getElementById('seconds').textContent = '--';
         }
 
         // Modify the form submission to handle shootout goals differently
