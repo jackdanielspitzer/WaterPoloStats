@@ -311,7 +311,23 @@
             clearInterval(timerInterval);
             isTimerRunning = false;
             isPaused = false;
-            if (currentQuarter < 4) {
+            
+            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                if (currentOTQuarter < overtimeQuarters) {
+                    // Move to next overtime quarter
+                    currentOTQuarter++;
+                    currentQuarter = 'OT' + currentOTQuarter;
+                    timeRemaining = parseInt(document.getElementById('otMinutes').value) * 60;
+                    updateTimerDisplay();
+                    document.getElementById('startPauseTimer').textContent = 'Start';
+                    document.getElementById('startPauseTimer').disabled = false;
+                    document.getElementById('rewindTimer').disabled = false;
+                    document.getElementById('endQuarter').disabled = false;
+                } else {
+                    // Show overtime options again after current OT periods are complete
+                    showEndGameOptions();
+                }
+            } else if (currentQuarter < 4) {
                 currentQuarter++;
                 timeRemaining = 420;
                 updateTimerDisplay();
@@ -320,35 +336,39 @@
                 document.getElementById('rewindTimer').disabled = false;
                 document.getElementById('endQuarter').disabled = false;
             } else {
-                // Create and show modal for end-game options
-                const modal = document.createElement('div');
-                modal.style.cssText = `
-                    position: fixed;
-                    top: 50%;
-                    left: 50%;
-                    transform: translate(-50%, -50%);
-                    background: white;
-                    padding: 20px;
-                    border-radius: 8px;
-                    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-                    z-index: 1000;
-                `;
-                
-                modal.innerHTML = `
-                    <h3>Game Time Complete</h3>
-                    <p>What would you like to do?</p>
-                    <div style="margin: 10px 0;">
-                        <button onclick="showOvertimeOptions()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-                        <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
-                        <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
-                    </div>
-                    <div id="overtimeOptions" style="display: none; margin-top: 10px;">
-                        <p>Overtime Settings:</p>
-                        <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
-                        <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label><br>
-                        <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px;">Start</button>
-                    </div>
-                `;
+                showEndGameOptions();
+            }
+}
+
+function showEndGameOptions() {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        z-index: 1000;
+    `;
+    
+    modal.innerHTML = `
+        <h3>Game Time Complete</h3>
+        <p>What would you like to do?</p>
+        <div style="margin: 10px 0;">
+            <button onclick="showOvertimeOptions()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
+            <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
+            <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
+        </div>
+        <div id="overtimeOptions" style="display: none; margin-top: 10px;">
+            <p>Overtime Settings:</p>
+            <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
+            <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label><br>
+            <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px;">Start</button>
+        </div>
+    `;
                 
                 document.body.appendChild(modal);
                 
@@ -360,7 +380,10 @@
         }
 
         function rewindTimer() {
-            const newTime = Math.min(420, timeRemaining + 10);
+            let maxTime = typeof currentQuarter === 'string' && currentQuarter.startsWith('OT') 
+                ? parseInt(document.getElementById('otMinutes').value) * 60 
+                : 420;
+            const newTime = Math.min(maxTime, timeRemaining + 10);
             if (newTime !== timeRemaining) {
                 timeRemaining = newTime;
                 updateTimerDisplay();
