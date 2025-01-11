@@ -437,6 +437,10 @@
                 e.preventDefault();
                 e.stopPropagation();
                 const inputText = document.getElementById('inputText').value;
+                const homeTeam = document.querySelector('input[name="home_team"]').value;
+                const awayTeam = document.querySelector('input[name="away_team"]').value;
+                const gameId = document.querySelector('input[name="game_id"]').value;
+
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     // For shootout goals, increment score by 0.1
                     const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
@@ -444,12 +448,23 @@
                     const currentScore = parseFloat(scoreElement.textContent || '0');
                     const newScore = currentScore + 0.1;
                     scoreElement.textContent = newScore.toFixed(1);
-                    document.getElementById('inputText').value = '';
-                    document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
-                } else if (inputText) {
-                    document.getElementById('inputText').value = '';
-                    document.getElementById('result').innerText = `Attempt recorded`;
+                    
+                    // Process the shootout event
+                    fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('result').innerText = data.response || 'Shootout goal recorded';
+                        updateTables();
+                    })
+                    .catch(error => console.error('Error:', error));
                 }
+                document.getElementById('inputText').value = '';
                 return false;
             }
         });
