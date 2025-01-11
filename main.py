@@ -1554,12 +1554,6 @@ def process_text():
         app.logger.error(f"Error processing text: {str(e)}")
         return jsonify({'error': f'Error processing text: {str(e)}'}), 500
 
-        response = run(text)
-        return jsonify({'response': response})
-    except Exception as e:
-        app.logger.error(f"Error processing text: {str(e)}")
-        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
-
         if game_id not in game_data:
             # Initialize game data if it doesn't exist
             game_data[game_id] = {
