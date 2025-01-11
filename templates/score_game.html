@@ -778,13 +778,11 @@
                 
                 const recentPenalty = recentEvents.some(event => {
                     const eventText = event.textContent.toLowerCase();
-                    const playerMatch = eventText.match(/\b\d+\b/);
-                    const eventPlayer = playerMatch ? playerMatch[0] : null;
-                    
+                    const penaltyTeam = eventText.includes('dark') ? 'dark' : 'light';
                     return (eventText.includes('penalty') || 
                            eventText.includes('5 meter') ||
                            eventText.includes('5-meter')) &&
-                           eventPlayer === scoringPlayer;
+                           penaltyTeam === scoringTeam;
                 });
 
                 // Check if opposing team has an active exclusion
