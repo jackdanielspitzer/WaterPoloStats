@@ -311,7 +311,7 @@
             clearInterval(timerInterval);
             isTimerRunning = false;
             isPaused = false;
-            
+
             if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
                 if (currentOTQuarter < overtimeQuarters) {
                     // Move to next overtime quarter
@@ -330,7 +330,7 @@
             } else {
                 showEndGameOptions();
             }
-            
+
             document.getElementById('startPauseTimer').textContent = 'Start';
             document.getElementById('startPauseTimer').disabled = false;
             document.getElementById('rewindTimer').disabled = false;
@@ -357,7 +357,7 @@ function showEndGameOptions() {
         box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         z-index: 1000;
     `;
-    
+
     modal.innerHTML = `
         <h3>Game Time Complete</h3>
         <p>What would you like to do?</p>
@@ -373,9 +373,9 @@ function showEndGameOptions() {
             <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px;">Start</button>
         </div>
     `;
-                
+
                 document.body.appendChild(modal);
-                
+
                 // Disable timer controls
                 document.getElementById('startPauseTimer').disabled = true;
                 document.getElementById('rewindTimer').disabled = true;
@@ -401,7 +401,7 @@ function showEndGameOptions() {
         function startCustomOvertime() {
             const quarters = parseInt(document.getElementById('otQuarters').value);
             const minutes = parseInt(document.getElementById('otMinutes').value);
-            
+
             clearInterval(timerInterval);
             isTimerRunning = false;
             isPaused = false;
@@ -409,11 +409,11 @@ function showEndGameOptions() {
             currentQuarter = 'OT1';
             overtimeQuarters = quarters;
             currentOTQuarter = 1;
-            
+
             document.getElementById('startPauseTimer').textContent = 'Start';
             document.getElementById('startPauseTimer').disabled = false;
             document.querySelector('div[style*="position: fixed"]')?.remove();
-            
+
             updateTimerDisplay();
         }
 
@@ -446,24 +446,27 @@ function showEndGameOptions() {
             }
         });
 
-        document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
-        document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
-        document.getElementById('endQuarter').addEventListener('click', function() {
-            if (typeof currentQuarter === 'string' && currentQuarter.indexOf('OT') === 0) {
-                if (currentOTQuarter < overtimeQuarters) {
-                    currentOTQuarter++;
-                    currentQuarter = 'OT' + currentOTQuarter;
-                    timeRemaining = parseInt(document.getElementById('otMinutes').value) * 60;
-                    updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
+        // Initialize button event listeners when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
+            document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
+            document.getElementById('endQuarter').addEventListener('click', function() {
+                if (typeof currentQuarter === 'string' && currentQuarter.indexOf('OT') === 0) {
+                    if (currentOTQuarter < overtimeQuarters) {
+                        currentOTQuarter++;
+                        currentQuarter = 'OT' + currentOTQuarter;
+                        timeRemaining = parseInt(document.getElementById('otMinutes')?.value || '3') * 60;
+                        updateTimerDisplay();
+                        document.getElementById('startPauseTimer').textContent = 'Start';
+                    } else {
+                        endQuarter();
+                    }
                 } else {
                     endQuarter();
                 }
-            } else {
-                endQuarter();
-            }
+            });
+            document.getElementById('overtime').addEventListener('click', showOvertimeOptions);
         });
-        document.getElementById('overtime').addEventListener('click', showOvertimeOptions);
 
 
         // Reset stats when page loads
