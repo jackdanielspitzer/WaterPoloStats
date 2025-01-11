@@ -763,18 +763,26 @@
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
+                const gameLog = document.getElementById('gameLog');
+                const recentEvents = Array.from(gameLog.children).slice(-3); // Look at last 3 events
+
+                // Check for recent penalty first
+                const recentPenalty = recentEvents.some(event => 
+                    event.textContent.toLowerCase().includes('penalty') || 
+                    event.textContent.toLowerCase().includes('5 meter') ||
+                    event.textContent.toLowerCase().includes('5-meter'));
 
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
 
-                if (hasAdvantage) {
+                if (recentPenalty || eventText.toLowerCase().includes('penalty') || 
+                    eventText.toLowerCase().includes('5 meter') || 
+                    eventText.toLowerCase().includes('5-meter')) {
+                    eventText += ' [PENALTY GOAL]';
+                } else if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
                     // Reset all exclusions after advantage goal
                     activeExclusions = [];
-                } else if (eventText.toLowerCase().includes('penalty') || 
-                          eventText.toLowerCase().includes('5 meter') || 
-                          eventText.toLowerCase().includes('5-meter')) {
-                    eventText += ' [PENALTY GOAL]';
                 } else {
                     eventText += ' [NATURAL GOAL]';
                 }
