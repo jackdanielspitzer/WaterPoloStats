@@ -700,15 +700,59 @@
         });
         updateTables(); // Initial update
 
+        // Track exclusions with timing
+        let activeExclusions = [];
+
         function addEventToLog(eventText) {
             const minutes = document.getElementById('minutes').textContent;
             const seconds = document.getElementById('seconds').textContent;
             const quarter = document.getElementById('currentQuarter').textContent;
             const gameTime = `Q${quarter} ${minutes}:${seconds}`;
+            const currentTime = minutes * 60 + parseInt(seconds);
+
+            // Update active exclusions
+            activeExclusions = activeExclusions.filter(ex => 
+                (currentTime <= ex.endTime && quarter === ex.quarter) ||
+                (quarter !== ex.quarter && quarter - ex.quarter <= 1)
+            );
+
+            // Check for exclusion events
+            if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
+                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                activeExclusions.push({
+                    team: team,
+                    startTime: currentTime,
+                    endTime: currentTime - 20,
+                    quarter: quarter
+                });
+            }
+
+            // Add advantage goal tag if applicable
+            if (eventText.toLowerCase().includes('scored')) {
+                const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                const hasAdvantage = activeExclusions.some(ex => 
+                    ex.team !== scoringTeam
+                );
+                
+                if (hasAdvantage) {
+                    eventText += ' [ADVANTAGE GOAL]';
+                } else if (eventText.toLowerCase().includes('penalty') || 
+                          eventText.toLowerCase().includes('5 meter') || 
+                          eventText.toLowerCase().includes('5-meter')) {
+                    eventText += ' [PENALTY GOAL]';
+                } else {
+                    eventText += ' [NATURAL GOAL]';
+                }
+            }
+
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
             document.getElementById('gameLog').appendChild(logEntry);
+            
+            // Auto-scroll to bottom
+            const gameLog = document.getElementById('gameLog');
+            gameLog.scrollTop = gameLog.scrollHeight;
         }
 
 
