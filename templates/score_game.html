@@ -448,6 +448,15 @@
             // Continue with normal form submission if not in shootout
         });
 
+        // Handle end game during shootout
+        if (isShootout) {
+            const form = document.getElementById('endGameForm');
+            form.addEventListener('submit', function(e) {
+                const schoolSlug = form.querySelector('input[name="school_slug"]').value;
+                form.action = `/end_game?redirect=${schoolSlug}`;
+            });
+        }
+
         // Initialize button event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
@@ -742,10 +751,10 @@
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
-                
+
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
-                
+
                 if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
                 } else if (eventText.toLowerCase().includes('penalty') || 
@@ -761,7 +770,7 @@
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
-            
+
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
                 logEntry.style.color = '#e74c3c';
@@ -770,9 +779,9 @@
             } else if (eventText.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
             }
-            
+
             document.getElementById('gameLog').appendChild(logEntry);
-            
+
             // Auto-scroll to bottom
             const gameLog = document.getElementById('gameLog');
             gameLog.scrollTop = gameLog.scrollHeight;
