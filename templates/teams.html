@@ -9,22 +9,6 @@
             position: relative;
             display: inline-block;
         }
-        .content-wrapper {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin: 20px;
-            flex: 1;
-        }
-        .game {
-            width: 100%;
-            max-width: none;
-        }
-        .game-schedule {
-            width: 100%;
-            max-width: none;
-            margin: 0;
-        }
         .profile-dropdown .dropdown-content {
             display: none;
             position: absolute;
@@ -258,9 +242,9 @@
             </div>
         {% endif %}
     </div>
-    <div class="content-wrapper">
-        <!-- School Info and Roster -->
-        <div>
+    <div style="display: flex; gap: 20px; margin: 20px;">
+        <!-- Left Column -->
+        <div style="flex: 1;">
             <div class="school-container" style="margin: 0;">
                 <div style="display: flex; align-items: center;">
                     <img src="{{ url_for('static', filename=school.logo) }}" alt="{{ school.name }} Logo">
@@ -309,8 +293,9 @@
         {% endif %}
     </div>
         </div>
-        <!-- Game Schedule -->
-        <div class="game-schedule">
+        <!-- Right Column -->
+        <div style="flex: 1;">
+            <div class="game-schedule">
                 <h2>Game Schedule</h2>
 
         {% if team_data.games %}
