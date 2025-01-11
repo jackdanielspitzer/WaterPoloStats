@@ -443,32 +443,31 @@
 
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     // For shootout goals, increment score by 0.1
-                    const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
-                    const scoreElement = document.getElementById(team + 'Score');
-                    const currentScore = parseFloat(scoreElement.textContent || '0');
-                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                    try {
+                        const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
+                        const scoreElement = document.getElementById(team + 'Score');
+                        const currentScore = parseFloat(scoreElement.textContent || '0');
+                        scoreElement.textContent = (currentScore + 0.1).toFixed(1);
 
-                    // Process the shootout event
-                    fetch('/process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                    })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    })
-                    .then(() => {
-                        document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                        // Process the shootout event
+                        const response = await fetch('/process', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
+                        });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        const data = await response.json();
+                        document.getElementById('result').innerText = data.response || 'Success';
                         addEventToLog(`${team.toUpperCase()} team scored in shootout [SHOOTOUT GOAL]`);
                         updateTables();
-                    })
-                    .catch(error => {
+                    } catch (error) {
                         console.error('Error:', error);
                         document.getElementById('result').innerText = 'Error recording shootout goal';
-                    });
+                    }
                 }
                 document.getElementById('inputText').value = '';
                 return false;
