@@ -2418,24 +2418,14 @@ def end_game():
                 # Calculate and save scores
                 white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
                 black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
-                
-                # Get current quarter to determine if it's OT or SO
-                current_quarter = request.form.get('current_quarter', '')
-                game_type = ''
-                if current_quarter == 'SO':
-                    game_type = '(SO)'
-                elif 'OT' in str(current_quarter):
-                    game_type = '(OT)'
 
                 white_game["score"] = {
                     "white_team_score": white_score,
-                    "black_team_score": black_score,
-                    "game_type": game_type
+                    "black_team_score": black_score
                 }
                 black_game["score"] = {
                     "white_team_score": white_score,
-                    "black_team_score": black_score,
-                    "game_type": game_type
+                    "black_team_score": black_score
                 }
 
                 # Save updated data

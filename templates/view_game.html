@@ -37,7 +37,7 @@
         <h1>Game Box Score</h1>
         <h2>{{ away_team }} vs {{ home_team }}</h2>
         <p><strong>Date:</strong> {{ game.date }}</p>
-        <p><strong>Score:</strong> {{ "%.1f"|format(game.score.white_team_score|float) }} - {{ "%.1f"|format(game.score.black_team_score|float) }} {{ game.score.game_type }}</p>
+        <p><strong>Score:</strong> {{ game.score.white_team_score }} - {{ game.score.black_team_score }}</p>
 
         <h2>{{ away_team }} Stats</h2>
         {% if not away_stats_private or (current_user_id == away_manager_id) %}
