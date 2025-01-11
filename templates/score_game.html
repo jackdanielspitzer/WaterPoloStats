@@ -755,18 +755,25 @@
                 const gameLog = document.getElementById('gameLog');
                 const recentEvents = Array.from(gameLog.children).slice(-3); // Look at last 3 events
 
-                // Check for recent penalty first
-                const recentPenalty = recentEvents.some(event => 
-                    event.textContent.toLowerCase().includes('penalty') || 
-                    event.textContent.toLowerCase().includes('5 meter') ||
-                    event.textContent.toLowerCase().includes('5-meter'));
+                // Check for recent penalty drawn by same player
+                const scoringPlayerMatch = eventText.match(/\b\d+\b/);  // Get player number
+                const scoringPlayer = scoringPlayerMatch ? scoringPlayerMatch[0] : null;
+                
+                const recentPenalty = recentEvents.some(event => {
+                    const eventText = event.textContent.toLowerCase();
+                    const playerMatch = eventText.match(/\b\d+\b/);
+                    const eventPlayer = playerMatch ? playerMatch[0] : null;
+                    
+                    return (eventText.includes('penalty') || 
+                           eventText.includes('5 meter') ||
+                           eventText.includes('5-meter')) &&
+                           eventPlayer === scoringPlayer;
+                });
 
                 // Check if opposing team has an active exclusion
                 const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
 
-                if (recentPenalty || eventText.toLowerCase().includes('penalty') || 
-                    eventText.toLowerCase().includes('5 meter') || 
-                    eventText.toLowerCase().includes('5-meter')) {
+                if (recentPenalty) {
                     eventText += ' [PENALTY GOAL]';
                 } else if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
