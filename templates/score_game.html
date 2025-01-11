@@ -748,6 +748,8 @@
                 
                 if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
+                    // Reset all exclusions after advantage goal
+                    activeExclusions = [];
                 } else if (eventText.toLowerCase().includes('penalty') || 
                           eventText.toLowerCase().includes('5 meter') || 
                           eventText.toLowerCase().includes('5-meter')) {
