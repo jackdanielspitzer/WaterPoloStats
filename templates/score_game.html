@@ -716,10 +716,10 @@
 
             // Update active exclusions - remove expired ones
             activeExclusions = activeExclusions.filter(ex => {
-                const sameQuarter = ex.quarter === quarter;
+                const sameQuarter = ex.quarter === parseInt(quarter);
                 const nextQuarter = parseInt(quarter) === ex.quarter + 1;
-                const timeValid = currentTime <= ex.endTime || (nextQuarter && currentTime >= 380); // 380 = 6:20
-                return timeValid && (sameQuarter || nextQuarter);
+                const withinExclusionTime = ex.startTime - currentTime <= 20;
+                return withinExclusionTime && (sameQuarter || nextQuarter);
             });
 
             // Handle exclusion events
@@ -728,7 +728,6 @@
                 activeExclusions.push({
                     team: team,
                     startTime: currentTime,
-                    endTime: currentTime - 20,
                     quarter: parseInt(quarter)
                 });
                 eventText += ' [20 SEC EXCLUSION]';
