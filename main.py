@@ -1539,21 +1539,6 @@ def process_text():
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
 
-        # Initialize game data if it doesn't exist
-        if game_id not in game_data:
-            game_data[game_id] = {
-                'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                            'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
-                'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                            'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
-            }
-
-        response = run(text)
-        return jsonify({'response': response})
-    except Exception as e:
-        app.logger.error(f"Error processing text: {str(e)}")
-        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
-
         if game_id not in game_data:
             # Initialize game data if it doesn't exist
             game_data[game_id] = {
@@ -1597,14 +1582,10 @@ def process_text():
                         print(f"Error processing shootout: {str(e)}")
                         return jsonify({'error': f'Player {player} not found in roster'}), 400
 
-            try:
-                if responses:
-                    return jsonify({'response': ' and '.join(responses)})
-                else:
-                    response = run(text, game_id)
-                    return jsonify({'response': response})
-            except Exception as e:
-                return jsonify({'error': str(e)}), 500
+            return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
+        else:
+            response = run(text, game_id)
+            return jsonify({'response': response})
             
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
@@ -2127,6 +2108,7 @@ def quick_score(school_slug, game_index):
     # Process form submission
     if request.method == 'POST':
         try:
+            # Initialize game data
             home_box = {
                 'Player': [str(p['cap_number']) for p in home_roster],
                 'Shot': [0] * len(home_roster),
@@ -2206,8 +2188,8 @@ def quick_score(school_slug, game_index):
 
             return redirect(url_for('team_page', school_slug=school_slug))
         except Exception as e:
-            print(f"Error processing game data: {str(e)}")
-            return f"Error processing game data: {str(e)}", 500
+            print(f"Error saving game data: {str(e)}")
+            return f"Error saving game data: {str(e)}", 500
 
     # Initialize box scores
     home_box = {
