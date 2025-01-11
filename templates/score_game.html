@@ -706,35 +706,39 @@
         let activeExclusions = [];
 
         function addEventToLog(eventText) {
-            const minutes = document.getElementById('minutes').textContent;
-            const seconds = document.getElementById('seconds').textContent;
+            const minutes = parseInt(document.getElementById('minutes').textContent);
+            const seconds = parseInt(document.getElementById('seconds').textContent);
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
-            const currentTime = minutes * 60 + parseInt(seconds);
+            const gameTime = `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const currentTime = minutes * 60 + seconds;
 
-            // Update active exclusions
-            activeExclusions = activeExclusions.filter(ex => 
-                (currentTime <= ex.endTime && quarter === ex.quarter) ||
-                (quarter !== ex.quarter && quarter - ex.quarter <= 1)
-            );
+            // Update active exclusions - remove expired ones
+            activeExclusions = activeExclusions.filter(ex => {
+                const sameQuarter = ex.quarter === quarter;
+                const nextQuarter = parseInt(quarter) === ex.quarter + 1;
+                const timeValid = currentTime <= ex.endTime || (nextQuarter && currentTime >= 380); // 380 = 6:20
+                return timeValid && (sameQuarter || nextQuarter);
+            });
 
-            // Check for exclusion events
+            // Handle exclusion events
             if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
                 const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
                     team: team,
                     startTime: currentTime,
                     endTime: currentTime - 20,
-                    quarter: quarter
+                    quarter: parseInt(quarter)
                 });
+                eventText += ' [20 SEC EXCLUSION]';
             }
 
-            // Add advantage goal tag if applicable
+            // Handle goals and add appropriate tags
             if (eventText.toLowerCase().includes('scored')) {
                 const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                const hasAdvantage = activeExclusions.some(ex => 
-                    ex.team !== scoringTeam
-                );
+                const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
+                
+                // Check if opposing team has an active exclusion
+                const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
                 
                 if (hasAdvantage) {
                     eventText += ' [ADVANTAGE GOAL]';
@@ -747,9 +751,20 @@
                 }
             }
 
+            // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
+            
+            // Add color coding for different types of events
+            if (eventText.includes('[ADVANTAGE GOAL]')) {
+                logEntry.style.color = '#e74c3c';
+            } else if (eventText.includes('[PENALTY GOAL]')) {
+                logEntry.style.color = '#e67e22';
+            } else if (eventText.includes('[20 SEC EXCLUSION]')) {
+                logEntry.style.color = '#3498db';
+            }
+            
             document.getElementById('gameLog').appendChild(logEntry);
             
             // Auto-scroll to bottom
