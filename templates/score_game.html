@@ -310,11 +310,15 @@
         function endQuarter() {
             clearInterval(timerInterval);
             isTimerRunning = false;
+            isPaused = false;
             if (currentQuarter < 4) {
                 currentQuarter++;
                 timeRemaining = 420;
                 updateTimerDisplay();
                 document.getElementById('startPauseTimer').textContent = 'Start';
+                document.getElementById('startPauseTimer').disabled = false;
+                document.getElementById('rewindTimer').disabled = false;
+                document.getElementById('endQuarter').disabled = false;
             } else {
                 // Create and show modal for end-game options
                 const modal = document.createElement('div');
