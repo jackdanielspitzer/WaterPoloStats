@@ -428,13 +428,15 @@
 
         // Modify the form submission to handle shootout goals differently
         document.getElementById('form').addEventListener('submit', async function(e) {
-            if (isShootout && inputText.toLowerCase().includes('goal')) {
+            const inputText = document.getElementById('inputText').value;
+            if (isShootout && inputText && inputText.toLowerCase().includes('goal')) {
+                e.preventDefault();
                 // For shootout goals, increment score by 0.1
                 const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
                 const scoreElement = document.getElementById(team + 'Score');
-                const currentScore = parseFloat(scoreElement.textContent);
+                const currentScore = parseFloat(scoreElement.textContent || '0');
                 scoreElement.textContent = (currentScore + 0.1).toFixed(1);
-                e.preventDefault();
+                document.getElementById('inputText').value = '';
                 return false;
             }
         });
