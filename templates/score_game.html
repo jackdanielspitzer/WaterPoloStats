@@ -448,30 +448,10 @@
                         const newScore = Math.round((currentScore + 0.1) * 10) / 10;
                         scoreElement.textContent = newScore.toFixed(1);
 
-                        const params = new URLSearchParams({
-                            text: inputText,
-                            home_team: homeTeam,
-                            away_team: awayTeam,
-                            game_id: gameId,
-                            game_time: 'SO'
-                        });
-
                         const response = await fetch('/process', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: params
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        if (data.error) {
-                            throw new Error(data.error);
-                        }
                             },
                             body: new URLSearchParams({
                                 text: inputText,
