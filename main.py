@@ -1556,7 +1556,9 @@ def process_text():
                 if player and 'score' in text.lower():
                     # Increment score by 0.1 for shootout goals
                     box_key = 'dataWhite' if team == 'light' else 'dataBlack'
-                    roster = team_rosters.get(away_team_name if team == 'light' else home_team_name, [])
+                    away_team = request.form.get('away_team')
+                    home_team = request.form.get('home_team')
+                    roster = team_rosters.get(away_team if team == 'light' else home_team, [])
                     
                     try:
                         player_index = next(i for i, p in enumerate(roster) if str(p['cap_number']).strip() == str(player).strip())
