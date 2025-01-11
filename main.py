@@ -1530,6 +1530,7 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', '')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1547,8 +1548,27 @@ def process_text():
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
 
-        response = run(text, game_id)
-        return jsonify({'response': response})
+        # Special handling for shootout
+        if game_time == 'SO':
+            events = extract_key_phrases(text)
+            responses = []
+            for player, event, team in events:
+                if player and event == 'Shot' and team:
+                    # For shootout, we only care about successful shots
+                    if 'score' in text.lower():
+                        response_text = f"The {team} team {player} scored in shootout"
+                        responses.append(response_text)
+                        
+                        # Add to game log
+                        if 'game_log' not in game_data[game_id]:
+                            game_data[game_id]['game_log'] = []
+                        game_data[game_id]['game_log'].append(f"SO - {response_text} [SHOOTOUT GOAL]")
+
+            return jsonify({'response': ' and '.join(responses) if responses else 'Could not parse the input'})
+        else:
+            response = run(text, game_id)
+            return jsonify({'response': response})
+            
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
         return jsonify({'error': f'Error processing text: {str(e)}'}), 500
