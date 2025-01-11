@@ -1571,6 +1571,34 @@ def run(text, game_id):
                     game_data[game_id]['game_log'] = []
 
                 # Add game time and log entry
+                # Add event with goal type tag if applicable
+                event_time = datetime.strptime(game_time.split(' ')[1], '%M:%S')
+                
+                # Check if this is a goal event
+                if 'scored' in log_entry.lower():
+                    # Look back in game log for recent exclusions or penalties
+                    recent_events = game_data[game_id].get('game_log', [])[-5:]  # Look at last 5 events
+                    found_advantage = False
+                    found_penalty = False
+                    
+                    for prev_event in recent_events:
+                        prev_time = datetime.strptime(prev_event.split(' - ')[0].split(' ')[1], '%M:%S')
+                        time_diff = (event_time - prev_time).total_seconds()
+                        
+                        if 'excluded' in prev_event.lower() and time_diff <= 20:
+                            found_advantage = True
+                            break
+                        elif 'penalty' in prev_event.lower() and time_diff <= 10:
+                            found_penalty = True
+                            break
+                    
+                    if found_advantage:
+                        log_entry += " [ADVANTAGE GOAL]"
+                    elif found_penalty:
+                        log_entry += " [PENALTY GOAL]"
+                    else:
+                        log_entry += " [NATURAL GOAL]"
+                
                 game_data[game_id]['game_log'].append(f"{game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
