@@ -446,23 +446,12 @@
                     const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
                     const scoreElement = document.getElementById(team + 'Score');
                     const currentScore = parseFloat(scoreElement.textContent || '0');
-                    const newScore = currentScore + 0.1;
-                    scoreElement.textContent = newScore.toFixed(1);
+                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
                     
-                    // Process the shootout event
-                    fetch('/process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        document.getElementById('result').innerText = data.response || 'Shootout goal recorded';
-                        updateTables();
-                    })
-                    .catch(error => console.error('Error:', error));
+                    // Just record the shootout goal in game log without updating player stats
+                    document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                    document.getElementById('inputText').value = '';
+                    addEventToLog(`${team.toUpperCase()} team scored in shootout [SHOOTOUT GOAL]`);
                 }
                 document.getElementById('inputText').value = '';
                 return false;
