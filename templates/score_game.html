@@ -446,7 +446,6 @@
                         currentScore = parseFloat(scoreElement.textContent || '0');
                         // Round to 1 decimal place to avoid floating point issues
                         const newScore = Math.round((currentScore + 0.1) * 10) / 10;
-                        scoreElement.textContent = newScore.toFixed(1);
 
                         const response = await fetch('/process', {
                             method: 'POST',
@@ -466,6 +465,7 @@
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
+                        scoreElement.textContent = newScore.toFixed(1);
                         document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
                         await updateTables();
                     } catch (error) {
