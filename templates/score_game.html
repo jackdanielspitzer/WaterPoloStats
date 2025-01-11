@@ -438,10 +438,15 @@
                     const currentScore = parseFloat(scoreElement.textContent || '0');
                     scoreElement.textContent = (currentScore + 0.1).toFixed(1);
                     document.getElementById('inputText').value = '';
-                    document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                    const teamName = team === 'home' ? '{{ home_team }}' : '{{ away_team }}';
+                    document.getElementById('result').innerText = `Shootout goal scored for ${teamName}`;
+                } else if (inputText && (inputText.toLowerCase().includes('missed') || inputText.toLowerCase().includes('saved'))) {
+                    document.getElementById('inputText').value = '';
+                    const team = inputText.toLowerCase().includes('dark') ? '{{ home_team }}' : '{{ away_team }}';
+                    document.getElementById('result').innerText = `${team} shootout attempt saved`;
                 } else if (inputText) {
                     document.getElementById('inputText').value = '';
-                    document.getElementById('result').innerText = `Attempt recorded`;
+                    document.getElementById('result').innerText = `Attempt recorded for shootout`;
                 }
                 return false;
             }
