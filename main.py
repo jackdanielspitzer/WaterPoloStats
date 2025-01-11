@@ -1550,15 +1550,20 @@ def process_text():
 
         # Special handling for shootout
         if game_time == 'SO':
-            events = extract_key_phrases(text)
-            responses = []
-            for player, event, team in events:
-                if player and 'score' in text.lower():
-                    # Increment score by 0.1 for shootout goals
-                    box_key = 'dataWhite' if team == 'light' else 'dataBlack'
-                    away_team = request.form.get('away_team')
-                    home_team = request.form.get('home_team')
-                    roster = team_rosters.get(away_team if team == 'light' else home_team, [])
+            try:
+                # Load team rosters
+                with open('team_rosters.json', 'r') as file:
+                    team_rosters = json.load(file)
+                
+                events = extract_key_phrases(text)
+                responses = []
+                for player, event, team in events:
+                    if player and 'score' in text.lower():
+                        # Increment score by 0.1 for shootout goals
+                        box_key = 'dataWhite' if team == 'light' else 'dataBlack'
+                        away_team = request.form.get('away_team')
+                        home_team = request.form.get('home_team')
+                        roster = team_rosters.get(away_team if team == 'light' else home_team, [])
                     
                     try:
                         player_index = next(i for i, p in enumerate(roster) if str(p['cap_number']).strip() == str(player).strip())
