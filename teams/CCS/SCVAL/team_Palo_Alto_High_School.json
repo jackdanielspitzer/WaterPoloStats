@@ -186,7 +186,8 @@
             "score": {
                 "white_team_score": 1,
                 "black_team_score": 2
-            }
+            },
+            "game_log": []
         },
         {
             "home_away": "Away",
@@ -196,7 +197,8 @@
             "date": "2025-01-10",
             "game_type": "Non-League Game",
             "is_scored": false,
-            "formatted_date": "January 10th, 2025"
+            "formatted_date": "January 10th, 2025",
+            "game_log": []
         },
         {
             "home_away": "Away",
@@ -314,14 +316,14 @@
                     "8"
                 ],
                 "Shot": [
-                    0,
+                    1,
                     0,
                     0,
                     0,
                     0
                 ],
                 "Shot Attempt": [
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -391,13 +393,16 @@
                     0
                 ]
             },
-            "game_log": [],
+            "game_log": [
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team 1 attempted a shot"
+            ],
             "score": {
-                "white_team_score": 0.0,
-                "black_team_score": 0.1,
-                "game_type": "(SO)"
+                "white_team_score": 0,
+                "black_team_score": 1,
+                "game_type": ""
             },
-            "is_shootout": true
+            "is_shootout": false
         },
         {
             "home_away": "Home",
@@ -565,7 +570,8 @@
             "score": {
                 "white_team_score": 0,
                 "black_team_score": 2
-            }
+            },
+            "game_log": []
         },
         {
             "home_away": "Away",
