@@ -540,10 +540,23 @@
                             'Content-Type': 'application/x-www-form-urlencoded',
                         },
                         body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
+                    }).then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Network response was not ok');
+                    }).then(data => {
+                        if (!game_data[gameId]) {
+                            game_data[gameId] = { game_log: [] };
+                        }
+                        if (!game_data[gameId].game_log) {
+                            game_data[gameId].game_log = [];
+                        }
+                        game_data[gameId].game_log.push(shootoutEvent);
+                        addEventToLog(shootoutEvent);
+                    }).catch(error => {
+                        console.error('Error:', error);
                     });
-                    if (!game_data[gameId].game_log) {
-                        game_data[gameId].game_log = [];
-                    }
                     game_data[gameId].game_log.push(shootoutEvent);
                     addEventToLog(shootoutEvent);
                 }
