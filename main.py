@@ -2474,10 +2474,15 @@ def end_game():
                         # Keep decimal places for shootout
                         white_score = round(white_score, 1)
                         black_score = round(black_score, 1)
+                        # Ensure is_shootout is set for both teams' games
+                        white_game["is_shootout"] = True
+                        black_game["is_shootout"] = True
                     else:
                         # Convert to integer for regular/OT games
                         white_score = int(white_score)
                         black_score = int(black_score)
+                        white_game["is_shootout"] = False
+                        black_game["is_shootout"] = False
                 except ValueError as e:
                     print(f"Error converting scores: {str(e)}")
                     white_score = 0
