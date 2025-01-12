@@ -9,6 +9,16 @@
             "game_type": "League Game",
             "is_scored": true,
             "formatted_date": "January 31st, 2025"
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-31",
+            "game_type": "Non-League Game",
+            "is_scored": true,
+            "formatted_date": "January 31st, 2025"
         }
     ]
 }
