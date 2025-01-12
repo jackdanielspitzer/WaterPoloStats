@@ -2389,9 +2389,17 @@ def end_game():
         current_quarter = request.form.get('current_quarter', '')
         school_slug = request.form.get('school_slug')
         
-        # Get scores from the form
-        white_score = request.form.get('away_score', '0')
-        black_score = request.form.get('home_score', '0')
+        # Get scores from the form and convert to float
+        white_score = float(request.form.get('away_score', '0'))
+        black_score = float(request.form.get('home_score', '0'))
+        
+        # Initialize team files if they don't exist
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
+
+        # Load team data for both teams
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
 
         # Initialize team files if they don't exist
         initialize_team_file(white_team_name)
@@ -2476,13 +2484,26 @@ def end_game():
                     black_score = 0
                 # Save game scores with proper type indicators
                 score_info = {
-                    "white_team_score": float(white_score),
-                    "black_team_score": float(black_score),
-                    "game_type": "(SO)" if is_shootout else "(OT)" if "OT" in str(game_type) else ""
+                    "white_team_score": white_score,
+                    "black_team_score": black_score,
+                    "game_type": "(SO)" if current_quarter == 'SO' else "(OT)" if "OT" in str(current_quarter) else ""
                 }
                 
-                white_game["score"] = score_info.copy()
-                black_game["score"] = score_info.copy()
+                # Update game scores for both teams' data
+                if game_index < len(white_team_data["games"]):
+                    white_team_data["games"][game_index]["score"] = score_info.copy()
+                    white_team_data["games"][game_index]["is_scored"] = True
+
+                # Find and update corresponding game in black team data
+                for black_game in black_team_data["games"]:
+                    if black_game["opponent"] == white_team_name:
+                        black_game["score"] = score_info.copy()
+                        black_game["is_scored"] = True
+                        break
+                
+                # Save updated data for both teams
+                save_team_data(white_team_name, white_team_data)
+                save_team_data(black_team_name, black_team_data)
                 
                 # Add shootout flag
                 white_game["is_shootout"] = is_shootout
