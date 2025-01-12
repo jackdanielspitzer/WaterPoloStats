@@ -523,11 +523,18 @@
                     formData.append('is_shootout', 'true');
                     formData.append('final_home_score', document.getElementById('homeScore').textContent);
                     formData.append('final_away_score', document.getElementById('awayScore').textContent);
+                    formData.append('school_slug', document.querySelector('input[name="school_slug"]').value);
 
                     const response = await fetch('/end_game', {
                         method: 'POST',
                         body: formData
                     });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to end game');
+                    }
+                    
+                    window.location.href = `/team/${formData.get('school_slug')}`;
 
                     if (response.ok) {
                         // Disable scoring interface
