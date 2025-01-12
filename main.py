@@ -2545,6 +2545,12 @@ def end_game():
                 current_game_log = game_data.get(game_id, {}).get('game_log', [])
                 is_shootout = request.form.get('current_quarter') == 'SO'
 
+                # Add shootout indicator to relevant game log entries if needed
+                if is_shootout:
+                    for i, log_entry in enumerate(current_game_log):
+                        if 'scored a goal' in log_entry and '[NATURAL GOAL]' in log_entry:
+                            current_game_log[i] = log_entry.replace('[NATURAL GOAL]', '[SHOOTOUT GOAL]')
+
                 # Save identical game log and metadata for both teams
                 white_game.update({
                     'game_log': current_game_log,
