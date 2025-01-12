@@ -1550,10 +1550,18 @@ def process_text():
             }
 
         response = run(text, game_id)
-        game_log = game_data[game_id].get('game_log', [])
+        
+        # Add the log entry with timestamp
+        if response:
+            if game_id not in game_data:
+                game_data[game_id] = {'game_log': []}
+            if 'game_log' not in game_data[game_id]:
+                game_data[game_id]['game_log'] = []
+            game_data[game_id]['game_log'].append(f"{game_time} - {response}")
+
         return jsonify({
             'response': response,
-            'game_log': game_log
+            'game_log': game_data[game_id].get('game_log', [])
         })
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
