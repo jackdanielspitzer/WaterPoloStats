@@ -501,20 +501,30 @@
         });
 
         // Handle end game during shootout
-        if (isShootout) {
-            const form = document.getElementById('endGameForm');
-            form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-                // Update current quarter to indicate shootout
-                document.getElementById('currentQuarterInput').value = 'SO';
-                // Disable input and clear form
-                document.getElementById('inputText').disabled = true;
-                document.getElementById('form').reset();
-                // Submit the form
-                form.submit();
-            });
-        }
+        document.getElementById('endGameForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
+            const gameIndex = form.querySelector('input[name="game_index"]').value;
+            
+            // Update current quarter to indicate shootout if in shootout mode
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            
+            // Disable input form and clear it
+            document.getElementById('inputText').disabled = true;
+            document.getElementById('form').reset();
+            document.getElementById('microphoneButton').disabled = true;
+            
+            // Submit the form and redirect
+            form.submit();
+            
+            // Prevent further scoring
+            document.getElementById('form').onsubmit = function() { return false; };
+            
+            // Redirect to team page which will show view scoring button
+            window.location.href = `/team/${schoolSlug}`;
+            return false;
+        });
 
         // Initialize button event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
