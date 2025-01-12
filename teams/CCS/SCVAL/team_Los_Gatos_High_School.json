@@ -177,6 +177,16 @@
                 "white_team_score": 1,
                 "black_team_score": 2
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": "21:57",
+            "date": "2025-01-23",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 23rd, 2025"
         }
     ]
 }
