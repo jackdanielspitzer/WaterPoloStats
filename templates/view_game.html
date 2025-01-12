@@ -153,7 +153,7 @@
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
                     <div id="gameLogEntry" style="margin-bottom: 5px; 
-                        {% if 'SO - ' in entry or '[SHOOTOUT GOAL]' in entry %}color: #9b59b6;
+                        {% if 'SO:' in entry or 'SO - ' in entry or '[SHOOTOUT GOAL]' in entry %}color: #9b59b6;
                         {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
                         {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
                         {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
