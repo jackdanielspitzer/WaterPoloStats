@@ -455,15 +455,13 @@
                         const team = isDarkTeam ? 'Dark' : 'Light';
                         document.getElementById('result').innerText = `${team} team scored in shootout`;
                         addEventToLog(`${team} team scored in shootout [SHOOTOUT GOAL]`);
-                        document.getElementById('inputText').value = ''; // Clear input
-                        return false; // Prevent form submission
                     } catch (error) {
                         console.error("Error processing shootout:", error);
                         document.getElementById('result').innerText = "Error recording shootout goal";
-                        return false; // Prevent form submission
                     }
                 }
                 document.getElementById('inputText').value = '';
+                e.preventDefault();
                 return false;
             }
             // Continue with normal form submission if not in shootout
