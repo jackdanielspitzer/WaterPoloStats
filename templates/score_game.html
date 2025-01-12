@@ -519,7 +519,18 @@
                     document.getElementById('result').innerText = resultText;
 
                     // Create shootout event and add to game log
-                    const shootoutEvent = resultText + ' [SHOOTOUT GOAL]';
+                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
+
+                    // Send shootout event to server
+                    fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
+                    });
+
+                    // Add to game log
                     if (!game_data[gameId]) {
                         game_data[gameId] = { game_log: [] };
                     }
@@ -806,7 +817,7 @@
                 if (!isShootout) {
                     const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
                     const homeScore = data.home_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
-                    const awayScoreEl = document.getElementById('awayScore');
+                    const awayScoreEl = document.getElementById('awayScoreEl);
                     const homeScoreEl = document.getElementById('homeScore');
 
                     awayScoreEl.textContent = awayScore;
