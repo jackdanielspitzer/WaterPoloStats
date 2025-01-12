@@ -2381,13 +2381,72 @@ def end_game():
         black_team_name = request.form.get('black_team_name')
         game_index = int(request.form.get('game_index'))
         school_slug = request.form.get('school_slug')
+        current_quarter = request.form.get('current_quarter')
 
-        if not white_team_name or not black_team_name or game_id not in game_data:
+        if not white_team_name or not black_team_name:
             raise ValueError("Missing required data")
+
+        # Initialize team files
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
             
-        # Mark the game as finished
-        white_game = None
-        black_game = None
+        # Load team data
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+        
+        # Find and update both teams' games
+        if game_index < len(white_team_data["games"]):
+            white_game = white_team_data["games"][game_index]
+            white_game["is_scored"] = True
+            
+            # Find corresponding black team game
+            black_game_index = next((i for i, g in enumerate(black_team_data["games"]) 
+                                   if g["opponent"] == white_team_name and g["date"] == white_game["date"]), None)
+            
+            if black_game_index is not None:
+                black_game = black_team_data["games"][black_game_index]
+                black_game["is_scored"] = True
+
+                # Save current game stats if available
+                if game_id in game_data:
+                    # Update both teams' game data
+                    white_game["away_box"] = game_data[game_id]['dataWhite']
+                    white_game["home_box"] = game_data[game_id]['dataBlack']
+                    black_game["home_box"] = game_data[game_id]['dataBlack']
+                    black_game["away_box"] = game_data[game_id]['dataWhite']
+
+                    # Save game logs
+                    white_game["game_log"] = game_data[game_id].get('game_log', [])
+                    black_game["game_log"] = game_data[game_id].get('game_log', [])
+
+                    # Calculate and save final scores
+                    white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
+                    black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
+
+                    game_type_suffix = "(SO)" if current_quarter == "SO" else "(OT)" if "OT" in str(current_quarter) else ""
+                    
+                    score_data = {
+                        "white_team_score": white_score,
+                        "black_team_score": black_score,
+                        "game_type": game_type_suffix
+                    }
+                    
+                    white_game["score"] = score_data
+                    black_game["score"] = score_data
+
+                # Save updated data for both teams
+                save_team_data(white_team_name, white_team_data)
+                save_team_data(black_team_name, black_team_data)
+
+                # Clear game data
+                if game_id in game_data:
+                    del game_data[game_id]
+
+        return redirect(url_for('team_page', school_slug=school_slug))
+
+    except Exception as e:
+        print(f"Error in end_game: {str(e)}")
+        return jsonify({'error': str(e)}), 500
         
         # Initialize team files
         white_team_data = load_team_data(white_team_name)
