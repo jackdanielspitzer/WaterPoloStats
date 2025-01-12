@@ -2475,26 +2475,11 @@ def end_game():
                     white_game["game_log"] = game_data[game_id].get('game_log', [])
                     black_game["game_log"] = game_data[game_id].get('game_log', [])
 
-                    # Handle shootout scores if provided
-                    if request.form.get('is_shootout') == 'true':
-                        white_score = float(request.form.get('final_away_score', 0))
-                        black_score = float(request.form.get('final_home_score', 0))
-                        
-                        # Update box scores with shootout scores
-                        if 'Shot' in white_game["away_box"]:
-                            for i in range(len(white_game["away_box"]['Shot'])):
-                                if i < len(game_data[game_id]['dataWhite'].get('Shot', [])):
-                                    white_game["away_box"]['Shot'][i] = game_data[game_id]['dataWhite']['Shot'][i]
-                        
-                        if 'Shot' in black_game["home_box"]:
-                            for i in range(len(black_game["home_box"]['Shot'])):
-                                if i < len(game_data[game_id]['dataBlack'].get('Shot', [])):
-                                    black_game["home_box"]['Shot'][i] = game_data[game_id]['dataBlack']['Shot'][i]
-                    else:
-                        white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
-                        black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
+                    # Calculate and save final scores
+                    white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
+                    black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
 
-                    game_type_suffix = "(SO)" if current_quarter == "SO" or request.form.get('is_shootout') == 'true' else "(OT)" if "OT" in str(current_quarter) else ""
+                    game_type_suffix = "(SO)" if current_quarter == "SO" else "(OT)" if "OT" in str(current_quarter) else ""
                     
                     score_data = {
                         "white_team_score": white_score,

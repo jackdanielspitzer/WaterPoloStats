@@ -249,7 +249,7 @@
         <input type="hidden" name="game_index" value="{{ game_index }}">
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
         <input type="hidden" name="current_quarter" id="currentQuarterInput">
-        <button type="submit" >Finish Game</button>
+        <button type="submit" onclick="document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent; return confirm('Are you sure you want to finish the game?')">Finish Game</button>
     </form>
 
     <div id="gameLog">
@@ -500,37 +500,50 @@
             // Continue with normal form submission if not in shootout
         });
 
-        // Handle end game form submission
-        document.getElementById('endGameForm').addEventListener('submit', function(e) {
+        // Handle end game during shootout
+        document.getElementById('endGameForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (confirm('Are you sure you want to finish the game?')) {
-                const form = this;
-                const homeScore = document.getElementById('homeScore').textContent;
-                const awayScore = document.getElementById('awayScore').textContent;
-                const currentQuarter = document.getElementById('currentQuarter').textContent;
-                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : currentQuarter;
+            const form = this;
+            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
+            const gameIndex = form.querySelector('input[name="game_index"]').value;
 
-                // Add hidden inputs
-                const inputs = {
-                    'final_home_score': homeScore,
-                    'final_away_score': awayScore,
-                    'is_shootout': isShootout.toString()
-                };
+            // Update current quarter to indicate shootout if in shootout mode
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
-                // Set form values
-                for (const [name, value] of Object.entries(inputs)) {
-                    let input = form.querySelector(`input[name="${name}"]`);
-                    if (!input) {
-                        input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = name;
-                        form.appendChild(input);
+            // Disable input form and clear it
+            document.getElementById('inputText').disabled = true;
+            document.getElementById('form').reset();
+            document.getElementById('microphoneButton').disabled = true;
+
+            // Submit the form and redirect
+            if (isShootout) {
+                try {
+                    const response = await fetch('/end_game', {
+                        method: 'POST',
+                        body: new FormData(form)
+                    });
+
+                    if (response.ok) {
+                        // Disable scoring interface
+                        document.getElementById('form').style.display = 'none';
+                        document.getElementById('inputText').disabled = true;
+                        document.getElementById('microphoneButton').disabled = true;
+
+                        // Redirect to team page
+                        window.location.href = `/team/${schoolSlug}`;
                     }
-                    input.value = value;
+                } catch (error) {
+                    console.error('Error ending game:', error);
                 }
-
+            } else {
                 form.submit();
             }
+            // Prevent further scoring
+            document.getElementById('form').onsubmit = function() { return false; };
+
+            // Redirect to team page which will show view scoring button
+
+            return false;
         });
 
         // Initialize button event listeners when DOM is loaded
@@ -776,10 +789,6 @@
                     homeScoreEl.textContent = homeScore;
                 }
 
-                // Get score elements
-                const awayScoreEl = document.getElementById('awayScore');
-                const homeScoreEl = document.getElementById('homeScore');
-
                 // Reset classes
                 awayScoreEl.classList.remove('winning-score');
                 homeScoreEl.classList.remove('winning-score');
@@ -822,7 +831,7 @@
                 return withinExclusionTime && (sameQuarter || nextQuarter);
             });
 
-            //            // Handle exclusion events
+            // Handle exclusion events
             if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
                 const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
@@ -864,7 +873,7 @@
                     } else {
                         eventText += ' [NATURAL GOAL]';
                     }
-                }
+                                }
             }
 
             // Create and style the log entry
