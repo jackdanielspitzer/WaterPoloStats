@@ -42,9 +42,7 @@
             {% if game.score %}
                 <p><strong>Score:</strong> 
                 {% if game.score.game_type == "(SO)" or game.is_shootout %}
-                    {% set white_score = '%.1f'|format(game.score.white_team_score|float) %}
-                    {% set black_score = '%.1f'|format(game.score.black_team_score|float) %}
-                    {{ white_score }} - {{ black_score }}
+                    {{ '%.1f'|format(game.score.white_team_score) }} - {{ '%.1f'|format(game.score.black_team_score) }}
                     {{ game.score.game_type }}
                 {% else %}
                     {{ game.score.white_team_score }} - {{ game.score.black_team_score }}
