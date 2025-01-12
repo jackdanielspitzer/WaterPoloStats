@@ -2285,6 +2285,10 @@ def view_scoring(school_slug, game_index):
     try:
         # Get manager info but don't block access
         manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+    except Exception as e:
+        app.logger.error(f"Error getting manager info: {str(e)}")
+        manager = None
+        
     try:
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
