@@ -508,33 +508,30 @@
             const currentQuarter = document.getElementById('currentQuarter').textContent;
             document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : currentQuarter;
 
-            // Add shootout data if in shootout mode
-            if (isShootout) {
-                const homeScore = document.getElementById('homeScore').textContent;
-                const awayScore = document.getElementById('awayScore').textContent;
+            // Get scores
+            const homeScore = document.getElementById('homeScore').textContent;
+            const awayScore = document.getElementById('awayScore').textContent;
 
-                // Add or update hidden inputs
-                const inputs = [
-                    {name: 'final_home_score', value: homeScore},
-                    {name: 'final_away_score', value: awayScore},
-                    {name: 'is_shootout', value: 'true'}
-                ];
+            // Add final scores and game type as hidden inputs
+            const inputs = [
+                {name: 'final_home_score', value: homeScore},
+                {name: 'final_away_score', value: awayScore},
+                {name: 'is_shootout', value: isShootout.toString()}
+            ];
 
-                inputs.forEach(({name, value}) => {
-                    let input = document.querySelector(`input[name="${name}"]`);
-                    if (!input) {
-                        input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = name;
-                        this.appendChild(input);
-                    }
-                    input.value = value;
-                });
-            }
+            inputs.forEach(({name, value}) => {
+                let input = document.querySelector(`input[name="${name}"]`);
+                if (!input) {
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    this.appendChild(input);
+                }
+                input.value = value;
+            });
 
             // Submit form
             this.submit();
-            return false;
         });
 
         // Initialize button event listeners when DOM is loaded
