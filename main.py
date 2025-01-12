@@ -2476,8 +2476,8 @@ def end_game():
                     black_score = 0
                 # Save game scores with proper type indicators
                 score_info = {
-                    "white_team_score": white_score,
-                    "black_team_score": black_score,
+                    "white_team_score": float(white_score),
+                    "black_team_score": float(black_score),
                     "game_type": "(SO)" if is_shootout else "(OT)" if "OT" in str(game_type) else ""
                 }
                 
