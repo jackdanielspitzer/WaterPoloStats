@@ -531,14 +531,18 @@
         // Process form submission for text input
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
-            const inputText = document.getElementById('inputText').value;
+            const inputText = document.getElementById('inputText').value.trim();
+            if (!inputText) {
+                console.log("Empty input, skipping submission");
+                return false;
+            }
             const homeTeam = document.querySelector('input[name="home_team"]').value;
             const awayTeam = document.querySelector('input[name="away_team"]').value;
-            const gameId = document.querySelector('input[name="game_id"]').value; //Added gameId
+            const gameId = document.querySelector('input[name="game_id"]').value;
             console.log("Submitting text:", inputText);
             console.log("Home team:", homeTeam);
             console.log("Away team:", awayTeam);
-            console.log("Game ID:", gameId); //Added gameId
+            console.log("Game ID:", gameId);
 
 
             // Get current game time and quarter
