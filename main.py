@@ -248,6 +248,18 @@ def open_game(team_name, game_index):
 # Helper function to save a team's JSON data
 def save_team_data(team_name, data):
     team_file_path = get_team_file_path(team_name)
+    
+    # Ensure game_log exists for each game
+    if "games" in data:
+        for game in data["games"]:
+            if "game_log" not in game:
+                game["game_log"] = []
+                
+            # If there's corresponding game data in memory, use its game log
+            game_id = str(data["games"].index(game))
+            if game_id in game_data and "game_log" in game_data[game_id]:
+                game["game_log"] = game_data[game_id]["game_log"]
+    
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
 
