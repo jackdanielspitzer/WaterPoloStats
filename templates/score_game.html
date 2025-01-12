@@ -444,8 +444,14 @@
 
                     try {
                         currentScore = parseFloat(scoreElement.textContent || '0');
-                        // Round to 1 decimal place to avoid floating point issues
-                        const newScore = Math.round((currentScore + 0.1) * 10) / 10;
+                        // Ensure increment is less than 1 for shootout
+                        const increment = 0.09;
+                        const newScore = Math.round((currentScore + increment) * 100) / 100;
+                        
+                        // Verify the change is less than 1
+                        if (newScore - currentScore >= 1) {
+                            throw new Error('Invalid shootout score increment');
+                        }
 
                         const response = await fetch('/process', {
                             method: 'POST',
