@@ -2333,11 +2333,17 @@ def view_scoring(school_slug, game_index):
         if not black_team_stats or 'Player' not in black_team_stats:
             black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
 
-        # Calculate scores based on correct home/away assignment
-        game['score'] = {
-            'white_team_score': sum(white_team_stats.get('Shot', [])),
-            'black_team_score': sum(black_team_stats.get('Shot', []))
-        }
+        # Get game log from team data file
+        team_data = load_team_data(team_name)
+        if game_index < len(team_data["games"]):
+            stored_game = team_data["games"][game_index]
+            game['game_log'] = stored_game.get('game_log', [])
+            game['score'] = stored_game.get('score', {
+                'white_team_score': sum(white_team_stats.get('Shot', [])),
+                'black_team_score': sum(black_team_stats.get('Shot', [])),
+                'game_type': "(SO)" if stored_game.get('is_shootout') else ""
+            })
+            game['is_shootout'] = stored_game.get('is_shootout', False)
 
         # Check privacy settings for both teams
         home_manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
