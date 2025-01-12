@@ -195,7 +195,7 @@
             "time": "23:49",
             "date": "2025-01-23",
             "game_type": "League Game",
-            "is_scored": true,
+            "is_scored": false,
             "formatted_date": "January 23rd, 2025",
             "home_box": {
                 "Player": [
