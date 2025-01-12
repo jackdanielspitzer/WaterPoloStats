@@ -523,24 +523,8 @@
                     formData.append('is_shootout', 'true');
                     formData.append('final_home_score', document.getElementById('homeScore').textContent);
                     formData.append('final_away_score', document.getElementById('awayScore').textContent);
-                    formData.append('white_team_name', form.querySelector('input[name="white_team_name"]').value);
-                    formData.append('black_team_name', form.querySelector('input[name="black_team_name"]').value);
 
                     const response = await fetch('/end_game', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to end game');
-                    }
-
-                    const result = await response.json();
-                    window.location.href = result.redirect;
-                } catch (error) {
-                    console.error('Error ending game:', error);
-                }
-                return false;
                         method: 'POST',
                         body: formData
                     });
