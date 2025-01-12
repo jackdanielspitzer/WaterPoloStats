@@ -470,15 +470,22 @@
 
                 if (inputText.toLowerCase().includes('scored')) {
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
-                    if (!regulationHomeScore) regulationHomeScore = parseFloat(document.getElementById('homeScore').textContent);
-                    if (!regulationAwayScore) regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
+                    // Store current scores before updating
+                    if (!regulationHomeScore) regulationHomeScore = Math.floor(parseFloat(document.getElementById('homeScore').textContent));
+                    if (!regulationAwayScore) regulationAwayScore = Math.floor(parseFloat(document.getElementById('awayScore').textContent));
                     
                     if (isDarkTeam) {
                         shootoutGoalsHome++;
-                        document.getElementById('homeScore').textContent = (regulationHomeScore + (shootoutGoalsHome * 0.1)).toFixed(1);
+                        const newScore = (regulationHomeScore + (shootoutGoalsHome * 0.1)).toFixed(1);
+                        document.getElementById('homeScore').textContent = newScore;
+                        // Prevent score from being overwritten
+                        regulationHomeScore = Math.floor(parseFloat(newScore));
                     } else {
                         shootoutGoalsAway++;
-                        document.getElementById('awayScore').textContent = (regulationAwayScore + (shootoutGoalsAway * 0.1)).toFixed(1);
+                        const newScore = (regulationAwayScore + (shootoutGoalsAway * 0.1)).toFixed(1);
+                        document.getElementById('awayScore').textContent = newScore;
+                        // Prevent score from being overwritten
+                        regulationAwayScore = Math.floor(parseFloat(newScore));
                     }
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
