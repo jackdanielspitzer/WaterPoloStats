@@ -2387,8 +2387,26 @@ def end_game():
         white_score = request.form.get('away_score', '0')
         black_score = request.form.get('home_score', '0')
 
-        # Explicitly mark the game as scored
-        game_data[game_id]['is_scored'] = True
+        # Initialize team files if they don't exist
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
+
+        # Load team data for both teams
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+
+        # Explicitly mark both games as scored
+        if game_index < len(white_team_data["games"]):
+            white_team_data["games"][game_index]["is_scored"] = True
+        
+        # Find corresponding game in black team's data
+        for black_game in black_team_data["games"]:
+            if black_game["opponent"] == white_team_name:
+                black_game["is_scored"] = True
+
+        # Save updated team data
+        save_team_data(white_team_name, white_team_data)
+        save_team_data(black_team_name, black_team_data)
 
         # Convert scores to float to handle shootout decimal points
         white_score = float(white_score)
