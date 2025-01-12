@@ -2530,6 +2530,13 @@ def end_game():
                 white_game["is_shootout"] = is_shootout
                 black_game["is_shootout"] = is_shootout
 
+                # Get game log from the current game data
+                current_game_log = game_data.get(game_id, {}).get('game_log', [])
+
+                # Save game log and other data for both teams
+                white_game['game_log'] = current_game_log
+                black_game['game_log'] = current_game_log
+
                 # Save updated data
                 save_team_data(white_team_name, white_team_data)
                 save_team_data(black_team_name, black_team_data)
