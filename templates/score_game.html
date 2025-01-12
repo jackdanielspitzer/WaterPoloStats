@@ -483,7 +483,26 @@
                 e.preventDefault();
                 return false;
             }
-            // Continue with normal form submission if not in shootout
+            try {
+                const response = await fetch('/process', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}`
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    document.getElementById('result').innerText = data.response || 'Success';
+                    updateTables();
+                } else {
+                    document.getElementById('result').innerText = 'Error processing text.';
+                }
+            } catch (error) {
+                console.error("Error processing event:", error);
+                document.getElementById('result').innerText = 'Error processing text.';
+            }
         });
 
         // Handle end game during shootout
