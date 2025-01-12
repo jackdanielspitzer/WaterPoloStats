@@ -2380,6 +2380,7 @@ def end_game():
         white_team_name = request.form.get('white_team_name')
         black_team_name = request.form.get('black_team_name')
         game_index = int(request.form.get('game_index'))
+        school_slug = request.form.get('school_slug')
 
         if not white_team_name or not black_team_name or game_id not in game_data:
             raise ValueError("Missing required data")
@@ -2425,6 +2426,10 @@ def end_game():
 
                 # Save scores and include game type
                 game_type = request.form.get('current_quarter')
+                # Ensure games are marked as scored
+                white_game["is_scored"] = True
+                black_game["is_scored"] = True
+                
                 white_game["score"] = {
                     "white_team_score": white_score,
                     "black_team_score": black_score,
