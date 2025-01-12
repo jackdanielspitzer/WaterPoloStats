@@ -2282,8 +2282,9 @@ def view_users():
 @app.route('/team/<school_slug>/view/<int:game_index>', methods=['GET'])
 @login_required
 def view_scoring(school_slug, game_index):
-    # Get manager info but don't block access
-    manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+    try:
+        # Get manager info but don't block access
+        manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
     try:
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
@@ -2347,24 +2348,26 @@ def view_scoring(school_slug, game_index):
         home_stats_private = home_manager.stats_private if home_manager else False
         away_stats_private = away_manager.stats_private if away_manager else False
 
+        # Convert None values to appropriate defaults before passing to template
         return render_template(
             "view_game.html",
-            game=game,
-            home_players=home_players,
-            away_players=away_players,
-            white_team_stats=white_team_stats,
-            black_team_stats=black_team_stats,
-            home_team=home_team_name,
-            away_team=away_team_name,
+            game=game if game else {},
+            home_players=home_players if home_players else [],
+            away_players=away_players if away_players else [],
+            white_team_stats=white_team_stats if isinstance(white_team_stats, dict) else {},
+            black_team_stats=black_team_stats if isinstance(black_team_stats, dict) else {},
+            home_team=home_team_name if home_team_name else "",
+            away_team=away_team_name if away_team_name else "",
             school_slug=school_slug,
             game_index=game_index,
-            home_stats_private=home_stats_private,
-            away_stats_private=away_stats_private,
+            home_stats_private=bool(home_stats_private),
+            away_stats_private=bool(away_stats_private),
             current_user_id=current_user.id if current_user.is_authenticated else None,
             home_manager_id=home_manager.id if home_manager else None,
             away_manager_id=away_manager.id if away_manager else None
         )
     except Exception as e:
+        app.logger.error(f"Error in view_scoring: {str(e)}")
         return f"Error: {str(e)}", 500
 
 
