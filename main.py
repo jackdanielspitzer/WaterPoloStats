@@ -2533,9 +2533,22 @@ def end_game():
                 # Get game log from the current game data
                 current_game_log = game_data.get(game_id, {}).get('game_log', [])
 
-                # Save game log and other data for both teams
-                white_game['game_log'] = current_game_log
-                black_game['game_log'] = current_game_log
+                # Get current game log and metadata
+                current_game_log = game_data.get(game_id, {}).get('game_log', [])
+                is_shootout = request.form.get('current_quarter') == 'SO'
+
+                # Save identical game log and metadata for both teams
+                white_game.update({
+                    'game_log': current_game_log,
+                    'is_shootout': is_shootout,
+                    'score': score_info
+                })
+                
+                black_game.update({
+                    'game_log': current_game_log,
+                    'is_shootout': is_shootout,
+                    'score': score_info
+                })
 
                 # Save updated data
                 save_team_data(white_team_name, white_team_data)
