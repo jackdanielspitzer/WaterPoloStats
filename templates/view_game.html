@@ -38,13 +38,20 @@
         <h2>{{ away_team }} vs {{ home_team }}</h2>
         <p><strong>Date:</strong> {{ game.date if game and game.date else 'N/A' }}</p>
         
-        {% if game and white_team_stats and black_team_stats %}
-            <!-- Game data is available -->
-            {% set white_score = white_team_stats.get('Shot', [])|sum %}
-            {% set black_score = black_team_stats.get('Shot', [])|sum %}
-        {% else %}
-            {% set white_score = 0 %}
-            {% set black_score = 0 %}
+        {% if game %}
+            {% if game.score %}
+                <p><strong>Score:</strong> 
+                {% if game.is_shootout %}
+                    {{ '%.1f'|format(game.score.white_team_score|float) }} - {{ '%.1f'|format(game.score.black_team_score|float) }} (SO)
+                {% else %}
+                    {{ game.score.white_team_score }} - {{ game.score.black_team_score }}
+                    {% if game.score.game_type %}
+                        {{ game.score.game_type }}
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                0 - 0
+            {% endif %}
         {% endif %}
         <p><strong>Score:</strong> 
     {% if game and game.score %}
