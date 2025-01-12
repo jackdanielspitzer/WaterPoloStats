@@ -501,13 +501,12 @@
         });
 
         // Handle end game during shootout
-        if (isShootout) {
-            const form = document.getElementById('endGameForm');
-            form.addEventListener('submit', function(e) {
-                const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-                form.action = `/end_game?redirect=${schoolSlug}`;
-            });
-        }
+        document.getElementById('endGameForm').addEventListener('submit', function(e) {
+            if (isShootout) {
+                // Ensure current quarter shows as 'SO' for shootout
+                document.getElementById('currentQuarterInput').value = 'SO';
+            }
+        });
 
         // Initialize button event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
