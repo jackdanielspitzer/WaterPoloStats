@@ -783,9 +783,12 @@
             "time": null,
             "date": "2025-01-30",
             "game_type": "League Game",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "January 30th, 2025",
-            "game_log": []
+            "game_log": [
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team 1 attempted a shot"
+            ]
         }
     ]
 }
