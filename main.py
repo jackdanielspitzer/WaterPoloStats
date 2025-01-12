@@ -2380,6 +2380,11 @@ def end_game():
         white_team_name = request.form.get('white_team_name')
         black_team_name = request.form.get('black_team_name')
         game_index = int(request.form.get('game_index'))
+        current_quarter = request.form.get('current_quarter')
+        
+        # Get scores from the form
+        white_score = float(request.form.get('away_score', 0))
+        black_score = float(request.form.get('home_score', 0))
 
         if not white_team_name or not black_team_name or game_id not in game_data:
             raise ValueError("Missing required data")
@@ -2415,13 +2420,17 @@ def end_game():
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
 
-                # Get final scores including shootout if applicable
-                white_score = round(float(request.form.get('away_score', 0)), 1)
-                black_score = round(float(request.form.get('home_score', 0)), 1)
+                # Get game type
+                game_type = current_quarter
+                is_shootout = game_type == 'SO'
 
-                # Round to 1 decimal place to handle shootout scores properly
-                white_score = round(float(white_score), 1)
-                black_score = round(float(black_score), 1)
+                # Round scores to 1 decimal place for shootouts, whole numbers otherwise
+                if is_shootout:
+                    white_score = round(float(white_score), 1)
+                    black_score = round(float(black_score), 1)
+                else:
+                    white_score = int(white_score)
+                    black_score = int(black_score)
 
                 # Save scores and include game type
                 game_type = request.form.get('current_quarter')
