@@ -520,6 +520,13 @@
 
                     // Create shootout event and add to game log
                     const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
+                    
+                    // Add to game log
+                    if (!game_data[gameId]) {
+                        game_data[gameId] = { game_log: [] };
+                    }
+                    game_data[gameId].game_log.push(shootoutEvent);
+                    addEventToLog(shootoutEvent);
 
                     // Send shootout event to server
                     fetch('/process', {
@@ -529,11 +536,6 @@
                         },
                         body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
                     });
-
-                    // Add to game log
-                    if (!game_data[gameId]) {
-                        game_data[gameId] = { game_log: [] };
-                    }
                     if (!game_data[gameId].game_log) {
                         game_data[gameId].game_log = [];
                     }
