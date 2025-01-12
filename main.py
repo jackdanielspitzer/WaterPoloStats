@@ -2283,13 +2283,21 @@ def view_users():
 @login_required
 def view_scoring(school_slug, game_index):
     try:
+        # Initialize empty stats dictionaries
+        white_team_stats = {
+            'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 
+            'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 
+            'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []
+        }
+        black_team_stats = {
+            'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 
+            'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 
+            'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []
+        }
+
         # Get manager info but don't block access
         manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
-    except Exception as e:
-        app.logger.error(f"Error getting manager info: {str(e)}")
-        manager = None
-        
-    try:
+
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
             team_rosters = json.load(file)
