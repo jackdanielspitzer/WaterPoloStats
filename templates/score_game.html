@@ -471,7 +471,7 @@
             regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
         }
 
-        // Handle shootout goals
+        // Handle shootout goals only in frontend
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value.trim();
@@ -515,7 +515,17 @@
                     const team = isDarkTeam ? 'Dark' : 'Light';
                     const resultText = `${team} team scored in shootout`;
                     document.getElementById('result').innerText = resultText;
-                    addEventToLog(resultText + ' [SHOOTOUT GOAL]');
+
+                    // Create shootout event and add to game log
+                    const shootoutEvent = resultText + ' [SHOOTOUT GOAL]';
+                    if (!game_data[gameId]) {
+                        game_data[gameId] = { game_log: [] };
+                    }
+                    if (!game_data[gameId].game_log) {
+                        game_data[gameId].game_log = [];
+                    }
+                    game_data[gameId].game_log.push(shootoutEvent);
+                    addEventToLog(shootoutEvent);
                 }
                 document.getElementById('inputText').value = '';
                 return false;
@@ -810,7 +820,7 @@
                     awayScoreEl.classList.remove('winning-score');
                     homeScoreEl.classList.remove('winning-score');
 
-                    // Add winning-score class to the higher score
+                                        // Add winning-score class to the higher score
                     if (parseFloat(awayScore) > parseFloat(homeScore)) {
                         awayScoreEl.classList.add('winning-score');
                     } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
