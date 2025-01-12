@@ -2344,12 +2344,15 @@ def view_scoring(school_slug, game_index):
         team_data = load_team_data(team_name)
         if game_index < len(team_data["games"]):
             stored_game = team_data["games"][game_index]
-            game['game_log'] = stored_game.get('game_log', [])
-            game['score'] = stored_game.get('score', {
-                'white_team_score': sum(white_team_stats.get('Shot', [])),
-                'black_team_score': sum(black_team_stats.get('Shot', [])),
-                'game_type': "(SO)" if stored_game.get('is_shootout') else ""
-            })
+            game = stored_game  # Use the stored game data directly
+            if 'game_log' not in game:
+                game['game_log'] = []
+            if 'score' not in game:
+                game['score'] = {
+                    'white_team_score': sum(white_team_stats.get('Shot', [])),
+                    'black_team_score': sum(black_team_stats.get('Shot', [])),
+                    'game_type': "(SO)" if stored_game.get('is_shootout') else ""
+                }
             game['is_shootout'] = stored_game.get('is_shootout', False)
 
         # Check privacy settings for both teams
