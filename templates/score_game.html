@@ -473,8 +473,10 @@
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
                     if (isDarkTeam) {
                         shootoutGoalsHome++;
+                        document.getElementById('homeScore').textContent = (regulationHomeScore + (shootoutGoalsHome / 10)).toFixed(1);
                     } else {
                         shootoutGoalsAway++;
+                        document.getElementById('awayScore').textContent = (regulationAwayScore + (shootoutGoalsAway / 10)).toFixed(1);
                     }
                     updateShootoutScore();
 
