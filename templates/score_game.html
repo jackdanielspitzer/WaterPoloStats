@@ -430,21 +430,45 @@
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value.trim();
+            const form = document.getElementById('form');
             
+            if (isShootout) {
+                if (!inputText) {
+                    console.log("Empty input during shootout, skipping");
+                    return false;
+                }
+
+                if (inputText.toLowerCase().includes('scored')) {
+                    try {
+                        // Handle shootout scoring directly in frontend
+                        const isDarkTeam = inputText.toLowerCase().includes('dark');
+                        const scoreElement = document.getElementById(isDarkTeam ? 'homeScore' : 'awayScore');
+                        const currentScore = Math.floor(parseFloat(scoreElement.textContent || '0'));
+                        scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                        
+                        // Update result text and clear input
+                        const team = isDarkTeam ? 'Dark' : 'Light';
+                        document.getElementById('result').innerText = `${team} team scored in shootout`;
+                        addEventToLog(`${team} team scored in shootout [SHOOTOUT GOAL]`);
+                        document.getElementById('inputText').value = '';
+                        return false;
+                    } catch (error) {
+                        console.error("Error processing shootout:", error);
+                        document.getElementById('result').innerText = "Error recording shootout goal";
+                        return false;
+                    }
+                }
+                return false;
+            }
+
             if (!inputText) {
                 console.log("Empty input, skipping submission");
                 return false;
             }
 
-            const form = document.getElementById('form');
             const gameId = form.getAttribute('data-game-id');
             const homeTeam = form.querySelector('input[name="home_team"]').value;
             const awayTeam = form.querySelector('input[name="away_team"]').value;
-
-            if (isShootout) {
-
-                if (inputText && inputText.toLowerCase().includes('scored')) {
-                    try {
                         // Handle shootout scoring directly in frontend
                         const isDarkTeam = inputText.toLowerCase().includes('dark');
                         const scoreElement = document.getElementById(isDarkTeam ? 'homeScore' : 'awayScore');
