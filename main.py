@@ -2420,30 +2420,41 @@ def end_game():
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
 
-                # Get game type
-                game_type = current_quarter
+                # Get game type and handle shootout
+                game_type = request.form.get('current_quarter')
                 is_shootout = game_type == 'SO'
 
-                # Round scores to 1 decimal place for shootouts, whole numbers otherwise
-                if is_shootout:
-                    white_score = round(float(white_score), 1)
-                    black_score = round(float(black_score), 1)
-                else:
-                    white_score = int(white_score)
-                    black_score = int(black_score)
-
-                # Save scores and include game type
-                game_type = request.form.get('current_quarter')
-                white_game["score"] = {
+                try:
+                    # Convert scores to float first to handle decimal points
+                    white_score = float(white_score)
+                    black_score = float(black_score)
+                    
+                    # Round appropriately based on game type
+                    if is_shootout:
+                        # Keep decimal places for shootout
+                        white_score = round(white_score, 1)
+                        black_score = round(black_score, 1)
+                    else:
+                        # Convert to integer for regular/OT games
+                        white_score = int(white_score)
+                        black_score = int(black_score)
+                except ValueError as e:
+                    print(f"Error converting scores: {str(e)}")
+                    white_score = 0
+                    black_score = 0
+                # Save game scores with proper type indicators
+                score_info = {
                     "white_team_score": white_score,
                     "black_team_score": black_score,
-                    "game_type": "(SO)" if game_type == "SO" else "(OT)" if "OT" in str(game_type) else ""
+                    "game_type": "(SO)" if is_shootout else "(OT)" if "OT" in str(game_type) else ""
                 }
-                black_game["score"] = {
-                    "white_team_score": white_score,
-                    "black_team_score": black_score,
-                    "game_type": "(SO)" if game_type == "SO" else "(OT)" if "OT" in str(game_type) else ""
-                }
+                
+                white_game["score"] = score_info.copy()
+                black_game["score"] = score_info.copy()
+                
+                # Add shootout flag
+                white_game["is_shootout"] = is_shootout
+                black_game["is_shootout"] = is_shootout
 
                 # Save updated data
                 save_team_data(white_team_name, white_team_data)
