@@ -2384,6 +2384,25 @@ def end_game():
 
         if not white_team_name or not black_team_name or game_id not in game_data:
             raise ValueError("Missing required data")
+            
+        # Mark the game as finished
+        white_game = None
+        black_game = None
+        
+        # Initialize team files
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+        
+        if game_index < len(white_team_data["games"]):
+            white_game = white_team_data["games"][game_index]
+            white_game["is_scored"] = True
+            
+            # Find corresponding black team game
+            black_game_index = next((i for i, g in enumerate(black_team_data["games"]) 
+                                   if g["opponent"] == white_team_name and g["date"] == white_game["date"]), None)
+            if black_game_index is not None:
+                black_game = black_team_data["games"][black_game_index]
+                black_game["is_scored"] = True
 
         # Initialize team files
         initialize_team_file(white_team_name)
