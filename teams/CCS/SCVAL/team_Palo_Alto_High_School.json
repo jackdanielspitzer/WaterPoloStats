@@ -562,6 +562,16 @@
         },
         {
             "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": null,
+            "date": "2025-01-24",
+            "game_type": "Tournament",
+            "is_scored": false,
+            "formatted_date": "January 24th, 2025"
+        },
+        {
+            "home_away": "Away",
             "opponent": "Harker High School",
             "opponent_logo": "images/Harker High School.png",
             "time": null,
