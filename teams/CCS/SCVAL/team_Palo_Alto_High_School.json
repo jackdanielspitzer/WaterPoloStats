@@ -567,8 +567,199 @@
             "time": null,
             "date": "2025-01-24",
             "game_type": "Tournament",
-            "is_scored": false,
-            "formatted_date": "January 24th, 2025"
+            "is_scored": true,
+            "formatted_date": "January 24th, 2025",
+            "away_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "7",
+                    "8"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "game_log": [],
+            "score": {
+                "white_team_score": 0.0,
+                "black_team_score": 0.1,
+                "game_type": "(SO)"
+            },
+            "is_shootout": true
         },
         {
             "home_away": "Away",
