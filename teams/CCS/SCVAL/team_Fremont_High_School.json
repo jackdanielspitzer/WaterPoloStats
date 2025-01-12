@@ -389,6 +389,16 @@
                 "game_type": "(SO)"
             },
             "is_shootout": true
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": null,
+            "date": "2025-01-22",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "January 22nd, 2025"
         }
     ]
 }
