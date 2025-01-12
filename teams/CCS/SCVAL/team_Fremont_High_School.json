@@ -2,16 +2,6 @@
     "games": [
         {
             "home_away": "Away",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": null,
-            "date": "2025-01-20",
-            "game_type": "Tournament",
-            "is_scored": false,
-            "formatted_date": "January 20th, 2025"
-        },
-        {
-            "home_away": "Away",
             "opponent": "Henry M. Gunn High School",
             "opponent_logo": "images/Henry M. Gunn High School.png",
             "time": null,
