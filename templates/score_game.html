@@ -866,6 +866,15 @@
                     // Create shootout event text
                     const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                     const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
+                    
+                    // Send shootout event to server
+                    fetch('/process', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
+                    });
 
                     // Add to visual game log
                     const logEntry = document.createElement('div');
@@ -873,12 +882,6 @@
                     logEntry.innerHTML = shootoutEvent;
                     logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
                     document.getElementById('gameLog').appendChild(logEntry);
-
-                    // Add to game data for saving
-                    if (!game_data[game_id].game_log) {
-                        game_data[game_id].game_log = [];
-                    }
-                    game_data[game_id].game_log.push(shootoutEvent);
 
                     // Auto-scroll to bottom
                     const gameLog = document.getElementById('gameLog');
