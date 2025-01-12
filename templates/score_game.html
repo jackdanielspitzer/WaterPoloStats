@@ -414,6 +414,8 @@
         let currentOTQuarter = 1;
         let shootoutGoalsHome = 0;
         let shootoutGoalsAway = 0;
+        let regulationHomeScore = 0;
+        let regulationAwayScore = 0;
 
         function updateShootoutScore() {
             const homeScoreElement = document.getElementById('homeScore');
@@ -441,6 +443,9 @@
             document.querySelector('div[style*="position: fixed"]')?.remove();
             document.getElementById('minutes').textContent = '-';
             document.getElementById('seconds').textContent = '--';
+            // Store regulation scores before shootout begins
+            regulationHomeScore = parseFloat(document.getElementById('homeScore').textContent);
+            regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
         }
 
         // Handle shootout goals
