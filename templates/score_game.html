@@ -437,22 +437,7 @@
                 const awayTeam = form.querySelector('input[name="away_team"]').value;
 
                 if (inputText && inputText.toLowerCase().includes('scored')) {
-                    // For shootout goals, increment score by 0.1
-                    const team = inputText.toLowerCase().includes('dark') ? 'home' : 'away';
-                    const scoreElement = document.getElementById(team + 'Score');
-                    let currentScore = 0;
-
                     try {
-                        currentScore = parseFloat(scoreElement.textContent || '0');
-                        // Ensure increment is less than 1 for shootout
-                        const increment = 0.09;
-                        const newScore = Math.round((currentScore + increment) * 100) / 100;
-                        
-                        // Verify the change is less than 1
-                        if (newScore - currentScore >= 1) {
-                            throw new Error('Invalid shootout score increment');
-                        }
-
                         const response = await fetch('/process', {
                             method: 'POST',
                             headers: {
@@ -471,12 +456,11 @@
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
 
-                        scoreElement.textContent = newScore.toFixed(1);
-                        document.getElementById('result').innerText = `Shootout goal recorded for ${team} team`;
+                        const data = await response.json();
+                        document.getElementById('result').innerText = data.response;
                         await updateTables();
                     } catch (error) {
                         console.error("Error processing shootout:", error);
-                        scoreElement.textContent = currentScore.toFixed(1); // Revert score on error
                         document.getElementById('result').innerText = "Error recording shootout goal";
                     }
                 }
