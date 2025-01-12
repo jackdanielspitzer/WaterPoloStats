@@ -401,6 +401,16 @@
         },
         {
             "home_away": "Home",
+            "opponent": "Los Gatos High School",
+            "opponent_logo": "images/Los Gatos High School.png",
+            "time": null,
+            "date": "2025-01-23",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 23rd, 2025"
+        },
+        {
+            "home_away": "Home",
             "opponent": "Harker High School",
             "opponent_logo": "images/Harker High School.png",
             "time": "00:34",
