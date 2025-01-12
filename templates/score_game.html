@@ -767,8 +767,17 @@
             // Handle goals and add appropriate tags
             if (eventText.toLowerCase().includes('scored')) {
                 if (isShootout) {
-                    // Don't add any additional tags for shootout goals
-                    // The shootout handling is done separately
+                    // Update the game log with shootout goal
+                    const logEntry = document.createElement('div');
+                    logEntry.id = "gameLogEntry";
+                    const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                    logEntry.innerHTML = `<strong>SO:</strong> ${team} team scored in shootout [SHOOTOUT GOAL]`;
+                    logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
+                    document.getElementById('gameLog').appendChild(logEntry);
+                    
+                    // Auto-scroll to bottom
+                    const gameLog = document.getElementById('gameLog');
+                    gameLog.scrollTop = gameLog.scrollHeight;
                     return;
                 } else {
                     const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
