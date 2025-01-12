@@ -547,9 +547,12 @@
             // Set current quarter to SO for shootout
             document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
-            // Get current scores from display
-            homeScoreInput.value = document.getElementById('homeScore').textContent;
-            awayScoreInput.value = document.getElementById('awayScore').textContent;
+            // Get current scores and ensure they're properly formatted
+            const homeScore = parseFloat(document.getElementById('homeScore').textContent).toFixed(1);
+            const awayScore = parseFloat(document.getElementById('awayScore').textContent).toFixed(1);
+            
+            homeScoreInput.value = homeScore;
+            awayScoreInput.value = awayScore;
 
             // Submit the form
             this.submit();
