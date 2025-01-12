@@ -502,34 +502,34 @@
 
         // Handle end game during shootout
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Update current quarter
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-            
-            // Add shootout-specific data if in shootout mode
-            if (isShootout) {
-                const homeScoreInput = document.createElement('input');
-                homeScoreInput.type = 'hidden';
-                homeScoreInput.name = 'final_home_score';
-                homeScoreInput.value = document.getElementById('homeScore').textContent;
-                this.appendChild(homeScoreInput);
-
-                const awayScoreInput = document.createElement('input');
-                awayScoreInput.type = 'hidden';
-                awayScoreInput.name = 'final_away_score';
-                awayScoreInput.value = document.getElementById('awayScore').textContent;
-                this.appendChild(awayScoreInput);
-
-                const shootoutInput = document.createElement('input');
-                shootoutInput.type = 'hidden';
-                shootoutInput.name = 'is_shootout';
-                shootoutInput.value = 'true';
-                this.appendChild(shootoutInput);
+            try {
+                e.preventDefault();
+                
+                // Update current quarter
+                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+                
+                if (isShootout) {
+                    // Add final scores as hidden inputs
+                    const scores = [
+                        {name: 'final_home_score', value: document.getElementById('homeScore').textContent},
+                        {name: 'final_away_score', value: document.getElementById('awayScore').textContent},
+                        {name: 'is_shootout', value: 'true'}
+                    ];
+                    
+                    scores.forEach(score => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = score.name;
+                        input.value = score.value;
+                        this.appendChild(input);
+                    });
+                }
+                
+                // Submit form
+                this.submit();
+            } catch (error) {
+                console.error('Error submitting form:', error);
             }
-
-            // Submit the form
-            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded
