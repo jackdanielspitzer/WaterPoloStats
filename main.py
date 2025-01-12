@@ -264,24 +264,11 @@ def save_team_data(team_name, data):
                 # Update game log in the JSON file
                 game["game_log"] = current_game_log.copy()
                 
-                # Handle shootout entries if needed
+                # In shootout games, just update goal tags without filtering entries
                 if game.get("is_shootout"):
-                    regular_entries = []
-                    shootout_entries = []
-                    
-                    for entry in game["game_log"]:
-                        if "SO:" in entry:
-                            shootout_entries.append(entry)
-                        else:
-                            regular_entries.append(entry)
-                            
-                    # For shootout goals, ensure proper tagging
-                    for i, entry in enumerate(regular_entries):
+                    for i, entry in enumerate(game["game_log"]):
                         if "scored a goal" in entry and "[NATURAL GOAL]" in entry:
-                            regular_entries[i] = entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
-                    
-                    # Combine entries with shootout goals at the end
-                    game["game_log"] = regular_entries + shootout_entries
+                            game["game_log"][i] = entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
