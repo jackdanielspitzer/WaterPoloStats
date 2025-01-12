@@ -2387,6 +2387,9 @@ def end_game():
         white_score = request.form.get('away_score', '0')
         black_score = request.form.get('home_score', '0')
 
+        # Explicitly mark the game as scored
+        game_data[game_id]['is_scored'] = True
+
         # Convert scores to float to handle shootout decimal points
         white_score = float(white_score)
         black_score = float(black_score)
