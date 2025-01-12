@@ -412,11 +412,28 @@
         let isShootout = false;
         let overtimeQuarters = 2;
         let currentOTQuarter = 1;
+        let shootoutGoalsHome = 0;
+        let shootoutGoalsAway = 0;
+
+        function updateShootoutScore() {
+            const homeScoreElement = document.getElementById('homeScore');
+            const awayScoreElement = document.getElementById('awayScore');
+
+            // Get the regulation/overtime scores (as integers)
+            const homeRegScore = Math.floor(parseFloat(homeScoreElement.textContent));
+            const awayRegScore = Math.floor(parseFloat(awayScoreElement.textContent));
+
+            // Add shootout scores as decimals (divided by 10)
+            homeScoreElement.textContent = (homeRegScore + (shootoutGoalsHome / 10)).toFixed(1);
+            awayScoreElement.textContent = (awayRegScore + (shootoutGoalsAway / 10)).toFixed(1);
+        }
 
         function startShootout() {
             clearInterval(timerInterval);
             isTimerRunning = false;
             isShootout = true;
+            shootoutGoalsHome = 0;
+            shootoutGoalsAway = 0;
             document.getElementById('startPauseTimer').disabled = true;
             document.getElementById('rewindTimer').disabled = true;
             document.getElementById('endQuarter').disabled = true;
@@ -430,7 +447,7 @@
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value.trim();
-            
+
             if (!inputText) {
                 console.log("Empty input, skipping submission");
                 return false;
@@ -449,10 +466,12 @@
 
                 if (inputText.toLowerCase().includes('scored')) {
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
-                    const scoreElement = document.getElementById(isDarkTeam ? 'homeScore' : 'awayScore');
-                    const currentScore = Number((parseFloat(scoreElement.textContent || '0')).toFixed(1));
-                    const newScore = Number((currentScore + 0.1).toFixed(1));
-                    scoreElement.textContent = newScore;
+                    if (isDarkTeam) {
+                        shootoutGoalsHome++;
+                    } else {
+                        shootoutGoalsAway++;
+                    }
+                    updateShootoutScore();
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
                     const resultText = `${team} team scored in shootout`;
@@ -774,7 +793,7 @@
                     logEntry.innerHTML = `<strong>SO:</strong> ${team} team scored in shootout [SHOOTOUT GOAL]`;
                     logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
                     document.getElementById('gameLog').appendChild(logEntry);
-                    
+
                     // Auto-scroll to bottom
                     const gameLog = document.getElementById('gameLog');
                     gameLog.scrollTop = gameLog.scrollHeight;
