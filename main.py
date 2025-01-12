@@ -2376,11 +2376,17 @@ def view_scoring(school_slug, game_index):
 @app.route('/end_game', methods=['POST'])
 def end_game():
     try:
+        # Get required form data with validation
+        required_fields = ['game_index', 'white_team_name', 'black_team_name', 'school_slug']
+        for field in required_fields:
+            if not request.form.get(field):
+                return jsonify({'error': f'Missing {field}'}), 400
+
         game_id = request.form.get('game_index')
         white_team_name = request.form.get('white_team_name')
         black_team_name = request.form.get('black_team_name')
-        game_index = int(request.form.get('game_index'))
-        current_quarter = request.form.get('current_quarter')
+        game_index = int(game_id)
+        current_quarter = request.form.get('current_quarter', '')
         school_slug = request.form.get('school_slug')
         
         # Get scores from the form
