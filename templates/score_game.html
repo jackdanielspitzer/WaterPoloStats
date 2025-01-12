@@ -260,7 +260,7 @@
             const currentQuarter = document.getElementById('currentQuarter').textContent;
             const awayScore = document.getElementById('awayScore').textContent;
             const homeScore = document.getElementById('homeScore').textContent;
-            
+
             document.getElementById('currentQuarterInput').value = currentQuarter;
             document.getElementById('awayScoreInput').value = awayScore;
             document.getElementById('homeScoreInput').value = homeScore;
@@ -550,7 +550,7 @@
             // Get current scores and ensure they're properly formatted
             const homeScore = parseFloat(document.getElementById('homeScore').textContent).toFixed(1);
             const awayScore = parseFloat(document.getElementById('awayScore').textContent).toFixed(1);
-            
+
             homeScoreInput.value = homeScore;
             awayScoreInput.value = awayScore;
 
@@ -866,7 +866,10 @@
                     // Create shootout event text
                     const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                     const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
-                    
+                    const homeTeam = document.querySelector('input[name="home_team"]').value;
+                    const awayTeam = document.querySelector('input[name="away_team"]').value;
+                    const gameId = document.querySelector('input[name="game_id"]').value;
+
                     // Send shootout event to server
                     fetch('/process', {
                         method: 'POST',
@@ -886,6 +889,15 @@
                     // Auto-scroll to bottom
                     const gameLog = document.getElementById('gameLog');
                     gameLog.scrollTop = gameLog.scrollHeight;
+
+                    // Add shootout event to the game log array
+                    if (!game_data[gameId]) {
+                        game_data[gameId] = { game_log: [] };
+                    }
+                    if (!game_data[gameId].game_log) {
+                        game_data[gameId].game_log = [];
+                    }
+                    game_data[gameId].game_log.push(shootoutEvent);
                     return;
                 } else {
                     const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
