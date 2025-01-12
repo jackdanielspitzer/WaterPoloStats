@@ -2285,6 +2285,13 @@ def view_scoring(school_slug, game_index):
     # Get manager info but don't block access
     manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
     try:
+        # Get school data
+        school = schools.get(school_slug)
+        if not school:
+            return "School not found", 404
+            
+        team_name = school['name']
+        
         # Load team rosters from team_rosters.json
         with open('team_rosters.json', 'r') as file:
             team_rosters = json.load(file)
