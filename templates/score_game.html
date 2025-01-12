@@ -249,7 +249,7 @@
         <input type="hidden" name="game_index" value="{{ game_index }}">
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
         <input type="hidden" name="current_quarter" id="currentQuarterInput">
-        <button type="submit" onclick="document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent; return confirm('Are you sure you want to finish the game?')">Finish Game</button>
+        <button type="submit" >Finish Game</button>
     </form>
 
     <div id="gameLog">
@@ -504,21 +504,21 @@
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Get current quarter
+            // Get scores and quarter
+            const homeScore = document.getElementById('homeScore').textContent;
+            const awayScore = document.getElementById('awayScore').textContent;
             const currentQuarter = document.getElementById('currentQuarter').textContent;
             document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : currentQuarter;
 
-            // Get scores
-            const homeScore = document.getElementById('homeScore').textContent;
-            const awayScore = document.getElementById('awayScore').textContent;
-
-            // Add final scores and game type as hidden inputs
+            // Define all hidden inputs needed
             const inputs = [
                 {name: 'final_home_score', value: homeScore},
                 {name: 'final_away_score', value: awayScore},
-                {name: 'is_shootout', value: isShootout.toString()}
+                {name: 'is_shootout', value: isShootout.toString()},
+                {name: 'current_quarter', value: currentQuarter}
             ];
 
+            // Add or update hidden inputs
             inputs.forEach(({name, value}) => {
                 let input = document.querySelector(`input[name="${name}"]`);
                 if (!input) {
@@ -530,8 +530,10 @@
                 input.value = value;
             });
 
-            // Submit form
-            this.submit();
+            // Submit form with confirmation
+            if (confirm('Are you sure you want to finish the game?')) {
+                this.submit();
+            }
         });
 
         // Initialize button event listeners when DOM is loaded
@@ -823,7 +825,7 @@
                 return withinExclusionTime && (sameQuarter || nextQuarter);
             });
 
-            // Handle exclusion events
+            //            // Handle exclusion events
             if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
                 const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
