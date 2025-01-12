@@ -523,7 +523,7 @@
                     formData.append('is_shootout', 'true');
                     formData.append('final_home_score', document.getElementById('homeScore').textContent);
                     formData.append('final_away_score', document.getElementById('awayScore').textContent);
-                    formData.append('school_slug', schoolSlug);
+                    formData.append('school_slug', document.querySelector('input[name="school_slug"]').value);
 
                     const response = await fetch('/end_game', {
                         method: 'POST',
@@ -534,13 +534,10 @@
                         throw new Error('Failed to end game');
                     }
 
-                    window.location.href = `/team/${schoolSlug}`;
+                    window.location.href = `/team/${document.querySelector('input[name="school_slug"]').value}`;
                 } catch (error) {
                     console.error('Error ending game:', error);
-                }lector('input[name="school_slug"]').value);
-
-                    const response = await fetch('/end_game', {
-                        method: 'POST',
+                }
                         body: formData
                     });
 
