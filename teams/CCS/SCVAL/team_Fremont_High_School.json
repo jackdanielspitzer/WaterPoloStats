@@ -384,7 +384,7 @@
             "time": null,
             "date": "2025-01-24",
             "game_type": "Tournament",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "January 24th, 2025"
         },
         {
