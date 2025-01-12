@@ -36,7 +36,16 @@
     <div class="container">
         <h1>Game Box Score</h1>
         <h2>{{ away_team }} vs {{ home_team }}</h2>
-        <p><strong>Date:</strong> {{ game.date }}</p>
+        <p><strong>Date:</strong> {{ game.date if game and game.date else 'N/A' }}</p>
+        
+        {% if game and white_team_stats and black_team_stats %}
+            <!-- Game data is available -->
+            {% set white_score = white_team_stats.get('Shot', [])|sum %}
+            {% set black_score = black_team_stats.get('Shot', [])|sum %}
+        {% else %}
+            {% set white_score = 0 %}
+            {% set black_score = 0 %}
+        {% endif %}
         <p><strong>Score:</strong> {{ game.score.white_team_score }} - {{ game.score.black_team_score }}</p>
 
         <h2>{{ away_team }} Stats</h2>
