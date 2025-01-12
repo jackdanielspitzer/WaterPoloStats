@@ -258,31 +258,30 @@ def save_team_data(team_name, data):
             # If there's corresponding game data in memory, use its game log
             game_id = str(data["games"].index(game))
             if game_id in game_data and "game_log" in game_data[game_id]:
-                # Update game log with the memory version
-                game["game_log"] = game_data[game_id]["game_log"]
+                # Get the current game log from memory
+                current_game_log = game_data[game_id]["game_log"]
                 
-                # Handle shootout entries and game log
+                # Update game log in the JSON file
+                game["game_log"] = current_game_log.copy()
+                
+                # Handle shootout entries if needed
                 if game.get("is_shootout"):
-                    # Get current memory game log
-                    memory_game_log = game_data[game_id]["game_log"]
-                    
-                    # Update game log to include both regular and shootout entries
                     regular_entries = []
                     shootout_entries = []
                     
-                    for entry in memory_game_log:
+                    for entry in game["game_log"]:
                         if "SO:" in entry:
                             shootout_entries.append(entry)
                         else:
                             regular_entries.append(entry)
+                            
+                    # For shootout goals, ensure proper tagging
+                    for i, entry in enumerate(regular_entries):
+                        if "scored a goal" in entry and "[NATURAL GOAL]" in entry:
+                            regular_entries[i] = entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
                     
                     # Combine entries with shootout goals at the end
                     game["game_log"] = regular_entries + shootout_entries
-                    
-                    # Update goal type for shootout goals if needed
-                    for i, entry in enumerate(game["game_log"]):
-                        if "SO:" in entry and "[NATURAL GOAL]" in entry:
-                            game["game_log"][i] = entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
