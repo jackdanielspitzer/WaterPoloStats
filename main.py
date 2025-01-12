@@ -2399,6 +2399,12 @@ def end_game():
             # Find and mark black team's corresponding game
             black_game_index = next((i for i, g in enumerate(black_team_data.get("games", [])) 
                                    if g["opponent"] == white_team_name and g["date"] == white_game["date"]), None)
+
+            # Force set is_scored for shootout games
+            if current_quarter == "SO":
+                white_game["is_scored"] = True
+                if black_game_index is not None:
+                    black_team_data["games"][black_game_index]["is_scored"] = True
             
             if black_game_index is not None:
                 black_game = black_team_data["games"][black_game_index]
