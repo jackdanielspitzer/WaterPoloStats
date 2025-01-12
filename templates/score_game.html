@@ -819,7 +819,7 @@
                 if (!isShootout) {
                     const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
                     const homeScore = data.home_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
-                    const awayScoreEl = document.getElementById('awayScoreEl);
+                    const awayScoreEl = document.getElementById('awayScore');
                     const homeScoreEl = document.getElementById('homeScore');
 
                     awayScoreEl.textContent = awayScore;
