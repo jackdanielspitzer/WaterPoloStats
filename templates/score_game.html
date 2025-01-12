@@ -504,8 +504,15 @@
         if (isShootout) {
             const form = document.getElementById('endGameForm');
             form.addEventListener('submit', function(e) {
+                e.preventDefault();
                 const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-                form.action = `/end_game?redirect=${schoolSlug}`;
+                // Update current quarter to indicate shootout
+                document.getElementById('currentQuarterInput').value = 'SO';
+                // Disable input and clear form
+                document.getElementById('inputText').disabled = true;
+                document.getElementById('form').reset();
+                // Submit the form
+                form.submit();
             });
         }
 
