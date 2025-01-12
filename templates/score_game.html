@@ -503,14 +503,6 @@
         // Handle end game during shootout
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const currentQuarterInput = document.getElementById('currentQuarterInput');
-            currentQuarterInput.value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-
-            // Save final scores including decimals for shootout
-            const homeScoreEl = document.getElementById('homeScore');
-            const awayScoreEl = document.getElementById('awayScore');
-            const homeScore = parseFloat(homeScoreEl.textContent);
-            const awayScore = parseFloat(awayScoreEl.textContent);
 
             // Create hidden inputs for scores if they don't exist
             let homeScoreInput = this.querySelector('input[name="home_score"]');
@@ -529,9 +521,14 @@
                 this.appendChild(awayScoreInput);
             }
 
-            homeScoreInput.value = homeScore;
-            awayScoreInput.value = awayScore;
+            // Set current quarter to SO for shootout
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
+            // Get current scores from display
+            homeScoreInput.value = document.getElementById('homeScore').textContent;
+            awayScoreInput.value = document.getElementById('awayScore').textContent;
+
+            // Submit the form
             this.submit();
         });
 
@@ -822,7 +819,7 @@
 
             // Handle exclusion events
             if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
-                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
                     team: team,
                     startTime: currentTime,
