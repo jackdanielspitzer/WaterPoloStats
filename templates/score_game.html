@@ -438,27 +438,16 @@
 
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     try {
-                        const response = await fetch('/process', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded',
-                            },
-                            body: new URLSearchParams({
-                                text: inputText,
-                                home_team: homeTeam,
-                                away_team: awayTeam,
-                                game_id: gameId,
-                                game_time: 'SO'
-                            })
-                        });
-
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-
-                        const data = await response.json();
-                        document.getElementById('result').innerText = data.response;
-                        await updateTables();
+                        // Handle shootout scoring directly in frontend
+                        const isDarkTeam = inputText.toLowerCase().includes('dark');
+                        const scoreElement = document.getElementById(isDarkTeam ? 'homeScore' : 'awayScore');
+                        const currentScore = parseFloat(scoreElement.textContent || '0');
+                        scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                        
+                        // Update result text
+                        const team = isDarkTeam ? 'Dark' : 'Light';
+                        document.getElementById('result').innerText = `${team} team scored in shootout`;
+                        addEventToLog(`${team} team scored in shootout [SHOOTOUT GOAL]`);
                     } catch (error) {
                         console.error("Error processing shootout:", error);
                         document.getElementById('result').innerText = "Error recording shootout goal";
