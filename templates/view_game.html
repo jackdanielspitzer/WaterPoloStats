@@ -49,20 +49,11 @@
                         {{ game.score.game_type }}
                     {% endif %}
                 {% endif %}
+                </p>
             {% else %}
-                0 - 0
+                <p><strong>Score:</strong> 0 - 0</p>
             {% endif %}
         {% endif %}
-        <p><strong>Score:</strong> 
-    {% if game and game.score %}
-        {{ '%.1f'|format(game.score.white_team_score|float) }} - {{ '%.1f'|format(game.score.black_team_score|float) }}
-        {% if game.score.game_type %}
-            {{ game.score.game_type }}
-        {% endif %}
-    {% else %}
-        0 - 0
-    {% endif %}
-</p>
 
         <h2>{{ away_team }} Stats</h2>
         {% if not away_stats_private or (current_user_id == away_manager_id) %}
@@ -153,7 +144,7 @@
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
                     <div id="gameLogEntry" style="margin-bottom: 5px; 
-                        {% if 'SO:' in entry or 'SO - ' in entry or '[SHOOTOUT GOAL]' in entry or 'SO' in entry %}color: #9b59b6;
+                        {% if '[SHOOTOUT GOAL]' in entry or entry.startswith('SO:') %}color: #9b59b6;
                         {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
                         {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
                         {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
