@@ -42,7 +42,9 @@
             {% if game.score %}
                 <p><strong>Score:</strong> 
                 {% if game.score.game_type == "(SO)" or game.is_shootout %}
-                    {{ '%.1f'|format(game.score.white_team_score|float) }} - {{ '%.1f'|format(game.score.black_team_score|float) }}
+                    {% set white_score = '%.1f'|format(game.score.white_team_score|float) %}
+                    {% set black_score = '%.1f'|format(game.score.black_team_score|float) %}
+                    {{ white_score }} - {{ black_score }}
                     {{ game.score.game_type }}
                 {% else %}
                     {{ game.score.white_team_score }} - {{ game.score.black_team_score }}
@@ -145,7 +147,7 @@
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
                     <div id="gameLogEntry" style="margin-bottom: 5px; 
-                        {% if '[SHOOTOUT GOAL]' in entry or entry.startswith('SO:') %}color: #9b59b6;
+                        {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
                         {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
                         {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
                         {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
