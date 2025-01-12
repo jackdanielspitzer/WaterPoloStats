@@ -428,13 +428,20 @@
 
         // Handle shootout goals
         document.getElementById('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const inputText = document.getElementById('inputText').value.trim();
+            
+            if (!inputText) {
+                console.log("Empty input, skipping submission");
+                return false;
+            }
+
+            const form = document.getElementById('form');
+            const gameId = form.getAttribute('data-game-id');
+            const homeTeam = form.querySelector('input[name="home_team"]').value;
+            const awayTeam = form.querySelector('input[name="away_team"]').value;
+
             if (isShootout) {
-                e.preventDefault();
-                const inputText = document.getElementById('inputText').value;
-                const form = document.getElementById('form');
-                const gameId = form.getAttribute('data-game-id');
-                const homeTeam = form.querySelector('input[name="home_team"]').value;
-                const awayTeam = form.querySelector('input[name="away_team"]').value;
 
                 if (inputText && inputText.toLowerCase().includes('scored')) {
                     try {
