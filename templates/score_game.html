@@ -244,11 +244,12 @@
 
     <!-- Form to end the game -->
     <form id="endGameForm" action="/end_game" method="post">
-        <input type="hidden" name="white_team_name" value="{{ home_team }}">
-        <input type="hidden" name="black_team_name" value="{{ away_team }}">
+        <input type="hidden" name="white_team_name" value="{{ away_team }}">
+        <input type="hidden" name="black_team_name" value="{{ home_team }}">
         <input type="hidden" name="game_index" value="{{ game_index }}">
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
-        <button type="submit">Finish Game</button>
+        <input type="hidden" name="current_quarter" id="currentQuarterInput">
+        <button type="submit" onclick="document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent; return confirm('Are you sure you want to finish the game?')">Finish Game</button>
     </form>
 
     <div id="gameLog">
