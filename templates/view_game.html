@@ -145,8 +145,8 @@
 
     <script>
     function downloadGameLog() {
-        const gameLog = {{ game.game_log|tojson|safe }};
-        const content = gameLog.join('\n');
+        const gameLog = {{ (game.game_log if game and game.game_log else [])|tojson|safe }};
+        const content = gameLog ? gameLog.join('\n') : '';
         const blob = new Blob([content], { type: 'text/plain' });
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
