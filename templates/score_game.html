@@ -474,7 +474,7 @@
                     // Store current scores before updating
                     if (!regulationHomeScore) regulationHomeScore = Math.floor(parseFloat(document.getElementById('homeScore').textContent));
                     if (!regulationAwayScore) regulationAwayScore = Math.floor(parseFloat(document.getElementById('awayScore').textContent));
-                    
+
                     if (isDarkTeam) {
                         shootoutGoalsHome++;
                         const newScore = (regulationHomeScore + (shootoutGoalsHome * 0.1)).toFixed(1);
@@ -503,10 +503,35 @@
         // Handle end game during shootout
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Ensure current quarter shows as 'SO' for shootout
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-            
-            // Submit the form
+            const currentQuarterInput = document.getElementById('currentQuarterInput');
+            currentQuarterInput.value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+
+            // Save final scores including decimals for shootout
+            const homeScoreEl = document.getElementById('homeScore');
+            const awayScoreEl = document.getElementById('awayScore');
+            const homeScore = parseFloat(homeScoreEl.textContent);
+            const awayScore = parseFloat(awayScoreEl.textContent);
+
+            // Create hidden inputs for scores if they don't exist
+            let homeScoreInput = this.querySelector('input[name="home_score"]');
+            let awayScoreInput = this.querySelector('input[name="away_score"]');
+
+            if (!homeScoreInput) {
+                homeScoreInput = document.createElement('input');
+                homeScoreInput.type = 'hidden';
+                homeScoreInput.name = 'home_score';
+                this.appendChild(homeScoreInput);
+            }
+            if (!awayScoreInput) {
+                awayScoreInput = document.createElement('input');
+                awayScoreInput.type = 'hidden';
+                awayScoreInput.name = 'away_score';
+                this.appendChild(awayScoreInput);
+            }
+
+            homeScoreInput.value = homeScore;
+            awayScoreInput.value = awayScore;
+
             this.submit();
         });
 
