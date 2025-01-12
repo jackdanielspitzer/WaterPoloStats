@@ -508,7 +508,7 @@
             const awayScore = document.getElementById('awayScore').textContent;
             const currentQuarter = document.getElementById('currentQuarter').textContent;
             document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : currentQuarter;
-            
+
             const form = this;
             const inputs = [
                 {name: 'final_home_score', value: homeScore},
@@ -529,18 +529,6 @@
 
             if (confirm('Are you sure you want to finish the game?')) {
                 form.submit();
-            }
-                    input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = name;
-                    this.appendChild(input);
-                }
-                input.value = value;
-            });
-
-            // Submit form with confirmation
-            if (confirm('Are you sure you want to finish the game?')) {
-                this.submit();
             }
         });
 
