@@ -275,8 +275,25 @@
     </script>
     </form>
 
-    <div id="gameLog">
-        </div>
+    <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
+</div>
+<script>
+    // Initialize game log
+    let gameLog = [];
+    
+    function updateGameLog(entries) {
+        const gameLogDiv = document.getElementById('gameLog');
+        if (entries && entries.length > 0) {
+            entries.forEach(entry => {
+                const div = document.createElement('div');
+                div.textContent = entry;
+                div.className = 'gameLogEntry';
+                gameLogDiv.appendChild(div);
+            });
+            gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
+        }
+    }
+</script>
 
 
     <script>

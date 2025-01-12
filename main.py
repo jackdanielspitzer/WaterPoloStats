@@ -1530,6 +1530,7 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', 'Q1 7:00')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1544,11 +1545,16 @@ def process_text():
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                'game_log': []
             }
 
         response = run(text, game_id)
-        return jsonify({'response': response})
+        game_log = game_data[game_id].get('game_log', [])
+        return jsonify({
+            'response': response,
+            'game_log': game_log
+        })
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
         return jsonify({'error': f'Error processing text: {str(e)}'}), 500
