@@ -501,40 +501,44 @@
         });
 
         // Handle end game during shootout
-        document.getElementById('endGameForm').addEventListener('submit', function(e) {
+        document.getElementById('endGameForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            
-            // Update current quarter
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            try {
+                // Update current quarter
+                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
-            // Add shootout-specific data if needed
-            if (isShootout) {
-                const homeScoreInput = document.createElement('input');
-                homeScoreInput.type = 'hidden';
-                homeScoreInput.name = 'final_home_score';
-                homeScoreInput.value = document.getElementById('homeScore').textContent;
-                this.appendChild(homeScoreInput);
+                // Create form data for submission
+                const formData = new FormData(this);
+                
+                // Add shootout-specific data if needed
+                if (isShootout) {
+                    formData.append('final_home_score', document.getElementById('homeScore').textContent);
+                    formData.append('final_away_score', document.getElementById('awayScore').textContent);
+                    formData.append('is_shootout', 'true');
+                }
 
-                const awayScoreInput = document.createElement('input');
-                awayScoreInput.type = 'hidden';
-                awayScoreInput.name = 'final_away_score';
-                awayScoreInput.value = document.getElementById('awayScore').textContent;
-                this.appendChild(awayScoreInput);
+                // Disable inputs
+                document.getElementById('inputText').disabled = true;
+                document.getElementById('form').reset();
+                document.getElementById('microphoneButton').disabled = true;
 
-                const shootoutInput = document.createElement('input');
-                shootoutInput.type = 'hidden';
-                shootoutInput.name = 'is_shootout';
-                shootoutInput.value = 'true';
-                this.appendChild(shootoutInput);
+                // Submit the form
+                const response = await fetch('/end_game', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Get the redirect URL from the response
+                const redirectURL = response.url;
+                window.location.href = redirectURL;
+            } catch (error) {
+                console.error('Error ending game:', error);
+                alert('Failed to end game. Please try again.');
             }
-
-            // Disable inputs
-            document.getElementById('inputText').disabled = true;
-            document.getElementById('form').reset();
-            document.getElementById('microphoneButton').disabled = true;
-
-            // Submit the form normally
-            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded
