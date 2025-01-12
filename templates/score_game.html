@@ -538,23 +538,6 @@
                 } catch (error) {
                     console.error('Error ending game:', error);
                 }
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                        throw new Error('Failed to end game');
-                    }
-
-                    // Disable scoring interface
-                    document.getElementById('form').style.display = 'none';
-                    document.getElementById('inputText').disabled = true;
-                    document.getElementById('microphoneButton').disabled = true;
-
-                    // Redirect to team page
-                    window.location.href = `/team/${formData.get('school_slug')}`;
-                } catch (error) {
-                    console.error('Error ending game:', error);
-                }
             } else {
                 form.submit();
             }
