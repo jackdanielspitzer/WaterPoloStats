@@ -474,7 +474,7 @@
                     // Store current scores before updating
                     if (!regulationHomeScore) regulationHomeScore = Math.floor(parseFloat(document.getElementById('homeScore').textContent));
                     if (!regulationAwayScore) regulationAwayScore = Math.floor(parseFloat(document.getElementById('awayScore').textContent));
-
+                    
                     if (isDarkTeam) {
                         shootoutGoalsHome++;
                         const newScore = (regulationHomeScore + (shootoutGoalsHome * 0.1)).toFixed(1);
@@ -501,50 +501,13 @@
         });
 
         // Handle end game during shootout
-        document.getElementById('endGameForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const form = this;
-            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-            const gameIndex = form.querySelector('input[name="game_index"]').value;
-
-            // Update current quarter to indicate shootout if in shootout mode
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-
-            // Disable input form and clear it
-            document.getElementById('inputText').disabled = true;
-            document.getElementById('form').reset();
-            document.getElementById('microphoneButton').disabled = true;
-
-            // Submit the form and redirect
-            if (isShootout) {
-                try {
-                    const response = await fetch('/end_game', {
-                        method: 'POST',
-                        body: new FormData(form)
-                    });
-
-                    if (response.ok) {
-                        // Disable scoring interface
-                        document.getElementById('form').style.display = 'none';
-                        document.getElementById('inputText').disabled = true;
-                        document.getElementById('microphoneButton').disabled = true;
-
-                        // Redirect to team page
-                        window.location.href = `/team/${schoolSlug}`;
-                    }
-                } catch (error) {
-                    console.error('Error ending game:', error);
-                }
-            } else {
-                form.submit();
-            }
-            // Prevent further scoring
-            document.getElementById('form').onsubmit = function() { return false; };
-
-            // Redirect to team page which will show view scoring button
-
-            return false;
-        });
+        if (isShootout) {
+            const form = document.getElementById('endGameForm');
+            form.addEventListener('submit', function(e) {
+                const schoolSlug = form.querySelector('input[name="school_slug"]').value;
+                form.action = `/end_game?redirect=${schoolSlug}`;
+            });
+        }
 
         // Initialize button event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
