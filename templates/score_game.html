@@ -275,47 +275,8 @@
     </script>
     </form>
 
-    <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
-</div>
-<script>
-    // Initialize game log
-    let gameLog = [];
-    
-    function updateGameLog(response) {
-        if (!response || !response.game_log) return;
-        
-        const gameLogDiv = document.getElementById('gameLog');
-        const entries = response.game_log;
-        
-        // Clear existing entries
-        gameLogDiv.innerHTML = '';
-        
-        // Add all entries
-        entries.forEach(entry => {
-            const div = document.createElement('div');
-            div.textContent = entry;
-            div.className = 'gameLogEntry';
-            
-            // Add appropriate colors based on event type
-            if (entry.includes('[SHOOTOUT GOAL]')) {
-                div.style.color = '#9b59b6';
-            } else if (entry.includes('[ADVANTAGE GOAL]')) {
-                div.style.color = '#e74c3c';
-            } else if (entry.includes('[PENALTY GOAL]')) {
-                div.style.color = '#e67e22';
-            } else if (entry.includes('[NATURAL GOAL]')) {
-                div.style.color = '#2ecc71';
-            } else if (entry.includes('[20 SEC EXCLUSION]')) {
-                div.style.color = '#3498db';
-            }
-            
-            gameLogDiv.appendChild(div);
-        });
-        
-        // Scroll to bottom
-        gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
-    }
-</script>
+    <div id="gameLog">
+        </div>
 
 
     <script>
