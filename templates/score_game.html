@@ -501,46 +501,40 @@
         });
 
         // Handle end game during shootout
-        document.getElementById('endGameForm').addEventListener('submit', async function(e) {
+        document.getElementById('endGameForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const form = this;
             
-            try {
-                // Update current quarter
-                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            // Update current quarter
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
-                // Create FormData
-                const formData = new FormData(form);
-                
-                // Add shootout-specific data if needed
-                if (isShootout) {
-                    formData.append('is_shootout', 'true');
-                    formData.append('final_home_score', document.getElementById('homeScore').textContent);
-                    formData.append('final_away_score', document.getElementById('awayScore').textContent);
-                }
+            // Add shootout-specific data if needed
+            if (isShootout) {
+                const homeScoreInput = document.createElement('input');
+                homeScoreInput.type = 'hidden';
+                homeScoreInput.name = 'final_home_score';
+                homeScoreInput.value = document.getElementById('homeScore').textContent;
+                this.appendChild(homeScoreInput);
 
-                // Disable inputs
-                document.getElementById('inputText').disabled = true;
-                document.getElementById('form').reset();
-                document.getElementById('microphoneButton').disabled = true;
+                const awayScoreInput = document.createElement('input');
+                awayScoreInput.type = 'hidden';
+                awayScoreInput.name = 'final_away_score';
+                awayScoreInput.value = document.getElementById('awayScore').textContent;
+                this.appendChild(awayScoreInput);
 
-                // Submit the form
-                const response = await fetch('/end_game', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error('Failed to end game');
-                }
-
-                // Redirect on success
-                window.location.href = `/team/${formData.get('school_slug')}`;
-            } catch (error) {
-                console.error('Error ending game:', error);
+                const shootoutInput = document.createElement('input');
+                shootoutInput.type = 'hidden';
+                shootoutInput.name = 'is_shootout';
+                shootoutInput.value = 'true';
+                this.appendChild(shootoutInput);
             }
 
-            return false;
+            // Disable inputs
+            document.getElementById('inputText').disabled = true;
+            document.getElementById('form').reset();
+            document.getElementById('microphoneButton').disabled = true;
+
+            // Submit the form normally
+            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded
