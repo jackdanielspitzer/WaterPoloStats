@@ -261,11 +261,19 @@ def save_team_data(team_name, data):
                 # Update game log with the memory version
                 game["game_log"] = game_data[game_id]["game_log"]
                 
-                # Add appropriate goal type tag for shootout goals
+                # Handle shootout entries
                 if game.get("is_shootout"):
-                    for i, log_entry in enumerate(game["game_log"]):
-                        if "scored a goal [NATURAL GOAL]" in log_entry and game.get("is_shootout"):
-                            game["game_log"][i] = log_entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
+                    # Keep existing SO: entries and only convert new ones
+                    new_log = []
+                    for log_entry in game["game_log"]:
+                        if "SO:" not in log_entry and "scored a goal" in log_entry:
+                            if "[NATURAL GOAL]" in log_entry:
+                                team = "dark" if "dark team" in log_entry else "light"
+                                player = log_entry.split("team ")[1].split(" scored")[0]
+                                new_log.append(f"SO: {team} team scored in shootout [SHOOTOUT GOAL]")
+                        else:
+                            new_log.append(log_entry)
+                    game["game_log"] = new_log
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
