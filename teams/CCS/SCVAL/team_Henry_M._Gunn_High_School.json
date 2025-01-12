@@ -355,7 +355,8 @@
             "score": {
                 "white_team_score": 0,
                 "black_team_score": 2
-            }
+            },
+            "game_log": []
         },
         {
             "home_away": "Home",
@@ -569,7 +570,19 @@
             "date": "2025-01-22",
             "game_type": "League Game",
             "is_scored": false,
-            "formatted_date": "January 22nd, 2025"
+            "formatted_date": "January 22nd, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": null,
+            "date": "2025-01-30",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 30th, 2025",
+            "game_log": []
         },
         {
             "home_away": "Away",
