@@ -501,17 +501,14 @@
         });
 
         // Handle end game during shootout
-        document.getElementById('endGameForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        document.getElementById('endGameForm').addEventListener('submit', function(e) {
             try {
                 // Update current quarter
                 document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
-                // Create form data for submission
-                const formData = new FormData(this);
-                
                 // Add shootout-specific data if needed
                 if (isShootout) {
+                    let formData = new FormData(this);
                     formData.append('final_home_score', document.getElementById('homeScore').textContent);
                     formData.append('final_away_score', document.getElementById('awayScore').textContent);
                     formData.append('is_shootout', 'true');
@@ -522,22 +519,13 @@
                 document.getElementById('form').reset();
                 document.getElementById('microphoneButton').disabled = true;
 
-                // Submit the form
-                const response = await fetch('/end_game', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Get the redirect URL from the response
-                const redirectURL = response.url;
-                window.location.href = redirectURL;
+                // Let form submit normally
+                return true;
             } catch (error) {
                 console.error('Error ending game:', error);
                 alert('Failed to end game. Please try again.');
+                e.preventDefault();
+                return false;
             }
         });
 
