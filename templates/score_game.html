@@ -765,20 +765,25 @@
 
             // Handle goals and add appropriate tags
             if (eventText.toLowerCase().includes('scored')) {
-                const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
-
-                // Check if opposing team has an active exclusion
-                const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
-
-                if (hasAdvantage) {
-                    eventText += ' [ADVANTAGE GOAL]';
-                } else if (eventText.toLowerCase().includes('penalty') || 
-                          eventText.toLowerCase().includes('5 meter') || 
-                          eventText.toLowerCase().includes('5-meter')) {
-                    eventText += ' [PENALTY GOAL]';
+                if (isShootout) {
+                    // Only add shootout tag during shootout
+                    eventText += ' [SHOOTOUT GOAL]';
                 } else {
-                    eventText += ' [NATURAL GOAL]';
+                    const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                    const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
+
+                    // Check if opposing team has an active exclusion
+                    const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
+
+                    if (hasAdvantage) {
+                        eventText += ' [ADVANTAGE GOAL]';
+                    } else if (eventText.toLowerCase().includes('penalty') || 
+                              eventText.toLowerCase().includes('5 meter') || 
+                              eventText.toLowerCase().includes('5-meter')) {
+                        eventText += ' [PENALTY GOAL]';
+                    } else {
+                        eventText += ' [NATURAL GOAL]';
+                    }
                 }
             }
 
