@@ -504,24 +504,24 @@
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Set current quarter
-            const quarterInput = document.getElementById('currentQuarterInput');
-            quarterInput.value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            // Get current quarter
+            const currentQuarter = document.getElementById('currentQuarter').textContent;
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : currentQuarter;
 
-            // Handle shootout scores
+            // Add shootout data if in shootout mode
             if (isShootout) {
                 const homeScore = document.getElementById('homeScore').textContent;
                 const awayScore = document.getElementById('awayScore').textContent;
-                
-                // Create and append hidden inputs
-                const hiddenInputs = {
-                    'final_home_score': homeScore,
-                    'final_away_score': awayScore,
-                    'is_shootout': 'true'
-                };
 
-                Object.entries(hiddenInputs).forEach(([name, value]) => {
-                    let input = this.querySelector(`input[name="${name}"]`);
+                // Add or update hidden inputs
+                const inputs = [
+                    {name: 'final_home_score', value: homeScore},
+                    {name: 'final_away_score', value: awayScore},
+                    {name: 'is_shootout', value: 'true'}
+                ];
+
+                inputs.forEach(({name, value}) => {
+                    let input = document.querySelector(`input[name="${name}"]`);
                     if (!input) {
                         input = document.createElement('input');
                         input.type = 'hidden';
@@ -532,8 +532,9 @@
                 });
             }
 
-            // Submit the form
+            // Submit form
             this.submit();
+            return false;
         });
 
         // Initialize button event listeners when DOM is loaded
