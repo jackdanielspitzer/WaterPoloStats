@@ -2345,15 +2345,23 @@ def view_scoring(school_slug, game_index):
         if game_index < len(team_data["games"]):
             stored_game = team_data["games"][game_index]
             game = stored_game  # Use the stored game data directly
+            
+            # Use stored game log if available, otherwise initialize empty
             if 'game_log' not in game:
                 game['game_log'] = []
+                
+            # Use stored score if available, otherwise calculate
             if 'score' not in game:
                 game['score'] = {
                     'white_team_score': sum(white_team_stats.get('Shot', [])),
                     'black_team_score': sum(black_team_stats.get('Shot', [])),
                     'game_type': "(SO)" if stored_game.get('is_shootout') else ""
                 }
+                
             game['is_shootout'] = stored_game.get('is_shootout', False)
+            
+            # Print for debugging
+            print("Game log from stored data:", game['game_log'])
 
         # Check privacy settings for both teams
         home_manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
