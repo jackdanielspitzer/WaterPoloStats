@@ -249,7 +249,13 @@
         <input type="hidden" name="game_index" value="{{ game_index }}">
         <input type="hidden" name="school_slug" value="{{ school_slug }}">
         <input type="hidden" name="current_quarter" id="currentQuarterInput">
-        <button type="submit" onclick="document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent; return confirm('Are you sure you want to finish the game?')">Finish Game</button>
+        <input type="hidden" name="away_score" id="awayScoreInput">
+        <input type="hidden" name="home_score" id="homeScoreInput">
+        <button type="submit" onclick="
+            document.getElementById('currentQuarterInput').value = document.getElementById('currentQuarter').textContent;
+            document.getElementById('awayScoreInput').value = document.getElementById('awayScore').textContent;
+            document.getElementById('homeScoreInput').value = document.getElementById('homeScore').textContent;
+            return confirm('Are you sure you want to finish the game?')">Finish Game</button>
     </form>
 
     <div id="gameLog">

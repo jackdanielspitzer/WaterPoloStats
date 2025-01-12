@@ -2381,10 +2381,15 @@ def end_game():
         black_team_name = request.form.get('black_team_name')
         game_index = int(request.form.get('game_index'))
         current_quarter = request.form.get('current_quarter')
+        school_slug = request.form.get('school_slug')
         
         # Get scores from the form
-        white_score = float(request.form.get('away_score', 0))
-        black_score = float(request.form.get('home_score', 0))
+        white_score = request.form.get('away_score', '0')
+        black_score = request.form.get('home_score', '0')
+
+        # Convert scores to float to handle shootout decimal points
+        white_score = float(white_score)
+        black_score = float(black_score)
 
         if not white_team_name or not black_team_name or game_id not in game_data:
             raise ValueError("Missing required data")
