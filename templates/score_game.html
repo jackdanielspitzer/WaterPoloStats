@@ -414,7 +414,6 @@
         let currentOTQuarter = 1;
         let shootoutGoalsHome = 0;
         let shootoutGoalsAway = 0;
-        let window;
 
         function updateShootoutScore() {
             const homeScoreElement = document.getElementById('homeScore');
@@ -442,9 +441,6 @@
             document.querySelector('div[style*="position: fixed"]')?.remove();
             document.getElementById('minutes').textContent = '-';
             document.getElementById('seconds').textContent = '--';
-            // Store regulation scores before shootout begins
-            window.regulationHomeScore = parseFloat(document.getElementById('homeScore').textContent);
-            window.regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
         }
 
         // Handle shootout goals
@@ -472,11 +468,10 @@
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
                     if (isDarkTeam) {
                         shootoutGoalsHome++;
-                        document.getElementById('homeScore').textContent = (window.regulationHomeScore + (shootoutGoalsHome / 10)).toFixed(1);
                     } else {
                         shootoutGoalsAway++;
-                        document.getElementById('awayScore').textContent = (window.regulationAwayScore + (shootoutGoalsAway / 10)).toFixed(1);
                     }
+                    updateShootoutScore();
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
                     const resultText = `${team} team scored in shootout`;
@@ -818,7 +813,8 @@
                         eventText += ' [ADVANTAGE GOAL]';
                     } else if (eventText.toLowerCase().includes('penalty') || 
                               eventText.toLowerCase().includes('5 meter') || 
-                              eventText.toLowerCase().includes('5-meter')) {                        eventText += ' [PENALTY GOAL]';
+                              eventText.toLowerCase().includes('5-meter')) {
+                        eventText += ' [PENALTY GOAL]';
                     } else {
                         eventText += ' [NATURAL GOAL]';
                     }
