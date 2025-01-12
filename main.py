@@ -2382,10 +2382,31 @@ def end_game():
         game_index = int(request.form.get('game_index'))
         school_slug = request.form.get('school_slug')
         current_quarter = request.form.get('current_quarter')
+        
+        # Simple validation
+        if not all([white_team_name, black_team_name, game_index is not None, school_slug]):
+            raise ValueError("Missing required data")
 
-        # Initialize team files
-        initialize_team_file(white_team_name)
-        initialize_team_file(black_team_name)
+        # Load both teams' data
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+        
+        # Mark white team's game as finished
+        if game_index < len(white_team_data.get("games", [])):
+            white_game = white_team_data["games"][game_index]
+            white_game["is_scored"] = True
+            
+            # Find and mark black team's corresponding game
+            black_game_index = next((i for i, g in enumerate(black_team_data.get("games", [])) 
+                                   if g["opponent"] == white_team_name and g["date"] == white_game["date"]), None)
+            
+            if black_game_index is not None:
+                black_game = black_team_data["games"][black_game_index]
+                black_game["is_scored"] = True
+
+            # Save both teams' data
+            save_team_data(white_team_name, white_team_data)
+            save_team_data(black_team_name, black_team_data)
         
         # Load team data
         white_team_data = load_team_data(white_team_name)
