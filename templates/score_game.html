@@ -450,8 +450,9 @@
                 if (inputText.toLowerCase().includes('scored')) {
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
                     const scoreElement = document.getElementById(isDarkTeam ? 'homeScore' : 'awayScore');
-                    const currentScore = parseFloat(scoreElement.textContent || '0');
-                    scoreElement.textContent = (currentScore + 0.1).toFixed(1);
+                    const currentScore = Number((parseFloat(scoreElement.textContent || '0')).toFixed(1));
+                    const newScore = Number((currentScore + 0.1).toFixed(1));
+                    scoreElement.textContent = newScore;
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
                     const resultText = `${team} team scored in shootout`;
@@ -766,8 +767,9 @@
             // Handle goals and add appropriate tags
             if (eventText.toLowerCase().includes('scored')) {
                 if (isShootout) {
-                    // Only add shootout tag during shootout
-                    eventText += ' [SHOOTOUT GOAL]';
+                    // Don't add any additional tags for shootout goals
+                    // The shootout handling is done separately
+                    return;
                 } else {
                     const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                     const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
