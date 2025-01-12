@@ -740,14 +740,16 @@
                     homeTableBody.innerHTML += row;
                 });
 
-                // Update scores and handle winning team styling
-                const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
-                const homeScore = data.home_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
-                const awayScoreEl = document.getElementById('awayScore');
-                const homeScoreEl = document.getElementById('homeScore');
+                // Update scores only if not in shootout mode
+                if (!isShootout) {
+                    const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
+                    const homeScore = data.home_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
+                    const awayScoreEl = document.getElementById('awayScore');
+                    const homeScoreEl = document.getElementById('homeScore');
 
-                awayScoreEl.textContent = awayScore;
-                homeScoreEl.textContent = homeScore;
+                    awayScoreEl.textContent = awayScore;
+                    homeScoreEl.textContent = homeScore;
+                }
 
                 // Reset classes
                 awayScoreEl.classList.remove('winning-score');
