@@ -518,9 +518,15 @@
             // Submit the form and redirect
             if (isShootout) {
                 try {
+                    const formData = new FormData(form);
+                    // Add shootout flag and final scores
+                    formData.append('is_shootout', 'true');
+                    formData.append('final_home_score', document.getElementById('homeScore').textContent);
+                    formData.append('final_away_score', document.getElementById('awayScore').textContent);
+
                     const response = await fetch('/end_game', {
                         method: 'POST',
-                        body: new FormData(form)
+                        body: formData
                     });
 
                     if (response.ok) {
@@ -528,6 +534,10 @@
                         document.getElementById('form').style.display = 'none';
                         document.getElementById('inputText').disabled = true;
                         document.getElementById('microphoneButton').disabled = true;
+                        window.location.href = response.url;
+                    } else {
+                        console.error('Failed to end game:', await response.text());
+                    }ment.getElementById('microphoneButton').disabled = true;
 
                         // Redirect to team page
                         window.location.href = `/team/${schoolSlug}`;
