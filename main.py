@@ -2444,17 +2444,13 @@ def end_game():
                 white_game["is_scored"] = True
                 black_game["is_scored"] = True
 
-                # Save current game stats and game log
+                # Save current game stats
                 white_game["away_box"] = game_data[game_id]['dataWhite']
                 white_game["home_box"] = game_data[game_id]['dataBlack']
                 white_game["game_log"] = game_data[game_id].get('game_log', [])
                 black_game["home_box"] = game_data[game_id]['dataBlack']
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
-
-                # Save changes to files
-                save_team_data(white_team_name, white_team_data)
-                save_team_data(black_team_name, black_team_data)
 
                 # Get game type and handle shootout
                 game_type = request.form.get('current_quarter')
