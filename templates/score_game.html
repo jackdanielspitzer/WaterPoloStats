@@ -411,11 +411,13 @@
 
         let isShootout = false;
         let overtimeQuarters = 2;
-        let currentOTQuarter = 1;
-        let shootoutGoalsHome = 0;
-        let shootoutGoalsAway = 0;
-        let regulationHomeScore = 0;
-        let regulationAwayScore = 0;
+        const shootoutState = {
+            currentOTQuarter: 1,
+            shootoutGoalsHome: 0,
+            shootoutGoalsAway: 0,
+            regulationHomeScore: 0,
+            regulationAwayScore: 0
+        };
 
         function updateShootoutScore() {
             const homeScoreElement = document.getElementById('homeScore');
@@ -472,13 +474,12 @@
                 if (inputText.toLowerCase().includes('scored')) {
                     const isDarkTeam = inputText.toLowerCase().includes('dark');
                     if (isDarkTeam) {
-                        shootoutGoalsHome++;
-                        document.getElementById('homeScore').textContent = (regulationHomeScore + (shootoutGoalsHome / 10)).toFixed(1);
+                        shootoutState.shootoutGoalsHome++;
+                        document.getElementById('homeScore').textContent = (shootoutState.regulationHomeScore + (shootoutState.shootoutGoalsHome / 10)).toFixed(1);
                     } else {
-                        shootoutGoalsAway++;
-                        document.getElementById('awayScore').textContent = (regulationAwayScore + (shootoutGoalsAway / 10)).toFixed(1);
+                        shootoutState.shootoutGoalsAway++;
+                        document.getElementById('awayScore').textContent = (shootoutState.regulationAwayScore + (shootoutState.shootoutGoalsAway / 10)).toFixed(1);
                     }
-                    updateShootoutScore();
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
                     const resultText = `${team} team scored in shootout`;
