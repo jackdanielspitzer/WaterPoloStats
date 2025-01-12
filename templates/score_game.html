@@ -500,36 +500,40 @@
             // Continue with normal form submission if not in shootout
         });
 
-        // Handle end game during shootout
+        // Handle end game form submission
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
-            try {
-                e.preventDefault();
+            e.preventDefault();
+
+            // Set current quarter
+            const quarterInput = document.getElementById('currentQuarterInput');
+            quarterInput.value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+
+            // Handle shootout scores
+            if (isShootout) {
+                const homeScore = document.getElementById('homeScore').textContent;
+                const awayScore = document.getElementById('awayScore').textContent;
                 
-                // Update current quarter
-                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-                
-                if (isShootout) {
-                    // Add final scores as hidden inputs
-                    const scores = [
-                        {name: 'final_home_score', value: document.getElementById('homeScore').textContent},
-                        {name: 'final_away_score', value: document.getElementById('awayScore').textContent},
-                        {name: 'is_shootout', value: 'true'}
-                    ];
-                    
-                    scores.forEach(score => {
-                        const input = document.createElement('input');
+                // Create and append hidden inputs
+                const hiddenInputs = {
+                    'final_home_score': homeScore,
+                    'final_away_score': awayScore,
+                    'is_shootout': 'true'
+                };
+
+                Object.entries(hiddenInputs).forEach(([name, value]) => {
+                    let input = this.querySelector(`input[name="${name}"]`);
+                    if (!input) {
+                        input = document.createElement('input');
                         input.type = 'hidden';
-                        input.name = score.name;
-                        input.value = score.value;
+                        input.name = name;
                         this.appendChild(input);
-                    });
-                }
-                
-                // Submit form
-                this.submit();
-            } catch (error) {
-                console.error('Error submitting form:', error);
+                    }
+                    input.value = value;
+                });
             }
+
+            // Submit the form
+            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded
