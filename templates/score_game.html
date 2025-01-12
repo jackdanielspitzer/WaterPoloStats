@@ -502,10 +502,12 @@
 
         // Handle end game during shootout
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
-            if (isShootout) {
-                // Ensure current quarter shows as 'SO' for shootout
-                document.getElementById('currentQuarterInput').value = 'SO';
-            }
+            e.preventDefault();
+            // Ensure current quarter shows as 'SO' for shootout
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            
+            // Submit the form
+            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded

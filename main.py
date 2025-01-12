@@ -2415,9 +2415,16 @@ def end_game():
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
 
-                # Calculate regular scores
-                white_score = sum(game_data[game_id]['dataWhite'].get('Shot', []))
-                black_score = sum(game_data[game_id]['dataBlack'].get('Shot', []))
+                # Get scores directly from the display
+                white_score = float(game_data[game_id]['dataWhite'].get('Shot', []).count(1))
+                black_score = float(game_data[game_id]['dataBlack'].get('Shot', []).count(1))
+
+                # Add shootout goals if in shootout mode
+                if request.form.get('current_quarter') == 'SO':
+                    shootout_goals_white = sum(1 for x in game_data[game_id].get('game_log', []) if 'light team scored in shootout' in x.lower())
+                    shootout_goals_black = sum(1 for x in game_data[game_id].get('game_log', []) if 'dark team scored in shootout' in x.lower())
+                    white_score += shootout_goals_white * 0.1
+                    black_score += shootout_goals_black * 0.1
 
                 # Round to 1 decimal place to handle shootout scores properly
                 white_score = round(float(white_score), 1)
