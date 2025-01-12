@@ -502,31 +502,34 @@
 
         // Handle end game during shootout
         document.getElementById('endGameForm').addEventListener('submit', function(e) {
-            try {
-                // Update current quarter
-                document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            e.preventDefault();
+            
+            // Update current quarter
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
+            
+            // Add shootout-specific data if in shootout mode
+            if (isShootout) {
+                const homeScoreInput = document.createElement('input');
+                homeScoreInput.type = 'hidden';
+                homeScoreInput.name = 'final_home_score';
+                homeScoreInput.value = document.getElementById('homeScore').textContent;
+                this.appendChild(homeScoreInput);
 
-                // Add shootout-specific data if needed
-                if (isShootout) {
-                    let formData = new FormData(this);
-                    formData.append('final_home_score', document.getElementById('homeScore').textContent);
-                    formData.append('final_away_score', document.getElementById('awayScore').textContent);
-                    formData.append('is_shootout', 'true');
-                }
+                const awayScoreInput = document.createElement('input');
+                awayScoreInput.type = 'hidden';
+                awayScoreInput.name = 'final_away_score';
+                awayScoreInput.value = document.getElementById('awayScore').textContent;
+                this.appendChild(awayScoreInput);
 
-                // Disable inputs
-                document.getElementById('inputText').disabled = true;
-                document.getElementById('form').reset();
-                document.getElementById('microphoneButton').disabled = true;
-
-                // Let form submit normally
-                return true;
-            } catch (error) {
-                console.error('Error ending game:', error);
-                alert('Failed to end game. Please try again.');
-                e.preventDefault();
-                return false;
+                const shootoutInput = document.createElement('input');
+                shootoutInput.type = 'hidden';
+                shootoutInput.name = 'is_shootout';
+                shootoutInput.value = 'true';
+                this.appendChild(shootoutInput);
             }
+
+            // Submit the form
+            this.submit();
         });
 
         // Initialize button event listeners when DOM is loaded
