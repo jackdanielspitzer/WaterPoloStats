@@ -363,10 +363,14 @@
                     updateTimerDisplay();
                     document.getElementById('startPauseTimer').textContent = 'Start';
                     return;
+                } else if (currentOTQuarter >= overtimeQuarters) {
+                    // Only show options after all overtime quarters are complete
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    isPaused = false;
+                    showEndGameOptions();
+                    return;
                 }
-                // Only show options after all overtime quarters are complete
-                showEndGameOptions();
-                return;
             } else if (currentQuarter < 4) {
                 currentQuarter++;
                 timeRemaining = 420;
@@ -483,14 +487,18 @@
             isTimerRunning = false;
             isPaused = false;
             timeRemaining = minutes * 60;
-            // Get the next OT number
-            let nextOTNum = 1;
+            
+            // If already in OT, add the new quarters to existing total
             if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                nextOTNum = parseInt(currentQuarter.substring(2)) + 1;
+                overtimeQuarters += quarters;
+                // Keep current OT number
+                currentOTQuarter = parseInt(currentQuarter.substring(2));
+            } else {
+                // Starting fresh OT
+                currentQuarter = 'OT1';
+                overtimeQuarters = quarters;
+                currentOTQuarter = 1;
             }
-            currentQuarter = 'OT' + nextOTNum;
-            overtimeQuarters = quarters;
-            currentOTQuarter = nextOTNum;
 
             document.getElementById('startPauseTimer').textContent = 'Start';
             document.getElementById('startPauseTimer').disabled = false;
