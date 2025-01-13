@@ -585,18 +585,11 @@
             "is_scored": false,
             "formatted_date": "March 12th, 2025",
             "game_log": [
-                "Q1 7:00 - The dark team 5 was excluded",
-                "Q1 7:00 - The light team 2 drew an exclusion",
-                "Q1 7:00 - The dark team 5 scored a goal [ADVANTAGE GOAL]",
-                "Q1 7:00 - The dark team 5 attempted a shot",
-                "Q1 6:51 - The dark team 5 was excluded",
-                "Q1 6:51 - The light team 2 drew an exclusion",
-                "Q1 6:44 - The light team 3 scored a goal [ADVANTAGE GOAL]",
-                "Q1 6:44 - The light team 3 attempted a shot",
-                "Q1 6:31 - The dark team 5 performed Penalties Drawn",
-                "Q1 6:31 - The light team 3 was excluded",
-                "Q1 6:24 - The dark team 10 scored a goal [ADVANTAGE GOAL]",
-                "Q1 6:24 - The dark team 10 attempted a shot"
+                "Q1 7:00 - The dark team 1 performed Penalties Drawn",
+                "Q1 7:00 - The dark team 1 attempted a shot",
+                "Q1 7:00 - The dark team 1 attempted a shot",
+                "Q1 7:00 - The dark team 1 attempted a shot",
+                "Q1 7:00 - The dark team 1 attempted a shot"
             ]
         }
     ]
