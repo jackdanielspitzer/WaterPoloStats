@@ -24,7 +24,7 @@
             "is_scored": true,
             "formatted_date": "January 23rd, 2025",
             "game_log": [
-                "Q1 7:00 - The dark team 1 scored a goal [SHOOTOUT GOAL]",
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
                 "Q1 7:00 - The dark team 1 attempted a shot"
             ],
             "home_box": {
@@ -211,11 +211,11 @@
                     0
                 ]
             },
-            "is_shootout": true,
+            "is_shootout": false,
             "score": {
-                "white_team_score": 0.0,
-                "black_team_score": 1.1,
-                "game_type": "(SO)"
+                "white_team_score": 0,
+                "black_team_score": 1,
+                "game_type": ""
             }
         },
         {
@@ -433,6 +433,31 @@
                 "black_team_score": 1.1,
                 "game_type": "(SO)"
             }
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-23",
+            "game_type": "Non-League Game",
+            "is_scored": true,
+            "formatted_date": "January 23rd, 2025",
+            "game_log": [
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team 1 attempted a shot"
+            ]
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-24",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "January 24th, 2025",
+            "game_log": []
         }
     ]
 }
