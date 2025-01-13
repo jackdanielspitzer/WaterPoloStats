@@ -37,7 +37,7 @@
         <h1>Game Box Score</h1>
         <h2>{{ away_team }} vs {{ home_team }}</h2>
         <p><strong>Date:</strong> {{ game.date if game and game.date else 'N/A' }}</p>
-        
+
         {% if game %}
             {% if game.score %}
                 <p><strong>Score:</strong> 
@@ -65,6 +65,7 @@
                     <th>Name</th>
                     <th>Goals</th>
                     <th>Shot Attempts</th>
+                    <th>Assists</th>
                     <th>Blocks</th>
                     <th>Steals</th>
                     <th>Exclusions</th>
@@ -81,6 +82,7 @@
                     <td>{{ player.name }}</td>
                     <td>{{ white_team_stats.get('Shot', [])[loop.index0]|default(0) }}</td>
                     <td>{{ white_team_stats.get('Shot Attempt', [])[loop.index0]|default(0) }}</td>
+                    <td>{{ white_team_stats.get('Assists', [])[loop.index0]|default(0) }}</td>
                     <td>{{ white_team_stats.get('Blocks', [])[loop.index0]|default(0) }}</td>
                     <td>{{ white_team_stats.get('Steals', [])[loop.index0]|default(0) }}</td>
                     <td>{{ white_team_stats.get('Exclusions', [])[loop.index0]|default(0) }}</td>
@@ -107,6 +109,7 @@
                     <th>Name</th>
                     <th>Goals</th>
                     <th>Shot Attempts</th>
+                    <th>Assists</th>
                     <th>Blocks</th>
                     <th>Steals</th>
                     <th>Exclusions</th>
@@ -123,6 +126,7 @@
                     <td>{{ player.name }}</td>
                     <td>{{ black_team_stats.get('Shot', [])[loop.index0]|default(0) }}</td>
                     <td>{{ black_team_stats.get('Shot Attempt', [])[loop.index0]|default(0) }}</td>
+                    <td>{{ black_team_stats.get('Assists', [])[loop.index0]|default(0) }}</td>
                     <td>{{ black_team_stats.get('Blocks', [])[loop.index0]|default(0) }}</td>
                     <td>{{ black_team_stats.get('Steals', [])[loop.index0]|default(0) }}</td>
                     <td>{{ black_team_stats.get('Exclusions', [])[loop.index0]|default(0) }}</td>
