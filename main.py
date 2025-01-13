@@ -894,9 +894,13 @@ def extract_key_phrases(text):
             break
         elif ('assist' in doc_text or 'assisted' in doc_text):
             if len(all_numbers) >= 2:
-                # For input like "dark 1 assisted dark 2" or similar patterns
-                assister = all_numbers[0]
-                scorer = all_numbers[1]
+                # For input patterns like "dark 1 assisted by dark 2" or "dark 1 assisted dark 2"
+                if "assisted by" in doc_text:
+                    scorer = all_numbers[0]
+                    assister = all_numbers[1]
+                else:
+                    assister = all_numbers[0]
+                    scorer = all_numbers[1]
                 
                 # Add all relevant events
                 events.append((scorer, 'Shot', current_team))  # Goal for scorer
