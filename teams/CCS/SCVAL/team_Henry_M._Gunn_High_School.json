@@ -173,6 +173,198 @@
             ]
         },
         {
+            "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": null,
+            "date": "2025-01-16",
+            "game_type": "Tournament",
+            "is_scored": true,
+            "formatted_date": "January 16th, 2025",
+            "game_log": [
+                "Q1 7:00 - The dark team 1 performed Sprint Won",
+                "Q1 7:00 - The dark team 1 performed Sprint Attempt"
+            ],
+            "away_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "7",
+                    "8"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 0,
+                "game_type": ""
+            }
+        },
+        {
             "home_away": "Home",
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
