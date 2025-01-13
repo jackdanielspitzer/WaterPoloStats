@@ -893,25 +893,15 @@ def extract_key_phrases(text):
                 first_event['team'] = current_team
             break
         elif ('assist' in doc_text or 'assisted' in doc_text):
-            if len(all_numbers) >= 2 and ('scored' in doc_text or 'goal' in doc_text):
-                # Handle goal and assist in any order
-                scorer = None
-                assister = None
-
-                # Find which number is mentioned closer to 'scored' or 'goal'
-                scorer_idx = doc_text.find(all_numbers[0])
-                goal_idx = max(doc_text.find('scored'), doc_text.find('goal'))
-
-                if abs(scorer_idx - goal_idx) < abs(doc_text.find(all_numbers[1]) - goal_idx):
-                    scorer = all_numbers[0]
-                    assister = all_numbers[1]
-                else:
-                    scorer = all_numbers[1]
-                    assister = all_numbers[0]
-
-                events.append((scorer, 'Shot', current_team))
-                events.append((scorer, 'Shot Attempt', current_team))
-                events.append((assister, 'Assists', current_team))
+            if len(all_numbers) >= 2:
+                # For input like "dark 1 assisted dark 2" or similar patterns
+                assister = all_numbers[0]
+                scorer = all_numbers[1]
+                
+                # Add all relevant events
+                events.append((scorer, 'Shot', current_team))  # Goal for scorer
+                events.append((scorer, 'Shot Attempt', current_team))  # Shot attempt for scorer
+                events.append((assister, 'Assists', current_team))  # Assist for assister
                 return events
             elif len(all_numbers) >= 1:
                 # If it's just an assist
