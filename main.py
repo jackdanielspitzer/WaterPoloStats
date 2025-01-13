@@ -1580,10 +1580,10 @@ def run(text, game_id):
 
                 # Format quarter display correctly (OT instead of QOT)
                 quarter_part = game_time.split(' ')[0]
-                if quarter_part.startswith('QOT'):
-                    quarter_part = 'OT' + quarter_part[3:]
-                elif quarter_part.startswith('OT'):
-                    quarter_part = quarter_part  # Keep as is if already in correct format
+                if quarter_part.startswith('Q') and 'OT' in quarter_part:
+                    # Extract OT number if present
+                    ot_num = quarter_part[3:] if len(quarter_part) > 3 else ''
+                    quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
                 event_time = datetime.strptime(time_part, '%M:%S')
