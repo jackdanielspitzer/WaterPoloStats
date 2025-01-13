@@ -1578,9 +1578,13 @@ def run(text, game_id):
                 if 'game_log' not in game_data[game_id]:
                     game_data[game_id]['game_log'] = []
 
-                # Add game time and log entry
-                # Add event with goal type tag if applicable
-                event_time = datetime.strptime(game_time.split(' ')[1], '%M:%S')
+                # Format quarter display correctly (OT instead of QOT)
+                quarter_part = game_time.split(' ')[0]
+                if quarter_part.startswith('QOT'):
+                    quarter_part = 'OT' + quarter_part[3:]
+                time_part = game_time.split(' ')[1]
+                formatted_game_time = f"{quarter_part} {time_part}"
+                event_time = datetime.strptime(time_part, '%M:%S')
                 
                 # Check if this is a goal event
                 if 'scored' in log_entry.lower():
@@ -1607,7 +1611,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{game_time} - {log_entry}")
+                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 
