@@ -1433,7 +1433,8 @@ def home():
         team_data = load_team_data(school['name'])
         for game in team_data.get('games', []):
             game_date = datetime.strptime(game['date'], '%Y-%m-%d').date()
-            if game_date >= today and not game.get('is_scored', False):
+            # Only include future games that haven't been scored
+            if game_date >= today and not game.get('is_scored'):
                 game_key = f"{game['date']}-{sorted([school['name'], game['opponent']])[0]}-{sorted([school['name'], game['opponent']])[1]}"
                 if game_key not in seen_games:
                     game['school_name'] = school['name']
