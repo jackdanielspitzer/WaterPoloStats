@@ -360,6 +360,17 @@
         },
         {
             "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": null,
+            "date": "2025-01-15",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 15th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Away",
             "opponent": "Henry M. Gunn High School",
             "opponent_logo": "images/Henry M. Gunn High School.png",
             "time": null,
