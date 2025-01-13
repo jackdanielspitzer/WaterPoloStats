@@ -2523,7 +2523,7 @@ def end_game():
                 score_info = {
                     "white_team_score": white_score,
                     "black_team_score": black_score,
-                    "game_type": "(SO)" if current_quarter == 'SO' else "(OT)" if "OT" in str(current_quarter) else ""
+                    "game_type": "(SO)" if current_quarter == 'SO' else f"({current_quarter})" if "OT" in str(current_quarter) else ""
                 }
                 
                 # Update game scores for both teams' data
