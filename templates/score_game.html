@@ -1019,7 +1019,8 @@
 
                     const hasPenaltyDrawn = previousEvent && 
                         (previousEvent.toLowerCase().includes('drew a penalty') ||
-                         previousEvent.toLowerCase().includes('penalty drawn'));
+                         previousEvent.toLowerCase().includes('penalty drawn') ||
+                         previousEvent.toLowerCase().includes('penalties drawn'));
 
                     if (hasPenaltyDrawn) {
                         eventText += ' [PENALTY GOAL]';
