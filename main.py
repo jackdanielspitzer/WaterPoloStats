@@ -2565,13 +2565,36 @@ def end_game():
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
 
-        if game_index < len(white_team_data["games"]):
-            white_game = white_team_data["games"][game_index]
-            white_game_date = white_game["date"]
+        # Get the game date from either team's data
+        game_date = None
+        if game_index < len(white_team_data.get("games", [])):
+            game_date = white_team_data["games"][game_index]["date"]
+        elif game_index < len(black_team_data.get("games", [])):
+            game_date = black_team_data["games"][game_index]["date"]
 
-            # Find corresponding black team game
-            black_game_index = next((i for i, g in enumerate(black_team_data["games"]) 
-                                   if g["opponent"] == white_team_name and g["date"] == white_game_date), None)
+        if not game_date:
+            return jsonify({'error': 'Game not found'}), 404
+
+        # Find corresponding games in both teams' data by date and opponent
+        white_game_index = None
+        black_game_index = None
+
+        for i, game in enumerate(white_team_data.get("games", [])):
+            if game["date"] == game_date and game["opponent"] == black_team_name:
+                white_game_index = i
+                break
+
+        for i, game in enumerate(black_team_data.get("games", [])):
+            if game["date"] == game_date and game["opponent"] == white_team_name:
+                black_game_index = i
+                break
+
+        if white_game_index is None or black_game_index is None:
+            return jsonify({'error': 'Could not find matching games'}), 404
+
+        # Mark both games as scored
+        white_team_data["games"][white_game_index]["is_scored"] = True
+        black_team_data["games"][black_game_index]["is_scored"] = True
 
             if black_game_index is not None:
                 black_game = black_team_data["games"][black_game_index]
