@@ -2429,6 +2429,10 @@ def end_game():
         current_quarter = request.form.get('current_quarter', '')
         school_slug = request.form.get('school_slug')
 
+        # Initialize both team files
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
+
         # Load both teams' data
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name) 
