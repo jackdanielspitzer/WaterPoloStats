@@ -343,14 +343,14 @@
                     // Move to next overtime quarter
                     currentOTQuarter++;
                     currentQuarter = 'OT' + currentOTQuarter;
-                    // Use the stored overtime minutes value or default to 3
+                    // Use the stored overtime minutes value
                     const otMinutes = document.getElementById('otMinutes')?.value || 3;
                     timeRemaining = parseInt(otMinutes) * 60;
                     updateTimerDisplay();
                     document.getElementById('startPauseTimer').textContent = 'Start';
                     return; // Return here to prevent showing end game options
-                } else {
-                    // Show overtime options again after current OT periods are complete
+                } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                    // Only show end game options after all OT quarters are complete
                     showEndGameOptions();
                 }
             } else if (currentQuarter < 4) {
