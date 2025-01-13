@@ -294,7 +294,7 @@
             const seconds = timeRemaining % 60;
             document.getElementById('minutes').textContent = minutes;
             document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            document.getElementById('currentQuarter').textContent = currentQuarter;
+            document.getElementById('currentQuarter').textContent = isShootout ? 'SO' : currentQuarter;
         }
 
         function startPauseTimer() {
