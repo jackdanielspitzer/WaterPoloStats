@@ -7,9 +7,202 @@
             "time": null,
             "date": "2025-01-13",
             "game_type": "Non-League Game",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "January 13th, 2025",
-            "game_log": []
+            "game_log": [
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team 1 attempted a shot"
+            ],
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 1,
+                "game_type": ""
+            }
         },
         {
             "home_away": "Home",
@@ -381,6 +574,30 @@
                 "black_team_score": 0.1,
                 "game_type": "(SO)"
             }
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": "15:00",
+            "date": "2025-03-12",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 12th, 2025",
+            "game_log": [
+                "Q1 7:00 - The dark team 5 was excluded",
+                "Q1 7:00 - The light team 2 drew an exclusion",
+                "Q1 7:00 - The dark team 5 scored a goal [ADVANTAGE GOAL]",
+                "Q1 7:00 - The dark team 5 attempted a shot",
+                "Q1 6:51 - The dark team 5 was excluded",
+                "Q1 6:51 - The light team 2 drew an exclusion",
+                "Q1 6:44 - The light team 3 scored a goal [ADVANTAGE GOAL]",
+                "Q1 6:44 - The light team 3 attempted a shot",
+                "Q1 6:31 - The dark team 5 performed Penalties Drawn",
+                "Q1 6:31 - The light team 3 was excluded",
+                "Q1 6:24 - The dark team 10 scored a goal [ADVANTAGE GOAL]",
+                "Q1 6:24 - The dark team 10 attempted a shot"
+            ]
         }
     ]
 }
