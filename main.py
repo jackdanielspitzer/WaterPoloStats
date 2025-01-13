@@ -2428,6 +2428,39 @@ def end_game():
         game_index = int(game_id)
         current_quarter = request.form.get('current_quarter', '')
         school_slug = request.form.get('school_slug')
+
+        # Find matching game in other team's schedule
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+        
+        # Get the date from the current game
+        current_game_date = None
+        if game_index < len(white_team_data.get("games", [])):
+            current_game_date = white_team_data["games"][game_index]["date"]
+        elif game_index < len(black_team_data.get("games", [])):
+            current_game_date = black_team_data["games"][game_index]["date"]
+            
+        if not current_game_date:
+            return jsonify({'error': 'Game not found'}), 404
+
+        # Find corresponding game in opponent's schedule by date and opponent
+        white_game_index = None
+        black_game_index = None
+        
+        for i, game in enumerate(white_team_data.get("games", [])):
+            if (game["date"] == current_game_date and 
+                game["opponent"] == black_team_name):
+                white_game_index = i
+                break
+                
+        for i, game in enumerate(black_team_data.get("games", [])):
+            if (game["date"] == current_game_date and 
+                game["opponent"] == white_team_name):
+                black_game_index = i
+                break
+                
+        if white_game_index is None or black_game_index is None:
+            return jsonify({'error': 'Corresponding games not found'}), 404
         
         # Get scores from the form and convert to float
         white_score = float(request.form.get('away_score', '0'))
@@ -2534,17 +2567,22 @@ def end_game():
                     "game_type": "(SO)" if current_quarter == 'SO' else f"({current_quarter})" if "OT" in str(current_quarter) else ""
                 }
                 
-                # Update game scores for both teams' data
-                if game_index < len(white_team_data["games"]):
-                    white_team_data["games"][game_index]["score"] = score_info.copy()
-                    white_team_data["games"][game_index]["is_scored"] = True
+                # Update white team's game
+                white_team_data["games"][white_game_index]["score"] = score_info.copy()
+                white_team_data["games"][white_game_index]["is_scored"] = True
+                white_team_data["games"][white_game_index]["game_log"] = game_data.get(game_id, {}).get('game_log', [])
+                white_team_data["games"][white_game_index]["is_shootout"] = current_quarter == 'SO'
 
-                # Find and update corresponding game in black team data
-                for black_game in black_team_data["games"]:
-                    if black_game["opponent"] == white_team_name:
-                        black_game["score"] = score_info.copy()
-                        black_game["is_scored"] = True
-                        break
+                # Update black team's game with reversed scores
+                black_score_info = {
+                    "white_team_score": black_score,  # Swap scores for black team's perspective
+                    "black_team_score": white_score,
+                    "game_type": score_info["game_type"]
+                }
+                black_team_data["games"][black_game_index]["score"] = black_score_info
+                black_team_data["games"][black_game_index]["is_scored"] = True
+                black_team_data["games"][black_game_index]["game_log"] = game_data.get(game_id, {}).get('game_log', [])
+                black_team_data["games"][black_game_index]["is_shootout"] = current_quarter == 'SO'
                 
                 # Save updated data for both teams
                 save_team_data(white_team_name, white_team_data)
