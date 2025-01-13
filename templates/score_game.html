@@ -385,11 +385,11 @@
             <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
             <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
         </div>
-        <div id="overtimeOptions" style="display: none; margin-top: 10px;">
+        <div id="overtimeOptions" style="display: none; margin-top: 10px; background: white; padding: 15px; border-radius: 8px;">
             <p>Overtime Settings:</p>
             <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
             <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label><br>
-            <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px;">Start</button>
+            <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Start Overtime</button>
         </div>
     `;
 
@@ -413,7 +413,10 @@
         }
 
         function showOvertimeOptions() {
-            document.getElementById('overtimeOptions').style.display = 'block';
+            const overtimeOptions = document.getElementById('overtimeOptions');
+            overtimeOptions.style.display = 'block';
+            overtimeOptions.style.zIndex = '1001';  // Ensure it appears on top
+            overtimeOptions.scrollIntoView({ behavior: 'smooth' });
         }
 
         function startCustomOvertime() {
