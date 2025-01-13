@@ -167,7 +167,10 @@
                 "white_team_score": 0,
                 "black_team_score": 2
             },
-            "game_log": []
+            "game_log": [
+                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team 1 attempted a shot"
+            ]
         },
         {
             "home_away": "Home",
@@ -372,6 +375,17 @@
                 "game_type": "(SO)"
             },
             "is_shootout": true
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Fremont High School",
+            "opponent_logo": "images/Fremont High School.png",
+            "time": null,
+            "date": "2025-01-22",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "January 22nd, 2025",
+            "game_log": []
         },
         {
             "home_away": "Away",
