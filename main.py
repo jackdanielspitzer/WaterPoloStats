@@ -2435,6 +2435,34 @@ def end_game():
 
         # Load both teams' data
         white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name)
+
+        # Find the matching games by date and opponent
+        white_game = None
+        black_game = None
+
+        # Find white team's game
+        for i, game in enumerate(white_team_data.get('games', [])):
+            if i == game_index and game.get('opponent') == black_team_name:
+                white_game = game
+                white_game['is_scored'] = True
+                break
+
+        # Find black team's corresponding game
+        game_date = white_game.get('date') if white_game else None
+        if game_date:
+            for game in black_team_data.get('games', []):
+                if game.get('date') == game_date and game.get('opponent') == white_team_name:
+                    black_game = game
+                    black_game['is_scored'] = True
+                    break
+
+        # Initialize both team files
+        initialize_team_file(white_team_name)
+        initialize_team_file(black_team_name)
+
+        # Load both teams' data
+        white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name) 
 
         # Find the corresponding games in both teams' data
