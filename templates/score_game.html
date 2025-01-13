@@ -404,16 +404,14 @@
             modal.innerHTML = `
         <h3>Game Time Complete</h3>
         <p>What would you like to do?</p>
-        <div style="margin: 10px 0;">
-            <button onclick="showOvertimeOptions()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-            <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
-            <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
-        </div>
-        <div id="overtimeOptions" style="display: none; margin-top: 10px; background: white; padding: 15px; border-radius: 8px;">
-            <p>Overtime Settings:</p>
+        <div id="overtimeOptions" style="margin: 10px 0;">
             <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
             <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label><br>
-            <button onclick="startCustomOvertime()" style="margin-top: 10px; padding: 8px 16px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer;">Start Overtime</button>
+            <div style="margin-top: 10px;">
+                <button onclick="startCustomOvertime()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
+                <button onclick="startShootout(); document.querySelector('div[style*=\\"position: fixed\\"]').remove();" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
+                <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
+            </div>
         </div>
     `;
 
