@@ -258,17 +258,9 @@ def save_team_data(team_name, data):
             # If there's corresponding game data in memory, use its game log
             game_id = str(data["games"].index(game))
             if game_id in game_data and "game_log" in game_data[game_id]:
-                # Get the current game log from memory
-                current_game_log = game_data[game_id]["game_log"]
-                
-                # Update game log in the JSON file
-                game["game_log"] = current_game_log.copy()
-                
-                # In shootout games, just update goal tags without filtering entries
-                if game.get("is_shootout"):
-                    for i, entry in enumerate(game["game_log"]):
-                        if "scored a goal" in entry and "[NATURAL GOAL]" in entry:
-                            game["game_log"][i] = entry.replace("[NATURAL GOAL]", "[SHOOTOUT GOAL]")
+                # Get the current game log from memory and copy it directly
+                if game_id in game_data and "game_log" in game_data[game_id]:
+                    game["game_log"] = game_data[game_id]["game_log"].copy()
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
