@@ -1614,29 +1614,45 @@ def run(text, game_id):
                         attempt_team = None
                         sequence_found = True
 
+                        print("\n=== Penalty Sequence Debug ===")
+                        print(f"Recent events:")
+                        for i, event in enumerate(recent_events):
+                            print(f"{i}: {event}")
+
                         # Check penalty drawn event
                         if 'drew a penalty' in recent_events[0].lower() or 'drew penalty' in recent_events[0].lower():
                             penalty_team = 'dark' if 'dark' in recent_events[0].lower() else 'light'
+                            print(f"1. Penalty drawn by {penalty_team} team")
                         else:
                             sequence_found = False
+                            print("1. No penalty drawn event found in position 0")
 
                         # Check exclusion event
                         if sequence_found and 'excluded' in recent_events[1].lower():
                             exclusion_team = 'dark' if 'dark' in recent_events[1].lower() else 'light'
-                            if exclusion_team == penalty_team:  # Must be on opposite team
+                            print(f"2. Exclusion on {exclusion_team} team")
+                            if exclusion_team == penalty_team:
+                                print("   ERROR: Exclusion on same team as penalty drawer")
                                 sequence_found = False
                         else:
                             sequence_found = False
+                            print("2. No exclusion event found in position 1")
 
                         # Check attempt event
                         if sequence_found and 'attempt' in recent_events[3].lower():
                             attempt_team = 'dark' if 'dark' in recent_events[3].lower() else 'light'
-                            if attempt_team != penalty_team:  # Must be same team
+                            print(f"3. Attempt by {attempt_team} team")
+                            if attempt_team != penalty_team:
+                                print("   ERROR: Attempt not by penalty drawing team")
                                 sequence_found = False
                         else:
                             sequence_found = False
+                            print("3. No attempt event found in position 3")
 
                         found_penalty = sequence_found and penalty_team == scoring_team
+                        print(f"\nSequence valid: {sequence_found}")
+                        print(f"Scoring team: {scoring_team}")
+                        print(f"Is penalty goal: {found_penalty}\n")
 
                     if found_advantage:
                         log_entry += " [ADVANTAGE GOAL]"
