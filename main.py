@@ -2447,6 +2447,7 @@ def end_game():
         white_game_index = None
         black_game_index = None
         
+        # Find matching games by both date and opponent
         for i, game in enumerate(white_team_data.get("games", [])):
             if (game["date"] == current_game_date and 
                 game["opponent"] == black_team_name):
@@ -2458,9 +2459,13 @@ def end_game():
                 game["opponent"] == white_team_name):
                 black_game_index = i
                 break
-                
+
         if white_game_index is None or black_game_index is None:
             return jsonify({'error': 'Corresponding games not found'}), 404
+            
+        # Mark both games as scored immediately
+        white_team_data["games"][white_game_index]["is_scored"] = True
+        black_team_data["games"][black_game_index]["is_scored"] = True
         
         # Get scores from the form and convert to float
         white_score = float(request.form.get('away_score', '0'))
