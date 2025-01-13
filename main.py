@@ -2471,18 +2471,31 @@ def end_game():
         white_game_index = None
         black_game_index = None
 
-        # Find both games using date matching
+        # Find both games using date and opponent matching
         if game_index < len(white_team_data.get("games", [])):
             white_game = white_team_data["games"][game_index]
+            white_game_index = game_index
             game_date = white_game["date"]
 
             # Find matching game in black team data
             for i, game in enumerate(black_team_data.get("games", [])):
-                if game["date"] == game_date and game["opponent"] == white_team_name:
+                if (game["date"] == game_date and 
+                    game["opponent"] == white_team_name and
+                    white_game["opponent"] == black_team_name):
                     black_game = game
                     black_game_index = i
-                    white_game_index = game_index
                     break
+
+            if not black_game:
+                # Try searching other direction
+                for i, game in enumerate(white_team_data.get("games", [])):
+                    if (game["date"] == game_date and
+                        game["opponent"] == black_team_name):
+                        white_game = game
+                        white_game_index = i
+                        black_game = black_team_data["games"][game_index]
+                        black_game_index = game_index
+                        break
 
         # If we found the white game but not the black game, search the other way
         if not black_game and game_index < len(black_team_data.get("games", [])):
