@@ -364,6 +364,12 @@
         }
 
         function showEndGameOptions() {
+            // Get current OT number if we're in OT
+            let currentOTNum = 0;
+            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                currentOTNum = parseInt(currentQuarter.substring(2));
+            }
+            
             const modal = document.createElement('div');
             modal.style.cssText = `
         position: fixed;
@@ -427,9 +433,14 @@
             isTimerRunning = false;
             isPaused = false;
             timeRemaining = minutes * 60;
-            currentQuarter = 'OT1';
+            // Get the next OT number
+            let nextOTNum = 1;
+            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                nextOTNum = parseInt(currentQuarter.substring(2)) + 1;
+            }
+            currentQuarter = 'OT' + nextOTNum;
             overtimeQuarters = quarters;
-            currentOTQuarter = 1;
+            currentOTQuarter = nextOTNum;
 
             document.getElementById('startPauseTimer').textContent = 'Start';
             document.getElementById('startPauseTimer').disabled = false;
