@@ -354,14 +354,19 @@
                     showEndGameOptions();
                 }
             } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                // Check if we still have overtime quarters remaining
-                if (currentOTQuarter < overtimeQuarters) {
+                // Get total number of overtime quarters from initial selection plus any additional ones
+                const totalOTQuarters = overtimeQuarters;
+                
+                if (currentOTQuarter < totalOTQuarters) {
+                    // Still have overtime quarters remaining
                     currentOTQuarter++;
                     currentQuarter = 'OT' + currentOTQuarter;
                     const otMinutes = document.getElementById('otMinutes')?.value || 3;
                     timeRemaining = parseInt(otMinutes) * 60;
                     updateTimerDisplay();
+                    document.getElementById('startPauseTimer').textContent = 'Start';
                 } else {
+                    // All overtime quarters are complete
                     showEndGameOptions();
                 }
             } else if (currentQuarter < 4) {
