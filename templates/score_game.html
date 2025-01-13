@@ -592,7 +592,7 @@
                     document.getElementById('result').innerText = resultText;
 
                     // Create shootout event and add to game log
-                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
+                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`; // Placeholder for player number
 
                     // Initialize game data and game log if needed
                     if (!game_data[gameId]) {
@@ -815,7 +815,7 @@
         showBoxScoreButton.addEventListener('click', () => {
             // Toggle visibility of the tables container
             const isVisible = tablesContainer.style.display !== 'none';
-            tablesContainer.style.display = isVisible ? 'none' : 'block';
+            tablesContainer.style.display =isVisible ? 'none' : 'block';
 
             // Change button text based on the visibility of the tables container
             showBoxScoreButton.innerText = isVisible ? 'Show Box Score' : 'Hide Box Score';
@@ -973,7 +973,8 @@
                 if (isShootout) {
                     // Create shootout event text
                     const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`;
+                    const first_event = {player: 'Player #'}; // Placeholder - needs proper logic to get player number.
+                    const shootoutEvent = `SO: ${team} team ${first_event.player || ''} scored in shootout [SHOOTOUT GOAL]`;
                     const homeTeam = document.querySelector('input[name="home_team"]').value;
                     const awayTeam = document.querySelector('input[name="away_team"]').value;
                     const gameId = document.querySelector('input[name="game_id"]').value;
