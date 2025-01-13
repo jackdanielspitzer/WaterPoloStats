@@ -353,6 +353,17 @@
                     // Only show end game options after all OT quarters are complete
                     showEndGameOptions();
                 }
+            } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                // Check if we still have overtime quarters remaining
+                if (currentOTQuarter < overtimeQuarters) {
+                    currentOTQuarter++;
+                    currentQuarter = 'OT' + currentOTQuarter;
+                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
+                    timeRemaining = parseInt(otMinutes) * 60;
+                    updateTimerDisplay();
+                } else {
+                    showEndGameOptions();
+                }
             } else if (currentQuarter < 4) {
                 currentQuarter++;
                 timeRemaining = 420;
