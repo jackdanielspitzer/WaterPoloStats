@@ -1010,9 +1010,19 @@
                     return;
                 } else {
                     const gameLogEntries = Array.from(document.querySelectorAll('#gameLogEntry'));
-                    const previousEvent = gameLogEntries.length > 1 ? gameLogEntries[gameLogEntries.length - 2].textContent.toLowerCase() : '';
-                    
-                    if (previousEvent && previousEvent.includes('penalties drawn')) {
+                    const lastEvent = gameLogEntries.length > 0 ? gameLogEntries[gameLogEntries.length - 1].textContent : '';
+                    const previousEvent = gameLogEntries.length > 1 ? gameLogEntries[gameLogEntries.length - 2].textContent : '';
+
+                    const hasAdvantage = lastEvent && 
+                        lastEvent.toLowerCase().includes('exclusion') && 
+                        !lastEvent.toLowerCase().includes('drawn');
+
+                    const hasPenaltyDrawn = previousEvent && 
+                        (previousEvent.toLowerCase().includes('drew a penalty') ||
+                         previousEvent.toLowerCase().includes('penalty drawn') ||
+                         previousEvent.toLowerCase().includes('penalties drawn'));
+
+                    if (hasPenaltyDrawn) {
                         eventText += ' [PENALTY GOAL]';
                     } else if (hasAdvantage) {
                         eventText += ' [ADVANTAGE GOAL]';
