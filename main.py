@@ -254,13 +254,14 @@ def save_team_data(team_name, data):
         for game in data["games"]:
             if "game_log" not in game:
                 game["game_log"] = []
-                
-            # If there's corresponding game data in memory, use its game log exactly as is
+            
+            # Get the game index
             game_id = str(data["games"].index(game))
+            
+            # If there's corresponding game data in memory, use its game log
             if game_id in game_data and "game_log" in game_data[game_id]:
-                # Copy the exact game log entries from memory
-                game["game_log"] = game_data[game_id]["game_log"].copy()
-                # Remove any modifications/transformations here to keep text exactly as entered
+                # Make a deep copy of the game log to preserve all entries exactly
+                game["game_log"] = list(game_data[game_id]["game_log"])
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
