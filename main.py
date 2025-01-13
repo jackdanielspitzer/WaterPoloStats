@@ -1582,6 +1582,8 @@ def run(text, game_id):
                 quarter_part = game_time.split(' ')[0]
                 if quarter_part.startswith('QOT'):
                     quarter_part = 'OT' + quarter_part[3:]
+                elif quarter_part.startswith('OT'):
+                    quarter_part = quarter_part  # Keep as is if already in correct format
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
                 event_time = datetime.strptime(time_part, '%M:%S')
