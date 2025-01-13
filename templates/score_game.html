@@ -602,8 +602,7 @@
                         game_data[gameId].game_log = [];
                     }
 
-                    // Add shootout event to game log
-                    game_data[gameId].game_log.push(shootoutEvent);
+                    // Add shootout event to game log (only once)
                     addEventToLog(shootoutEvent);
 
                     // Send shootout event to server
