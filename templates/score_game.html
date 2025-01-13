@@ -947,7 +947,7 @@
             const minutes = parseInt(document.getElementById('minutes').textContent);
             const seconds = parseInt(document.getElementById('seconds').textContent);
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             const currentTime = minutes * 60 + seconds;
 
             // Update active exclusions - remove expired ones
