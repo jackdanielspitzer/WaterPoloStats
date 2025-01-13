@@ -2576,17 +2576,21 @@ def end_game():
             if black_game_index is not None:
                 black_game = black_team_data["games"][black_game_index]
 
-                # Mark games as scored
+                # Mark both teams' games as scored
                 white_game["is_scored"] = True
                 black_game["is_scored"] = True
 
-                # Save current game stats
+                # Save current game stats to both teams' files
                 white_game["away_box"] = game_data[game_id]['dataWhite']
                 white_game["home_box"] = game_data[game_id]['dataBlack']
                 white_game["game_log"] = game_data[game_id].get('game_log', [])
                 black_game["home_box"] = game_data[game_id]['dataBlack']
                 black_game["away_box"] = game_data[game_id]['dataWhite']
                 black_game["game_log"] = game_data[game_id].get('game_log', [])
+
+                # Save data for both teams
+                save_team_data(white_team_name, white_team_data)
+                save_team_data(black_team_name, black_team_data)
 
                 # Get game type and handle shootout
                 game_type = request.form.get('current_quarter')
