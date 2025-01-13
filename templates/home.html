@@ -220,25 +220,47 @@
                 <div class="game-card">
                     <div class="teams">
                         <div class="team">
-                            {% for slug, s in schools.items() %}
-                                {% if s.name == game.school_name %}
-                                    <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
-                                        <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}" style="margin-bottom: 8px;">
-                                        <span>{{ game.school_name }}</span>
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
+                            {% if game.home_away == "Away" %}
+                                {% for slug, s in schools.items() %}
+                                    {% if s.name == game.school_name %}
+                                        <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                                            <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}" style="margin-bottom: 8px;">
+                                            <span>{{ game.school_name }}</span>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% for slug, s in schools.items() %}
+                                    {% if s.name == game.opponent %}
+                                        <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                                            <img src="{{ url_for('static', filename=s.logo) }}" alt="{{ game.opponent }}" style="margin-bottom: 8px;">
+                                            <span>{{ game.opponent }}</span>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                         <div class="vs">vs</div>
                         <div class="team">
-                            {% for slug, s in schools.items() %}
-                                {% if s.name == game.opponent %}
-                                    <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
-                                        <img src="{{ url_for('static', filename=s.logo) }}" alt="{{ game.opponent }}" style="margin-bottom: 8px;">
-                                        <span>{{ game.opponent }}</span>
-                                    </a>
-                                {% endif %}
-                            {% endfor %}
+                            {% if game.home_away == "Away" %}
+                                {% for slug, s in schools.items() %}
+                                    {% if s.name == game.opponent %}
+                                        <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                                            <img src="{{ url_for('static', filename=s.logo) }}" alt="{{ game.opponent }}" style="margin-bottom: 8px;">
+                                            <span>{{ game.opponent }}</span>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% for slug, s in schools.items() %}
+                                    {% if s.name == game.school_name %}
+                                        <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                                            <img src="{{ url_for('static', filename=game.school_logo) }}" alt="{{ game.school_name }}" style="margin-bottom: 8px;">
+                                            <span>{{ game.school_name }}</span>
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
                         </div>
                     </div>
                     <div class="game-details">
