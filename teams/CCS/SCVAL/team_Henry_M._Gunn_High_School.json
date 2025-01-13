@@ -2,178 +2,6 @@
     "games": [
         {
             "home_away": "Away",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": null,
-            "date": "2025-01-15",
-            "game_type": "League Game",
-            "is_scored": true,
-            "formatted_date": "January 15th, 2025",
-            "home_box": {
-                "Player": [
-                    "1",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "10"
-                ],
-                "Shot": [
-                    1,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    1,
-                    0,
-                    0,
-                    1,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            },
-            "away_box": {
-                "Player": [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5"
-                ],
-                "Shot": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            },
-            "score": {
-                "white_team_score": 0,
-                "black_team_score": 2
-            },
-            "game_log": [
-                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
-                "Q1 7:00 - The dark team 1 attempted a shot"
-            ]
-        },
-        {
-            "home_away": "Away",
             "opponent": "Fremont High School",
             "opponent_logo": "images/Fremont High School.png",
             "time": null,
@@ -365,327 +193,15 @@
             }
         },
         {
-            "home_away": "Home",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": null,
-            "date": "2025-01-17",
-            "game_type": "Tournament",
-            "is_scored": true,
-            "formatted_date": "January 17th, 2025",
-            "home_box": {
-                "Player": [
-                    "1",
-                    "2",
-                    "3",
-                    "4",
-                    "5"
-                ],
-                "Shot": [
-                    1,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    1,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Won": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            },
-            "away_box": {
-                "Player": [
-                    "1",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "10"
-                ],
-                "Shot": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Won": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            },
-            "game_log": [
-                "Q1 7:00 - The dark team 1 scored a goal [NATURAL GOAL]",
-                "Q1 7:00 - The dark team 1 attempted a shot"
-            ],
-            "score": {
-                "white_team_score": 0.0,
-                "black_team_score": 1.1,
-                "game_type": "(SO)"
-            },
-            "is_shootout": true
-        },
-        {
             "home_away": "Away",
             "opponent": "Fremont High School",
             "opponent_logo": "images/Fremont High School.png",
             "time": null,
             "date": "2025-01-22",
             "game_type": "Non-League Game",
-            "is_scored": false,
-            "formatted_date": "January 22nd, 2025",
-            "game_log": []
-        },
-        {
-            "home_away": "Away",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": "15:22",
-            "date": "2025-03-15",
-            "game_type": "League Game",
             "is_scored": true,
-            "formatted_date": "March 15th, 2025",
-            "home_box": {
-                "Player": [
-                    "1",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "10"
-                ],
-                "Shot": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Won": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            },
+            "formatted_date": "January 22nd, 2025",
+            "game_log": [],
             "away_box": {
                 "Player": [
                     "1",
@@ -772,11 +288,109 @@
                     0
                 ]
             },
-            "game_log": [],
+            "home_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "7",
+                    "8"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "is_shootout": false,
             "score": {
                 "white_team_score": 0,
-                "black_team_score": 0
+                "black_team_score": 0,
+                "game_type": ""
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-31",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 31st, 2025",
+            "game_log": []
         }
     ]
 }
