@@ -1593,10 +1593,12 @@ def run(text, game_id):
                 # Check if this is a goal event
                 if 'scored' in log_entry.lower():
                     # Look back in game log for recent exclusions or penalties
-                    recent_events = game_data[game_id].get('game_log', [])[-5:]  # Look at last 5 events
+                    recent_events = game_data[game_id].get('game_log', [])[-4:]  # Look at last 4 events
+                    scoring_team = 'dark' if 'dark' in log_entry.lower() else 'light'
                     found_advantage = False
                     found_penalty = False
                     
+                    # Check for exclusion advantage first
                     for prev_event in recent_events:
                         prev_time = datetime.strptime(prev_event.split(' - ')[0].split(' ')[1], '%M:%S')
                         time_diff = (event_time - prev_time).total_seconds()
@@ -1604,10 +1606,38 @@ def run(text, game_id):
                         if 'excluded' in prev_event.lower() and time_diff <= 20:
                             found_advantage = True
                             break
-                        elif 'penalty' in prev_event.lower() and time_diff <= 10:
-                            found_penalty = True
-                            break
-                    
+
+                    # Check for correct penalty sequence if no advantage found
+                    if not found_advantage and len(recent_events) >= 4:
+                        penalty_team = None
+                        exclusion_team = None
+                        attempt_team = None
+                        sequence_found = True
+
+                        # Check penalty drawn event
+                        if 'drew a penalty' in recent_events[0].lower() or 'drew penalty' in recent_events[0].lower():
+                            penalty_team = 'dark' if 'dark' in recent_events[0].lower() else 'light'
+                        else:
+                            sequence_found = False
+
+                        # Check exclusion event
+                        if sequence_found and 'excluded' in recent_events[1].lower():
+                            exclusion_team = 'dark' if 'dark' in recent_events[1].lower() else 'light'
+                            if exclusion_team == penalty_team:  # Must be on opposite team
+                                sequence_found = False
+                        else:
+                            sequence_found = False
+
+                        # Check attempt event
+                        if sequence_found and 'attempt' in recent_events[3].lower():
+                            attempt_team = 'dark' if 'dark' in recent_events[3].lower() else 'light'
+                            if attempt_team != penalty_team:  # Must be same team
+                                sequence_found = False
+                        else:
+                            sequence_found = False
+
+                        found_penalty = sequence_found and penalty_team == scoring_team
+
                     if found_advantage:
                         log_entry += " [ADVANTAGE GOAL]"
                     elif found_penalty:
