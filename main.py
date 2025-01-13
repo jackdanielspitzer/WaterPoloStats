@@ -2429,6 +2429,45 @@ def end_game():
         current_quarter = request.form.get('current_quarter', '')
         school_slug = request.form.get('school_slug')
 
+        # Load both teams' data
+        white_team_data = load_team_data(white_team_name)
+        black_team_data = load_team_data(black_team_name) 
+
+        # Find the corresponding games in both teams' data
+        white_game = None
+        black_game = None
+        white_game_index = None
+        black_game_index = None
+
+        # Find both games using date matching
+        if game_index < len(white_team_data.get("games", [])):
+            white_game = white_team_data["games"][game_index]
+            game_date = white_game["date"]
+
+            # Find matching game in black team data
+            for i, game in enumerate(black_team_data.get("games", [])):
+                if game["date"] == game_date and game["opponent"] == white_team_name:
+                    black_game = game
+                    black_game_index = i
+                    white_game_index = game_index
+                    break
+
+        # If we found the white game but not the black game, search the other way
+        if not black_game and game_index < len(black_team_data.get("games", [])):
+            black_game = black_team_data["games"][game_index]
+            game_date = black_game["date"]
+
+            # Find matching game in white team data
+            for i, game in enumerate(white_team_data.get("games", [])):
+                if game["date"] == game_date and game["opponent"] == black_team_name:
+                    white_game = game
+                    white_game_index = i
+                    black_game_index = game_index
+                    break
+
+        if not white_game or not black_game:
+            return jsonify({'error': 'Could not find matching games'}), 404
+
         # Find matching game in other team's schedule
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
@@ -2463,13 +2502,20 @@ def end_game():
         if white_game_index is None or black_game_index is None:
             return jsonify({'error': 'Corresponding games not found'}), 404
             
-        # Mark both games as scored immediately
+        # Ensure both games are marked as scored and share the same game log
         white_team_data["games"][white_game_index]["is_scored"] = True
         black_team_data["games"][black_game_index]["is_scored"] = True
-        
+
         # Get scores from the form and convert to float
         white_score = float(request.form.get('away_score', '0'))
         black_score = float(request.form.get('home_score', '0'))
+
+        # Get current game log
+        game_log = game_data.get(game_id, {}).get('game_log', [])
+
+        # Update both games with the same game log
+        white_team_data["games"][white_game_index]["game_log"] = game_log
+        black_team_data["games"][black_game_index]["game_log"] = game_log
         
         # Initialize team files if they don't exist
         initialize_team_file(white_team_name)
