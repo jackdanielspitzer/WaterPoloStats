@@ -391,7 +391,7 @@
             if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
                 currentOTNum = parseInt(currentQuarter.substring(2));
             }
-            
+
             const modal = document.createElement('div');
             modal.style.cssText = `
         position: fixed;
@@ -487,7 +487,7 @@
             isTimerRunning = false;
             isPaused = false;
             timeRemaining = minutes * 60;
-            
+
             // If already in OT, add the new quarters to existing total
             if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
                 overtimeQuarters += quarters;
@@ -723,7 +723,7 @@
             const minutes = document.getElementById('minutes').textContent;
             const seconds = document.getElementById('seconds').textContent;
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
 
             try {
                 const response = await fetch('/process', {
@@ -782,7 +782,7 @@
             const minutes = document.getElementById('minutes').textContent;
             const seconds = document.getElementById('seconds').textContent;
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = `Q${quarter} ${minutes}:${seconds}`;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
 
             // Immediately process the recognized text
             try {
@@ -901,7 +901,7 @@
 
                 // Update scores only if not in shootout mode
                 if (!isShootout) {
-                                        const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
+                    const awayScore = data.away_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
                     const homeScore = data.home_box?.Shot?.reduce((a, b) => a + b, 0) || 0;
                     const awayScoreEl = document.getElementById('awayScore');
                     const homeScoreEl = document.getElementById('homeScore');
@@ -919,7 +919,7 @@
                     awayScoreEl.classList.remove('winning-score');
                     homeScoreEl.classList.remove('winning-score');
 
-                                        // Add winning-score class to the higher score
+                    // Add winning-score class to the higher score
                     if (parseFloat(awayScore) > parseFloat(homeScore)) {
                         awayScoreEl.classList.add('winning-score');
                     } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
@@ -960,7 +960,7 @@
 
             // Handle exclusion events
             if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
-                                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
                     team: team,
                     startTime: currentTime,
@@ -1017,14 +1017,14 @@
 
                     if (hasAdvantage) {
                         eventText += ' [ADVANTAGE GOAL]';
-                    } else if (eventText.toLowerCase().includes('penalty') || 
-                              eventText.toLowerCase().includes('5 meter') || 
+                    } else if (eventText.toLowerCase().includes('penalty') ||
+                              eventText.toLowerCase().includes('5 meter') ||
                               eventText.toLowerCase().includes('5-meter')) {
                         eventText += ' [PENALTY GOAL]';
                     } else {
                         eventText += ' [NATURAL GOAL]';
                     }
-                                }
+                }
             }
 
             // Create and style the log entry
