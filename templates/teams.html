@@ -313,7 +313,6 @@
                 </div>
                 {% if not game.is_scored %}
                     <a href="{{ url_for('scoring_page', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">Score Game</a>
-                    <a href="{{ url_for('quick_score', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">Quick Score</a>
                 {% else %}
                     <a href="{{ url_for('view_scoring', school_slug=school_slug, game_index=loop.index0) }}" class="action-button">View Scoring</a>
                 {% endif %}
