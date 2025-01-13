@@ -1009,22 +1009,13 @@
                     game_data[gameId].game_log.push(shootoutEvent);
                     return;
                 } else {
-                    const gameLogEntries = Array.from(document.querySelectorAll('#gameLogEntry'));
-                    const lastEvent = gameLogEntries.length > 0 ? gameLogEntries[gameLogEntries.length - 1].textContent : '';
-                    const previousEvent = gameLogEntries.length > 1 ? gameLogEntries[gameLogEntries.length - 2].textContent : '';
+                    const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
+                    const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
 
-                    const hasAdvantage = lastEvent && 
-                        lastEvent.toLowerCase().includes('exclusion') && 
-                        !lastEvent.toLowerCase().includes('drawn');
+                    // Check if opposing team has an active exclusion
+                    const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
 
-                    const hasPenaltyDrawn = previousEvent && 
-                        (previousEvent.toLowerCase().includes('drew a penalty') ||
-                         previousEvent.toLowerCase().includes('penalty drawn') ||
-                         previousEvent.toLowerCase().includes('penalties drawn'));
-
-                    if (hasPenaltyDrawn) {
-                        eventText += ' [PENALTY GOAL]';
-                    } else if (hasAdvantage) {
+                    if (hasAdvantage) {
                         eventText += ' [ADVANTAGE GOAL]';
                     } else if (eventText.toLowerCase().includes('penalty') ||
                               eventText.toLowerCase().includes('5 meter') ||
