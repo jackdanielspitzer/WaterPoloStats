@@ -1,4 +1,15 @@
 
 {
-    "games": []
+    "games": [
+        {
+            "home_away": "Home",
+            "opponent": "SF Polo",
+            "opponent_logo": "images/sf.png",
+            "time": null,
+            "date": "2025-01-23",
+            "game_type": "Club Game",
+            "is_scored": false,
+            "formatted_date": "January 23rd, 2025"
+        }
+    ]
 }
