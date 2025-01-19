@@ -1897,7 +1897,7 @@ schools = {
         "bg_color": "#000080",  # Navy blue
         "text_color": "#ffffff",
         "link_color": "#000080",
-        "league": "Club", 
+        "league": "Club",
         "games": [],
         "players":[]
     },
