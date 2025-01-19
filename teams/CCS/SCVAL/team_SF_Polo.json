@@ -1,15 +1,3 @@
 {
-    "games": [
-        {
-            "home_away": "Away",
-            "opponent": "SJ Express",
-            "opponent_logo": "images/sj.jpeg",
-            "time": "15:00",
-            "date": "2025-01-19",
-            "game_type": "League Game",
-            "is_scored": false,
-            "formatted_date": "January 19th, 2025",
-            "game_log": []
-        }
-    ]
+    "games": []
 }
