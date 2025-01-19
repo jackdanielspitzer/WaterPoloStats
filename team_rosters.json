@@ -254,5 +254,79 @@
             "grade": "10",
             "position": "Attacker"
         }
+    ],
+    "SJ Express": [
+        {
+            "cap_number": "1",
+            "name": "Dominic Hwang",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "1A",
+            "name": "Levi Huggins",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Chase Blitzer",
+            "grade": "11",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "3",
+            "name": "Ossi Carrico",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "4",
+            "name": "Samu Nagy",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "5",
+            "name": "Ian Cheline",
+            "grade": "10",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "6",
+            "name": "Kaden Cochran",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "7",
+            "name": "Max D",
+            "grade": "9",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "8",
+            "name": "Akash Dubey",
+            "grade": "10",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "9",
+            "name": "Adam Hamilton",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "10",
+            "name": "Timothy Jiang",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "11",
+            "name": "Daniel Nae",
+            "grade": "9",
+            "position": "Attacker"
+        }
     ]
 }
