@@ -1891,6 +1891,16 @@ def player_stats(player_name):
 
 # Simulate a dictionary of school data (name, logo, colors, and game schedule)
 schools = {
+    "sf-polo": {
+        "name": "SF Polo",
+        "logo": "images/sf.png",
+        "bg_color": "#000080",  # Navy blue
+        "text_color": "#ffffff",
+        "link_color": "#000080",
+        "league": "Club", 
+        "games": [],
+        "players":[]
+    },
     "sj-express": {
         "name": "SJ Express",
         "logo": "images/sj.jpeg",
