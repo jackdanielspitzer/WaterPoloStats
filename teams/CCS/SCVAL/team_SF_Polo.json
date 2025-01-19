@@ -1,9 +1,9 @@
 {
     "games": [
         {
-            "home_away": "Home",
-            "opponent": "SF Polo",
-            "opponent_logo": "images/sf.png",
+            "home_away": "Away",
+            "opponent": "SJ Express",
+            "opponent_logo": "images/sj.jpeg",
             "time": "15:00",
             "date": "2025-01-19",
             "game_type": "League Game",

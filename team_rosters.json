@@ -328,5 +328,85 @@
             "grade": "9",
             "position": "Attacker"
         }
+    ],
+    "SF Polo": [
+        {
+            "cap_number": "1",
+            "name": "Player 1",
+            "grade": "9",
+            "position": "Goalie"
+        },
+        {
+            "cap_number": "2",
+            "name": "Player 2",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "3",
+            "name": "Player 3",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "4",
+            "name": "Player 4",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "5",
+            "name": "Player 5",
+            "grade": "9",
+            "position": "Center"
+        },
+        {
+            "cap_number": "6",
+            "name": "Player 6",
+            "grade": "9",
+            "position": "Driver"
+        },
+        {
+            "cap_number": "7",
+            "name": "Player 7",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "8",
+            "name": "Player 8",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "9",
+            "name": "Player 9",
+            "grade": "9",
+            "position": "Attacker"
+        },
+        {
+            "cap_number": "10",
+            "name": "Player 10",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "11",
+            "name": "Player 11",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "12",
+            "name": "Player 12",
+            "grade": "9",
+            "position": "Center Defender"
+        },
+        {
+            "cap_number": "13",
+            "name": "Player 13",
+            "grade": "9",
+            "position": "Attacker"
+        }
     ]
 }
