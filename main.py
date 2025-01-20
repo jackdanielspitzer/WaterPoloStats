@@ -879,7 +879,7 @@ def extract_key_phrases(text):
                 first_event['team'] = current_team
 
         elif 'turnover' in doc_text or 'turned over' in doc_text or token in turnover_keywords or any(phrase in doc_text for phrase in [
-            'lost the ball', 'turned the ball over', 'offensive foul', 
+            'lost the ball', 'turned the ball over', 'offensive foul', 'offensive',
             'foul on offense', 'lost possession', 'dropped the ball'
         ]) or 'foul' in doc_text:
             # Handle single player turnover events
