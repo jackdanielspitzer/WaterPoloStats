@@ -308,25 +308,31 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isClubTeam = clubTeams.includes(currentTeam);
                     
-                    // Convert to array and reverse to safely remove options
-                    const options = Array.from(opponentSelect.options).reverse();
+                    // Get all options and convert to array
+                    const options = Array.from(opponentSelect.options);
                     
-                    options.forEach(option => {
+                    // Remove options from end to avoid index issues
+                    for (let i = options.length - 1; i >= 0; i--) {
+                        const option = options[i];
                         const isOptionClubTeam = clubTeams.includes(option.text);
                         
-                        // Remove self-matches
+                        // Remove if it's the same team
                         if (option.text === currentTeam) {
-                            opponentSelect.remove(option.index);
+                            opponentSelect.remove(i);
+                            continue;
                         }
-                        // For high school teams, remove club teams
-                        else if (!isClubTeam && isOptionClubTeam) {
-                            opponentSelect.remove(option.index);
+                        
+                        // If current team is a club team, only keep other club teams
+                        if (isClubTeam && !isOptionClubTeam) {
+                            opponentSelect.remove(i);
+                            continue;
                         }
-                        // For club teams, remove non-club teams
-                        else if (isClubTeam && !isOptionClubTeam) {
-                            opponentSelect.remove(option.index);
+                        
+                        // If current team is a high school, remove all club teams
+                        if (!isClubTeam && isOptionClubTeam) {
+                            opponentSelect.remove(i);
                         }
-                    });
+                    }
                 }
                 
                 // Run when page loads
