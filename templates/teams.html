@@ -306,24 +306,27 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isClubTeam = clubTeams.includes(currentTeam);
                     
-                    // Create array from options before modifying
-                    const options = Array.from(opponentSelect.options);
-                    
-                    // Remove options in reverse order to avoid index issues
-                    for(let i = options.length - 1; i >= 0; i--) {
-                        const option = options[i];
+                    // Get all options before modifying
+                    Array.from(opponentSelect.options).forEach(option => {
                         const isOptionClubTeam = clubTeams.includes(option.text);
                         
-                        // Remove club teams from high school options and vice versa
-                        if ((isClubTeam && !isOptionClubTeam) || (!isClubTeam && isOptionClubTeam)) {
-                            opponentSelect.remove(i);
+                        // Always hide team playing against itself
+                        if (option.text === currentTeam) {
+                            opponentSelect.remove(option.index);
+                            return;
                         }
                         
-                        // Don't allow team to play against itself
-                        if (option.text === currentTeam) {
-                            opponentSelect.remove(i);
+                        // For high school teams, remove club teams
+                        if (!isClubTeam && isOptionClubTeam) {
+                            opponentSelect.remove(option.index);
+                            return;
                         }
-                    }
+                        
+                        // For club teams, only show other club teams
+                        if (isClubTeam && !isOptionClubTeam) {
+                            opponentSelect.remove(option.index);
+                        }
+                    });
                 }
                 
                 // Run when page loads
