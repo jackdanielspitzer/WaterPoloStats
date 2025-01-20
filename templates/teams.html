@@ -308,46 +308,40 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isCurrentTeamClub = clubTeams.includes(currentTeam);
                     
-                    // Create a new select element
-                    const newSelect = document.createElement('select');
-                    newSelect.name = 'opponent';
-                    newSelect.required = true;
+                    // Remove all existing options first
+                    while (opponentSelect.options.length > 0) {
+                        opponentSelect.remove(0);
+                    }
                     
-                    // Add the default option
+                    // Add default option
                     const defaultOption = document.createElement('option');
                     defaultOption.value = '';
                     defaultOption.text = 'Select Opponent';
-                    newSelect.appendChild(defaultOption);
+                    opponentSelect.add(defaultOption);
                     
-                    // Filter and add appropriate options
-                    Array.from(opponentSelect.options).forEach(option => {
-                        if (option.value === '') return; // Skip the default option
+                    // Get all schools data from the page
+                    const schools = {{ schools|tojson|safe }};
+                    
+                    // Add filtered options
+                    Object.values(schools).forEach(school => {
+                        if (school.name === currentTeam) return; // Skip self
                         
-                        const isOptionClubTeam = clubTeams.includes(option.text);
+                        const isSchoolClubTeam = clubTeams.includes(school.name);
                         
-                        // Skip self matches
-                        if (option.text === currentTeam) return;
-                        
-                        // For high school teams, only add other high school teams
-                        if (!isCurrentTeamClub && !isOptionClubTeam) {
-                            const newOption = document.createElement('option');
-                            newOption.value = option.value;
-                            newOption.text = option.text;
-                            newSelect.appendChild(newOption);
-                        }
-                        
-                        // For club teams, only add other club teams
-                        if (isCurrentTeamClub && isOptionClubTeam) {
-                            const newOption = document.createElement('option');
-                            newOption.value = option.value;
-                            newOption.text = option.text;
-                            newSelect.appendChild(newOption);
+                        // Only add if team types match (club vs club or school vs school)
+                        if (isCurrentTeamClub === isSchoolClubTeam) {
+                            const option = document.createElement('option');
+                            option.value = school.name;
+                            option.text = school.name;
+                            opponentSelect.add(option);
                         }
                     });
-                    
-                    // Replace the old select with the new one
-                    opponentSelect.parentNode.replaceChild(newSelect, opponentSelect);
                 }
+                
+                // Run when form is shown
+                document.getElementById('toggleAddGameForm').addEventListener('click', () => {
+                    setTimeout(filterOpponents, 0);
+                });
                 
                 // Run when page loads
                 window.addEventListener('load', filterOpponents);
