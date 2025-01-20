@@ -1189,7 +1189,7 @@ def extract_events(text):
     block_keywords = ['block', 'blocked', 'blocks', 'save', 'saved']
     steal_keywords = ['steal', 'stole', 'took', 'steals']
     assist_keywords = ['assist', 'assisted', 'helps', 'helped']
-    exclusion_keywords = ['exclusion', 'kickout', 'excluded']
+    exclusion_keywords = ['exclusion', 'kickout', 'excluded', 'kicked out', 'kick out', 'kicked']
     penalty_keywords = ['penalty', 'five meter', '5 meter', '5-meter', '5m', '5 m']
 
     numbers = extract_numbers(text)
