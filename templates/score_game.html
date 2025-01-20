@@ -433,7 +433,7 @@
         <div id="finishGameConfirm" style="display: none; text-align: center;">
             <h3>Finish Game</h3>
             <p>Are you sure you want to end the game?</p>
-            <button onclick="document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
+            <button onclick="finishGame() && document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
             <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
         </div>
     `;
