@@ -298,54 +298,6 @@
         <div style="flex: 1;">
             <div class="game-schedule" style="width: 100%; max-width: none;">
                 <h2>Game Schedule</h2>
-                
-                <script>
-                function filterOpponents() {
-                    const opponentSelect = document.getElementById('opponent');
-                    if (!opponentSelect) return;
-                    
-                    const currentTeam = '{{ school.name }}';
-                    const clubTeams = ['SF Polo', 'SJ Express'];
-                    const isCurrentTeamClub = clubTeams.includes(currentTeam);
-                    
-                    // Remove all existing options first
-                    while (opponentSelect.options.length > 0) {
-                        opponentSelect.remove(0);
-                    }
-                    
-                    // Add default option
-                    const defaultOption = document.createElement('option');
-                    defaultOption.value = '';
-                    defaultOption.text = 'Select Opponent';
-                    opponentSelect.add(defaultOption);
-                    
-                    // Get all schools data from the page
-                    const schools = {{ schools|tojson|safe }};
-                    
-                    // Add filtered options
-                    Object.values(schools).forEach(school => {
-                        if (school.name === currentTeam) return; // Skip self
-                        
-                        const isSchoolClubTeam = clubTeams.includes(school.name);
-                        
-                        // Only add if team types match (club vs club or school vs school)
-                        if (isCurrentTeamClub === isSchoolClubTeam) {
-                            const option = document.createElement('option');
-                            option.value = school.name;
-                            option.text = school.name;
-                            opponentSelect.add(option);
-                        }
-                    });
-                }
-                
-                // Run when form is shown
-                document.getElementById('toggleAddGameForm').addEventListener('click', () => {
-                    setTimeout(filterOpponents, 0);
-                });
-                
-                // Run when page loads
-                window.addEventListener('load', filterOpponents);
-                </script>
 
         {% if team_data.games %}
             {% set sorted_games = team_data.games | sort(attribute='date') %}

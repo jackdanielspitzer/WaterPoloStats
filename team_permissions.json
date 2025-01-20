@@ -1,15 +1,5 @@
 
 {
-    "sf-polo": {
-        "name": "SF Polo",
-        "stats_private": false,
-        "is_club": true
-    },
-    "sj-express": {
-        "name": "SJ Express",
-        "stats_private": false,
-        "is_club": true
-    },
     "palo-alto": {
         "name": "Palo Alto High School",
         "stats_private": false

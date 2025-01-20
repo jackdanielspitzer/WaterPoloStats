@@ -2012,17 +2012,6 @@ def team_page(school_slug):
     team_data = load_team_data(school['name'])
 
     if request.method == 'POST':
-        opponent_name = request.form.get('opponent')
-        # Check if current team is a high school trying to play a club team
-        if school.get('league') != 'Club' and opponent_name in ['SF Polo', 'SJ Express']:
-            flash('High school teams cannot schedule games with club teams')
-            return redirect(url_for('team_page', school_slug=school_slug))
-        # Check if current team is a club team trying to play a non-club team    
-        elif school.get('league') == 'Club' and opponent_name not in ['SF Polo', 'SJ Express']:
-            flash('Club teams can only schedule games with other club teams')
-            return redirect(url_for('team_page', school_slug=school_slug))
-
-    if request.method == 'POST':
         # Retrieve form data for adding a new game
         home_away = request.form.get('home_away')
         opponent_name = request.form.get('opponent')
