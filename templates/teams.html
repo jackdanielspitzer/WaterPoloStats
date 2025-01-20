@@ -303,10 +303,17 @@
                 function filterOpponents() {
                     const opponentSelect = document.getElementById('opponent');
                     const currentTeam = '{{ school.name }}';
-                    const isClubTeam = currentTeam === 'SF Polo' || currentTeam === 'SJ Express';
+                    const clubTeams = ['SF Polo', 'SJ Express'];
+                    const isClubTeam = clubTeams.includes(currentTeam);
                     
                     Array.from(opponentSelect.options).forEach(option => {
-                        const isOptionClubTeam = option.text === 'SF Polo' || option.text === 'SJ Express';
+                        const isOptionClubTeam = clubTeams.includes(option.text);
+                        
+                        // Disable club team options for non-club teams
+                        if (!isClubTeam && isOptionClubTeam) {
+                            option.disabled = true;
+                            option.style.display = 'none';
+                        }
                         
                         if (isClubTeam) {
                             // Club teams can only play other club teams
