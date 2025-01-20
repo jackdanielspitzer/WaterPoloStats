@@ -398,6 +398,17 @@
         },
         {
             "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-01-16",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "January 16th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Away",
             "opponent": "Fremont High School",
             "opponent_logo": "images/Fremont High School.png",
             "time": null,

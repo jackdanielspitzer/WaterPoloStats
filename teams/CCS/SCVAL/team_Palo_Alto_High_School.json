@@ -206,6 +206,17 @@
         },
         {
             "home_away": "Home",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": null,
+            "date": "2025-01-16",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "January 16th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Home",
             "opponent": "Harker High School",
             "opponent_logo": "images/Harker High School.png",
             "time": null,
