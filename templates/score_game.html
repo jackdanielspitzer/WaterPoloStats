@@ -475,6 +475,9 @@
         }
 
         function showFinishGameConfirm() {
+            const form = document.getElementById('endGameForm');
+            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
+            form.action = `/end_game?redirect=${encodeURIComponent('/team/' + schoolSlug)}`;
             document.getElementById('mainOptions').style.display = 'none';
             document.getElementById('finishGameConfirm').style.display = 'block';
         }
