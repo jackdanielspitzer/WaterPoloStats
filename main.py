@@ -1373,12 +1373,11 @@ def predict_connotation(sentence):
 
 
 def phrase(number, action, team):
-    if number == 1:
-        number = "goalie"
+    player_text = "goalie" if str(number) == "1" else f"#{number}"
     if action == 'Shot':
-        return f"The {team} team {number} scored a goal"
+        return f"The {team} team {player_text} scored a goal"
     elif action == 'Shot Attempt':
-        return f"The {team} team {number} attempted a shot"
+        return f"The {team} team {player_text} attempted a shot"
     elif action == 'Blocks':
         return f"The {team} team {number} blocked the shot"
     elif action == 'Steals':
