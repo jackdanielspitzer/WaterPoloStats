@@ -568,11 +568,11 @@
                     0
                 ]
             },
-            "is_shootout": true,
+            "is_shootout": false,
             "score": {
-                "white_team_score": 0.0,
-                "black_team_score": 0.1,
-                "game_type": "(SO)"
+                "white_team_score": 0,
+                "black_team_score": 0,
+                "game_type": ""
             }
         },
         {
@@ -582,7 +582,7 @@
             "time": "15:00",
             "date": "2025-03-12",
             "game_type": "League Game",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "March 12th, 2025",
             "game_log": [
                 "Q1 7:00 - The dark team 5 performed Penalties Drawn"

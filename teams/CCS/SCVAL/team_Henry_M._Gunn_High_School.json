@@ -779,11 +779,11 @@
                     0
                 ]
             },
-            "is_shootout": true,
+            "is_shootout": false,
             "score": {
-                "white_team_score": 0.0,
-                "black_team_score": 0.1,
-                "game_type": "(SO)"
+                "white_team_score": 0,
+                "black_team_score": 0,
+                "game_type": ""
             }
         },
         {
