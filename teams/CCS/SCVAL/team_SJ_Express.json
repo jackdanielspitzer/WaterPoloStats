@@ -1,3 +1,15 @@
 {
-    "games": []
+    "games": [
+        {
+            "home_away": "Away",
+            "opponent": "SF Polo",
+            "opponent_logo": "images/sf.png",
+            "time": "15:15",
+            "date": "2025-01-19",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "January 19th, 2025",
+            "game_log": []
+        }
+    ]
 }
