@@ -258,8 +258,8 @@
     function finishGame() {
         try {
             const currentQuarter = document.getElementById('currentQuarter').textContent;
-            const awayScore = document.getElementById('awayScore').textContent;
-            const homeScore = document.getElementById('homeScore').textContent;
+            const awayScore = document.getElementById('awayScore').textContent || '0';
+            const homeScore = document.getElementById('homeScore').textContent || '0';
 
             document.getElementById('currentQuarterInput').value = currentQuarter;
             document.getElementById('awayScoreInput').value = awayScore;
