@@ -306,30 +306,27 @@
                     
                     const currentTeam = '{{ school.name }}';
                     const clubTeams = ['SF Polo', 'SJ Express'];
-                    const isClubTeam = clubTeams.includes(currentTeam);
-                    
-                    // Get all options and convert to array
-                    const options = Array.from(opponentSelect.options);
+                    const isCurrentTeamClub = clubTeams.includes(currentTeam);
                     
                     // Remove options from end to avoid index issues
-                    for (let i = options.length - 1; i >= 0; i--) {
-                        const option = options[i];
+                    for (let i = opponentSelect.options.length - 1; i >= 0; i--) {
+                        const option = opponentSelect.options[i];
                         const isOptionClubTeam = clubTeams.includes(option.text);
                         
-                        // Remove if it's the same team
+                        // Remove self matches
                         if (option.text === currentTeam) {
                             opponentSelect.remove(i);
                             continue;
                         }
                         
-                        // If current team is a club team, only keep other club teams
-                        if (isClubTeam && !isOptionClubTeam) {
+                        // For high school teams, remove club teams
+                        if (!isCurrentTeamClub && isOptionClubTeam) {
                             opponentSelect.remove(i);
                             continue;
                         }
                         
-                        // If current team is a high school, remove all club teams
-                        if (!isClubTeam && isOptionClubTeam) {
+                        // For club teams, only keep other club teams
+                        if (isCurrentTeamClub && !isOptionClubTeam) {
                             opponentSelect.remove(i);
                         }
                     }
