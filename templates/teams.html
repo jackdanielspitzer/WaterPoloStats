@@ -302,35 +302,35 @@
                 <script>
                 function filterOpponents() {
                     const opponentSelect = document.getElementById('opponent');
+                    if (!opponentSelect) return;
+                    
                     const currentTeam = '{{ school.name }}';
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isClubTeam = clubTeams.includes(currentTeam);
                     
-                    // Get all options before modifying
-                    Array.from(opponentSelect.options).forEach(option => {
+                    // Convert to array and reverse to safely remove options
+                    const options = Array.from(opponentSelect.options).reverse();
+                    
+                    options.forEach(option => {
                         const isOptionClubTeam = clubTeams.includes(option.text);
                         
-                        // Always hide team playing against itself
+                        // Remove self-matches
                         if (option.text === currentTeam) {
                             opponentSelect.remove(option.index);
-                            return;
                         }
-                        
                         // For high school teams, remove club teams
-                        if (!isClubTeam && isOptionClubTeam) {
+                        else if (!isClubTeam && isOptionClubTeam) {
                             opponentSelect.remove(option.index);
-                            return;
                         }
-                        
-                        // For club teams, only show other club teams
-                        if (isClubTeam && !isOptionClubTeam) {
+                        // For club teams, remove non-club teams
+                        else if (isClubTeam && !isOptionClubTeam) {
                             opponentSelect.remove(option.index);
                         }
                     });
                 }
                 
                 // Run when page loads
-                document.addEventListener('DOMContentLoaded', filterOpponents);
+                window.addEventListener('load', filterOpponents);
                 </script>
 
         {% if team_data.games %}
