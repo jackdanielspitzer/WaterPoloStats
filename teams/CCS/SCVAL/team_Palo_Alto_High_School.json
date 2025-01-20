@@ -213,7 +213,11 @@
             "game_type": "Non-League Game",
             "is_scored": false,
             "formatted_date": "January 16th, 2025",
-            "game_log": []
+            "game_log": [
+                "Q1 7:00 - Turnover on dark 1",
+                "Q1 7:00 - The dark team #5 scored a goal [NATURAL GOAL]",
+                "Q1 7:00 - The dark team #5 attempted a shot"
+            ]
         },
         {
             "home_away": "Home",
