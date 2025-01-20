@@ -308,28 +308,45 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isCurrentTeamClub = clubTeams.includes(currentTeam);
                     
-                    // Remove options from end to avoid index issues
-                    for (let i = opponentSelect.options.length - 1; i >= 0; i--) {
-                        const option = opponentSelect.options[i];
+                    // Create a new select element
+                    const newSelect = document.createElement('select');
+                    newSelect.name = 'opponent';
+                    newSelect.required = true;
+                    
+                    // Add the default option
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = '';
+                    defaultOption.text = 'Select Opponent';
+                    newSelect.appendChild(defaultOption);
+                    
+                    // Filter and add appropriate options
+                    Array.from(opponentSelect.options).forEach(option => {
+                        if (option.value === '') return; // Skip the default option
+                        
                         const isOptionClubTeam = clubTeams.includes(option.text);
                         
-                        // Remove self matches
-                        if (option.text === currentTeam) {
-                            opponentSelect.remove(i);
-                            continue;
+                        // Skip self matches
+                        if (option.text === currentTeam) return;
+                        
+                        // For high school teams, only add other high school teams
+                        if (!isCurrentTeamClub && !isOptionClubTeam) {
+                            const newOption = document.createElement('option');
+                            newOption.value = option.value;
+                            newOption.text = option.text;
+                            newSelect.appendChild(newOption);
                         }
                         
-                        // For high school teams, remove club teams
-                        if (!isCurrentTeamClub && isOptionClubTeam) {
-                            opponentSelect.remove(i);
-                            continue;
+                        // For club teams, only add other club teams
+                        if (isCurrentTeamClub && isOptionClubTeam) {
+                            const newOption = document.createElement('option');
+                            newOption.value = option.value;
+                            newOption.text = option.text;
+                            newSelect.appendChild(newOption);
                         }
-                        
-                        // For club teams, only keep other club teams
-                        if (isCurrentTeamClub && !isOptionClubTeam) {
-                            opponentSelect.remove(i);
-                        }
-                    }
+                    });
+                    
+                    // Replace the old select with the new one
+                    opponentSelect.parentNode.replaceChild(newSelect, opponentSelect);
                 }
                 
                 // Run when page loads
