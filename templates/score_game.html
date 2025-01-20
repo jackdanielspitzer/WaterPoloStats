@@ -337,22 +337,52 @@
             clearInterval(timerInterval);
             isTimerRunning = false;
             isPaused = false;
-            document.getElementById('startPauseTimer').disabled = true;
-            document.getElementById('rewindTimer').disabled = true;
-            document.getElementById('endQuarter').disabled = true;
 
-            if (typeof currentQuarter === 'number' && currentQuarter >= 4) {
-                // Submit the end game form directly
-                document.getElementById('endGameForm').submit();
-            } else {
+            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                if (currentOTQuarter < overtimeQuarters) {
+                    // Move to next overtime quarter
+                    currentOTQuarter++;
+                    currentQuarter = 'OT' + currentOTQuarter;
+                    // Use the stored overtime minutes value
+                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
+                    timeRemaining = parseInt(otMinutes) * 60;
+                    updateTimerDisplay();
+                    document.getElementById('startPauseTimer').textContent = 'Start';
+                    return; // Return here to prevent showing end game options
+                } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                    // Only show end game options after all OT quarters are complete
+                    showEndGameOptions();
+                }
+            } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
+                if (currentOTQuarter < overtimeQuarters) {
+                    // Continue to next overtime quarter
+                    currentOTQuarter++;
+                    currentQuarter = 'OT' + currentOTQuarter;
+                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
+                    timeRemaining = parseInt(otMinutes) * 60;
+                    updateTimerDisplay();
+                    document.getElementById('startPauseTimer').textContent = 'Start';
+                    return;
+                } else if (currentOTQuarter >= overtimeQuarters) {
+                    // Only show options after all overtime quarters are complete
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    isPaused = false;
+                    showEndGameOptions();
+                    return;
+                }
+            } else if (currentQuarter < 4) {
                 currentQuarter++;
                 timeRemaining = 420;
                 updateTimerDisplay();
-                document.getElementById('startPauseTimer').textContent = 'Start';
-                document.getElementById('startPauseTimer').disabled = false;
-                document.getElementById('rewindTimer').disabled = false;
-                document.getElementById('endQuarter').disabled = false;
+            } else {
+                showEndGameOptions();
             }
+
+            document.getElementById('startPauseTimer').textContent = 'Start';
+            document.getElementById('startPauseTimer').disabled = false;
+            document.getElementById('rewindTimer').disabled = false;
+            document.getElementById('endQuarter').disabled = false;
         }
 
         function showEndGameOptions() {
