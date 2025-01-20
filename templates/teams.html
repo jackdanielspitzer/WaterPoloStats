@@ -306,16 +306,12 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isClubTeam = clubTeams.includes(currentTeam);
                     
+                    // Remove club team options for non-club teams
                     Array.from(opponentSelect.options).forEach(option => {
                         const isOptionClubTeam = clubTeams.includes(option.text);
-                        
-                        // Disable club team options for non-club teams
                         if (!isClubTeam && isOptionClubTeam) {
-                            option.disabled = true;
-                            option.style.display = 'none';
-                        }
-                        
-                        if (isClubTeam) {
+                            opponentSelect.remove(option.index);
+                        } else if (isClubTeam) {
                             // Club teams can only play other club teams
                             option.disabled = !isOptionClubTeam;
                         } else {
