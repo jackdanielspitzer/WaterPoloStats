@@ -306,24 +306,24 @@
                     const clubTeams = ['SF Polo', 'SJ Express'];
                     const isClubTeam = clubTeams.includes(currentTeam);
                     
-                    // Remove club team options for non-club teams
-                    Array.from(opponentSelect.options).forEach(option => {
+                    // Create array from options before modifying
+                    const options = Array.from(opponentSelect.options);
+                    
+                    // Remove options in reverse order to avoid index issues
+                    for(let i = options.length - 1; i >= 0; i--) {
+                        const option = options[i];
                         const isOptionClubTeam = clubTeams.includes(option.text);
-                        if (!isClubTeam && isOptionClubTeam) {
-                            opponentSelect.remove(option.index);
-                        } else if (isClubTeam) {
-                            // Club teams can only play other club teams
-                            option.disabled = !isOptionClubTeam;
-                        } else {
-                            // High school teams cannot play club teams
-                            option.disabled = isOptionClubTeam;
+                        
+                        // Remove club teams from high school options and vice versa
+                        if ((isClubTeam && !isOptionClubTeam) || (!isClubTeam && isOptionClubTeam)) {
+                            opponentSelect.remove(i);
                         }
                         
                         // Don't allow team to play against itself
                         if (option.text === currentTeam) {
-                            option.disabled = true;
+                            opponentSelect.remove(i);
                         }
-                    });
+                    }
                 }
                 
                 // Run when page loads
