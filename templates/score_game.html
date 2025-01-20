@@ -376,7 +376,10 @@
                 timeRemaining = 420;
                 updateTimerDisplay();
             } else {
-                showEndGameOptions();
+                // After 4th quarter, just keep scoring enabled
+                currentQuarter = 5;
+                timeRemaining = 420; // Reset to 7 minutes
+                updateTimerDisplay();
             }
 
             document.getElementById('startPauseTimer').textContent = 'Start';
