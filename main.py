@@ -1411,9 +1411,8 @@ def phrase(number, action, team):
 
 def run(text):
     import re
-    # Look for time pattern at start or after "At"
-    time_pattern = r'(?:^|\bAt\s+)(\d{1,2}):(\d{2})\s+'
-    match = re.search(time_pattern, text)
+    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
+    match = re.match(time_pattern, text)
     
     if match:
         minutes = int(match.group(1))
@@ -1563,40 +1562,10 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
-        game_time = request.form.get('game_time', '0:00')
 
-        if not all([text, game_id, home_team, away_team]):
-            return jsonify({'error': 'Missing required fields'}), 400
-
-        if game_id not in game_data:
-            # Initialize game data structure
-            game_data[game_id] = {
-                'dataWhite': {
-                    'Player': [],  
-                    'Shot': [], 'Shot Attempt': [], 'Assists': [],
-                    'Blocks': [], 'Steals': [], 'Exclusions': [],
-                    'Exclusions Drawn': [], 'Penalties': [], 
-                    'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []
-                },
-                'dataBlack': {
-                    'Player': [],
-                    'Shot': [], 'Shot Attempt': [], 'Assists': [],
-                    'Blocks': [], 'Steals': [], 'Exclusions': [],
-                    'Exclusions Drawn': [], 'Penalties': [],
-                    'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []
-                },
-                'game_log': []
-            }
-
-        response = run(text)
-        if not response:
-            return jsonify({'error': 'Could not process input'}), 400
-            
-        return jsonify({'response': response})
-    except Exception as e:
-        app.logger.error(f"Error processing text: {str(e)}")
-        return jsonify({'error': str(e)}), 500
-            if not game_id:
+        if not text:
+            return jsonify({'error': 'No text provided'}), 400
+        if not game_id:
             return jsonify({'error': 'No game ID provided'}), 400
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
