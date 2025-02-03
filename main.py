@@ -1411,8 +1411,9 @@ def phrase(number, action, team):
 
 def run(text):
     import re
-    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
-    match = re.match(time_pattern, text)
+    # Look for time pattern at start or after "At"
+    time_pattern = r'(?:^|\bAt\s+)(\d{1,2}):(\d{2})\s+'
+    match = re.search(time_pattern, text)
     
     if match:
         minutes = int(match.group(1))
