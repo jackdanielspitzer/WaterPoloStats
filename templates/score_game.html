@@ -788,9 +788,26 @@
 
         recognition.onresult = async function(event) {
             const transcript = event.results[0][0].transcript;
-            document.getElementById('inputText').value = transcript;
+            
+            // Try to extract time from the beginning of the transcript
+            const timeRegex = /^(?:at\s+)?(\d{1,2}):(\d{2})\s/i;
+            const timeMatch = transcript.match(timeRegex);
+            
+            if (timeMatch) {
+                // Extract minutes and seconds
+                const minutes = timeMatch[1];
+                const seconds = timeMatch[2];
+                
+                // Set the game time input
+                document.getElementById('gameTime').value = `${minutes}:${seconds}`;
+                
+                // Remove the time part from transcript for stat processing
+                const statText = transcript.slice(timeMatch[0].length);
+                document.getElementById('inputText').value = statText;
+            } else {
+                document.getElementById('inputText').value = transcript;
+            }
 
-            // Get current game time and quarter
             const gameTime = document.getElementById('gameTime').value;
             const quarter = document.getElementById('currentQuarter').value;
             const formattedGameTime = quarter.startsWith('OT') ? 
