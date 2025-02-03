@@ -1418,7 +1418,9 @@ def run(text):
     if match:
         minutes = int(match.group(1))
         seconds = int(match.group(2))
-        input_time = f"Q1 {minutes}:{seconds:02d}"
+        # Get current quarter from the game clock
+        current_quarter = request.form.get('current_quarter', 'Q1')
+        input_time = f"{current_quarter} {minutes}:{seconds:02d}"
         # Remove time from text
         text = text[match.end():]
     
@@ -1427,11 +1429,10 @@ def run(text):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
 
-    # Get current quarter from the game clock
-    current_quarter = request.form.get('current_quarter', 'Q1')
     if input_time is None:
         # Use game clock time if no time specified in input
         game_time = request.form.get('game_time', '7:00')
+        current_quarter = request.form.get('current_quarter', 'Q1')
         input_time = f"{current_quarter} {game_time}"
 
     for player, event, team in events:
