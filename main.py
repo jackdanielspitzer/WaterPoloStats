@@ -1572,9 +1572,26 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', 'Q1 7:00')  # Default game time
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
+
+        # Initialize game data if not exists
+        if game_id not in game_data:
+            game_data[game_id] = {
+                'dataWhite': {},
+                'dataBlack': {},
+                'game_log': []
+            }
+
+        # Pass game time to run function
+        response = run(text)
+        return jsonify({'response': response})
+    except Exception as e:
+        app.logger.error(f"Error processing text: {str(e)}")
+        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
+
         if not game_id:
             return jsonify({'error': 'No game ID provided'}), 400
         if not home_team or not away_team:
