@@ -1596,6 +1596,7 @@ def process_text():
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
         return jsonify({'error': str(e)}), 500
+            if not game_id:
             return jsonify({'error': 'No game ID provided'}), 400
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
