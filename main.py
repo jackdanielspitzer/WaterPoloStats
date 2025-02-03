@@ -1564,6 +1564,17 @@ def process_text():
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
 
+        if not all([text, game_id, home_team, away_team]):
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        if game_id not in game_data:
+            game_data[game_id] = {
+                'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+            }
+
         if not text:
             return jsonify({'error': 'No text provided'}), 400
         if not game_id:
