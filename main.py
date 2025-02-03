@@ -499,6 +499,19 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
+    # First check for time at start of input
+    import re
+    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
+    match = re.match(time_pattern, text)
+    
+    input_time = None
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        input_time = (minutes, seconds)
+        # Remove time from text for further processing
+        text = text[match.end():]
+    
     # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
     
@@ -1397,6 +1410,16 @@ def phrase(number, action, team):
         return f"The {team} team {number} performed {action}"
 
 def run(text):
+    import re
+    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
+    match = re.match(time_pattern, text)
+    
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        # Update the game timer with input time
+        timeRemaining = minutes * 60 + seconds
+    
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
