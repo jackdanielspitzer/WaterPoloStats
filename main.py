@@ -501,24 +501,19 @@ dataBlack = {
 def extract_key_phrases(text):
     # First check for time at start of input
     import re
-    # Handle both formats: "3:45" and "345"
-    time_pattern = r'^(?:(\d{1,2}):(\d{2})|(\d{3}))\s+'
+    # Only handle 3-digit format (e.g. "345")
+    time_pattern = r'^(\d{3})\s+'
     match = re.match(time_pattern, text)
     
     input_time = None
     if match:
-        if match.group(3):  # Format "345"
-            time_str = match.group(3)
-            minutes = int(time_str[0])
-            seconds = int(time_str[1:])
-        else:  # Format "3:45"
-            minutes = int(match.group(1))
-            seconds = int(match.group(2))
+        time_str = match.group(1)
+        minutes = int(time_str[0])
+        seconds = int(time_str[1:])
         input_time = (minutes, seconds)
         # Remove time from text for further processing
         text = text[match.end():]
     
-    input_time = None
     if match:
         minutes = int(match.group(1))
         seconds = int(match.group(2))
