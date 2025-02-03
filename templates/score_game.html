@@ -269,8 +269,13 @@
 
 
     <script>
-        // Initialize game data object
+        // Initialize game variables
         let game_data = {};
+        let isShootout = false;
+        let shootoutGoalsHome = 0;
+        let shootoutGoalsAway = 0;
+        let regulationHomeScore = null;
+        let regulationAwayScore = null;
         //Added parseGameTime function
         function parseGameTime(inputText) {
             const timeMatch = inputText.match(/(\d{1,2}):(\d{1,2})/);
@@ -775,6 +780,14 @@
             currentQuarter = 'OT1';
             document.getElementById('currentQuarter').textContent = 'OT1';
             resetTimer(180); // 3 minutes for overtime
+        }
+
+        function startShootout() {
+            isShootout = true;
+            document.getElementById('currentQuarter').textContent = 'SO';
+            // Store regulation scores
+            regulationHomeScore = parseInt(document.getElementById('homeScore').textContent);
+            regulationAwayScore = parseInt(document.getElementById('awayScore').textContent);
         }
     </script>
 </body>
