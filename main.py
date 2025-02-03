@@ -514,13 +514,6 @@ def extract_key_phrases(text):
         # Remove time from text for further processing
         text = text[match.end():]
     
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2))
-        input_time = (minutes, seconds)
-        # Remove time from text for further processing
-        text = text[match.end():]
-    
     # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
     
