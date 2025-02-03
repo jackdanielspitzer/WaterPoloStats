@@ -170,11 +170,6 @@
             <option value="OT3">OT3</option>
             <option value="OT4">OT4</option>
         </select>
-        <input type="text" id="gameTime" placeholder="MM:SS" style="font-size: 2em; margin-bottom: 10px; padding: 5px; width: 80px; text-align:center;">
-        <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
-        <button id="rewindTimer" style="padding: 10px 20px; margin-right: 10px;">Rewind 10s</button>
-        <button id="endQuarter" style="padding: 10px 20px; margin-right: 10px;">End Quarter</button>
-        <button id="overtime" style="padding: 10px 20px;">Overtime</button>
     </div>
     <div class="score-container">
         <div class="team-score away-team">
@@ -806,7 +801,7 @@
                 // Remove time part from input text
                 inputText = transcript.slice(timeMatch[0].length);
             }
-            
+
             document.getElementById('inputText').value = inputText;
 
             const gameTime = document.getElementById('gameTime').value;
