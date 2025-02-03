@@ -1414,16 +1414,25 @@ def run(text):
     time_pattern = r'^(\d{1,2}):(\d{2})\s+'
     match = re.match(time_pattern, text)
     
+    input_time = None
     if match:
         minutes = int(match.group(1))
         seconds = int(match.group(2))
-        # Update the game timer with input time
-        timeRemaining = minutes * 60 + seconds
+        input_time = f"Q1 {minutes}:{seconds:02d}"
+        # Remove time from text
+        text = text[match.end():]
     
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
+
+    # Get current quarter from the game clock
+    current_quarter = request.form.get('current_quarter', 'Q1')
+    if input_time is None:
+        # Use game clock time if no time specified in input
+        game_time = request.form.get('game_time', '7:00')
+        input_time = f"{current_quarter} {game_time}"
 
     for player, event, team in events:
         if player and event and team:
@@ -1683,7 +1692,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
+                game_data[game_id]['game_log'].append(f"{input_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 
