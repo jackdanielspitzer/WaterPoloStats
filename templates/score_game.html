@@ -787,36 +787,27 @@
         });
 
         recognition.onresult = async function(event) {
-            const transcript = event.results[0][0].transcript;
+            const transcript = event.results[0][0].transcript.toLowerCase();
             const form = document.getElementById('form');
             const homeTeam = form.querySelector('input[name="home_team"]').value;
             const awayTeam = form.querySelector('input[name="away_team"]').value;
             const gameId = form.querySelector('input[name="game_id"]').value;
 
             // Extract time from voice input
-            // Handle both formats: "345" and "3:45"
-            const timeRegex = /^(?:at\s+)?(?:(\d{1}):?(\d{2})|(\d{3}))\s/i;
+            // Match patterns like "345", "3:45", "3 45", or "at 3:45"
+            const timeRegex = /^(?:at\s+)?(\d{1,2})[\s:]?(\d{2})\s/i;
             const timeMatch = transcript.match(timeRegex);
 
+            let inputText = transcript;
             if (timeMatch) {
-                let minutes, seconds;
-                if (timeMatch[3]) {
-                    // Handle "345" format
-                    const timeStr = timeMatch[3];
-                    minutes = timeStr.slice(0, -2);
-                    seconds = timeStr.slice(-2);
-                } else {
-                    // Handle "3:45" format
-                    minutes = timeMatch[1];
-                    seconds = timeMatch[2];
-                }
+                const minutes = timeMatch[1].padStart(2, '0');
+                const seconds = timeMatch[2].padStart(2, '0');
                 document.getElementById('gameTime').value = `${minutes}:${seconds}`;
                 // Remove time part from input text
-                const statText = transcript.slice(timeMatch[0].length);
-                document.getElementById('inputText').value = statText;
-            } else {
-                document.getElementById('inputText').value = transcript;
+                inputText = transcript.slice(timeMatch[0].length);
             }
+            
+            document.getElementById('inputText').value = inputText;
 
             const gameTime = document.getElementById('gameTime').value;
             const quarter = document.getElementById('currentQuarter').value;
