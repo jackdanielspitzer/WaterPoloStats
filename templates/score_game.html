@@ -788,20 +788,20 @@
 
         recognition.onresult = async function(event) {
             const transcript = event.results[0][0].transcript;
-            
-            // Try to extract time from the beginning of the transcript
-            const timeRegex = /^(?:at\s+)?(\d{1,2}):(\d{2})\s/i;
+            const form = document.getElementById('form');
+            const homeTeam = form.querySelector('input[name="home_team"]').value;
+            const awayTeam = form.querySelector('input[name="away_team"]').value;
+            const gameId = form.querySelector('input[name="game_id"]').value;
+
+            // Extract time from voice input
+            const timeRegex = /(?:at\s+)?(\d{1,2})[:\s](\d{2})\s/i;
             const timeMatch = transcript.match(timeRegex);
-            
+
             if (timeMatch) {
-                // Extract minutes and seconds
                 const minutes = timeMatch[1];
                 const seconds = timeMatch[2];
-                
-                // Set the game time input
                 document.getElementById('gameTime').value = `${minutes}:${seconds}`;
-                
-                // Remove the time part from transcript for stat processing
+                // Remove time part from input text
                 const statText = transcript.slice(timeMatch[0].length);
                 document.getElementById('inputText').value = statText;
             } else {
@@ -834,7 +834,7 @@
                     document.getElementById('result').innerText = 'Error processing text.';
                 }
             } catch (error) {
-                console.error"Error processing text:", error);
+                console.error("Error processing text:", error);
                 document.getElementById('result').innerText = 'Error processing text.';
             }
         };
