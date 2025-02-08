@@ -1449,17 +1449,22 @@ def run(text):
                 minutes = match.group(1)
                 seconds = match.group(2)
             time_str = f"{minutes}:{seconds.zfill(2)}"
+            # Remove the time part from the text for further processing
+            text = text[match.end():].strip()
             break
     
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
+    current_quarter = request.form.get('current_quarter', 'Q1')
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                responses.append(phrase(player, event, team))
+                event_text = phrase(player, event, team)
+                game_time = time_str if time_str else "7:00"  # Default time if none provided
+                responses.append(f"{current_quarter} {game_time} - {event_text}")
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
