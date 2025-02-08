@@ -1427,7 +1427,7 @@ def phrase(number, action, team):
     else:
         return f"The {team} team {number} performed {action}"
 
-def run(text):
+def run(text, game_id):
     import re
     
     # Extract time from various formats for logging
@@ -1457,7 +1457,9 @@ def run(text):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    current_quarter = request.form.get('current_quarter', 'Q1')
+    
+    if game_id not in game_data:
+        game_data[game_id] = {'game_log': [], 'dataWhite': {}, 'dataBlack': {}}
 
     for player, event, team in events:
         if player and event and team:
@@ -1598,6 +1600,7 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', 'Q1 7:00')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1612,7 +1615,8 @@ def process_text():
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                'game_log': []
             }
 
         response = run(text, game_id)
