@@ -827,7 +827,8 @@
                 `${quarter} ${gameTime}` : 
                 `Q${quarter} ${gameTime}`;
 
-            // Immediately process the recognized text            try {
+            // Immediately process the recognized text            
+            try {
                 const response = await fetch('/process', {
                     method: 'POST',
                     headers: {
