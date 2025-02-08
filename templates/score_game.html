@@ -724,9 +724,13 @@
                 console.log("Empty input, skipping submission");
                 return false;
             }
-            const homeTeam = document.querySelector('input[name="home_team"]').value;
-            const awayTeam = document.querySelector('input[name="away_team"]').value;
-            const gameId = document.querySelector('input[name="game_id"]').value;
+            const homeTeam = document.querySelector('input[name="home_team"]')?.value;
+            const awayTeam = document.querySelector('input[name="away_team"]')?.value;
+            const gameId = document.querySelector('input[name="game_id"]')?.value;
+            if (!homeTeam || !awayTeam || !gameId) {
+                console.error("Missing form data");
+                return;
+            }
             console.log("Submitting text:", inputText);
             console.log("Home team:", homeTeam);
             console.log("Away team:", awayTeam);
@@ -792,9 +796,14 @@
         recognition.onresult = async function(event) {
             const transcript = event.results[0][0].transcript.toLowerCase();
             const form = document.getElementById('form');
-            const homeTeam = form.querySelector('input[name="home_team"]').value;
-            const awayTeam = form.querySelector('input[name="away_team"]').value;
-            const gameId = form.querySelector('input[name="game_id"]').value;
+            const homeTeam = form.querySelector('input[name="home_team"]')?.value;
+            const awayTeam = form.querySelector('input[name="away_team"]')?.value;
+            const gameId = form.getAttribute('data-game-id');
+            if (!homeTeam || !awayTeam || !gameId) {
+                console.error("Missing form data");
+                return;
+            }
+
 
             // Extract time from voice input
             // Match patterns like "345", "3:45", "3 45", or "at 3:45"
@@ -814,7 +823,7 @@
 
             const gameTime = document.getElementById('gameTime').value;
             const quarter = document.getElementById('currentQuarter').value;
-            const formattedGameTime = quarter.startsWith('OT') ? 
+            const formattedGameTime = quarter.startsWith('OT') ? `
                 `${quarter} ${gameTime}` : 
                 `Q${quarter} ${gameTime}`;
 
