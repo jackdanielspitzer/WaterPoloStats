@@ -160,16 +160,12 @@
 
     <!-- Score Display -->
     <div class="timer-container" style="text-align: center; margin-bottom: 20px;">
-        <select id="currentQuarter" style="font-size: 1.5em; margin-bottom: 10px; padding: 5px;">
-            <option value="1">Q1</option>
-            <option value="2">Q2</option>
-            <option value="3">Q3</option>
-            <option value="4">Q4</option>
-            <option value="OT1">OT1</option>
-            <option value="OT2">OT2</option>
-            <option value="OT3">OT3</option>
-            <option value="OT4">OT4</option>
-        </select>
+        <div class="quarter-display" style="font-size: 1.5em; margin-bottom: 10px;">Quarter: <span id="currentQuarter">1</span></div>
+        <div class="timer-display" style="font-size: 2em; margin-bottom: 10px;"><span id="minutes">7</span>:<span id="seconds">00</span></div>
+        <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
+        <button id="rewindTimer" style="padding: 10px 20px; margin-right: 10px;">Rewind 10s</button>
+        <button id="endQuarter" style="padding: 10px 20px; margin-right: 10px;">End Quarter</button>
+        <button id="overtime" style="padding: 10px 20px;">Overtime</button>
     </div>
     <div class="score-container">
         <div class="team-score away-team">
@@ -261,7 +257,7 @@
     <script>
     function finishGame() {
         try {
-            const currentQuarter = document.getElementById('currentQuarter').value;
+            const currentQuarter = document.getElementById('currentQuarter').textContent;
             const awayScore = document.getElementById('awayScore').textContent || '0';
             const homeScore = document.getElementById('homeScore').textContent || '0';
 
@@ -660,7 +656,7 @@
             }
 
             // Set current quarter to SO for shootout
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').value;
+            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
 
             // Get current scores and ensure they're properly formatted
             const homeScore = parseFloat(document.getElementById('homeScore').textContent).toFixed(1);
@@ -675,32 +671,24 @@
 
         // Initialize button event listeners when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
-            if (document.getElementById('startPauseTimer')) {
-                document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
-            }
-            if (document.getElementById('rewindTimer')) {
-                document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
-            }
-            if (document.getElementById('endQuarter')) {
-                document.getElementById('endQuarter').addEventListener('click', function() {
-                    if (typeof currentQuarter === 'string' && currentQuarter.indexOf('OT') === 0) {
-                        if (currentOTQuarter < overtimeQuarters) {
-                            currentOTQuarter++;
-                            currentQuarter = 'OT' + currentOTQuarter;
-                            timeRemaining = parseInt(document.getElementById('otMinutes')?.value || '3') * 60;
-                            updateTimerDisplay();
-                            document.getElementById('startPauseTimer').textContent = 'Start';
-                        } else {
-                            endQuarter();
-                        }
+            document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
+            document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
+            document.getElementById('endQuarter').addEventListener('click', function() {
+                if (typeof currentQuarter === 'string' && currentQuarter.indexOf('OT') === 0) {
+                    if (currentOTQuarter < overtimeQuarters) {
+                        currentOTQuarter++;
+                        currentQuarter = 'OT' + currentOTQuarter;
+                        timeRemaining = parseInt(document.getElementById('otMinutes')?.value || '3') * 60;
+                        updateTimerDisplay();
+                        document.getElementById('startPauseTimer').textContent = 'Start';
                     } else {
                         endQuarter();
                     }
-                });
-            }
-            if (document.getElementById('overtime')) {
-                document.getElementById('overtime').addEventListener('click', showOvertimeOptions);
-            }
+                } else {
+                    endQuarter();
+                }
+            });
+            document.getElementById('overtime').addEventListener('click', showOvertimeOptions);
         });
 
 
@@ -724,13 +712,9 @@
                 console.log("Empty input, skipping submission");
                 return false;
             }
-            const homeTeam = document.querySelector('input[name="home_team"]')?.value;
-            const awayTeam = document.querySelector('input[name="away_team"]')?.value;
-            const gameId = document.querySelector('input[name="game_id"]')?.value;
-            if (!homeTeam || !awayTeam || !gameId) {
-                console.error("Missing form data");
-                return;
-            }
+            const homeTeam = document.querySelector('input[name="home_team"]').value;
+            const awayTeam = document.querySelector('input[name="away_team"]').value;
+            const gameId = document.querySelector('input[name="game_id"]').value;
             console.log("Submitting text:", inputText);
             console.log("Home team:", homeTeam);
             console.log("Away team:", awayTeam);
@@ -738,11 +722,10 @@
 
 
             // Get current game time and quarter
-            const gameTime = document.getElementById('gameTime').value;
-            const quarter = document.getElementById('currentQuarter').value;
-            const formattedGameTime = quarter.startsWith('OT') ? 
-                `${quarter} ${gameTime}` : 
-                `Q${quarter} ${gameTime}`;
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
 
             try {
                 const response = await fetch('/process', {
@@ -750,7 +733,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(formattedGameTime)}`
+                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
                 });
 
                 if (response.ok) {
@@ -794,47 +777,23 @@
         });
 
         recognition.onresult = async function(event) {
-            const transcript = event.results[0][0].transcript.toLowerCase();
-            const form = document.getElementById('form');
-            const homeTeam = form.querySelector('input[name="home_team"]')?.value;
-            const awayTeam = form.querySelector('input[name="away_team"]')?.value;
-            const gameId = form.getAttribute('data-game-id');
-            if (!homeTeam || !awayTeam || !gameId) {
-                console.error("Missing form data");
-                return;
-            }
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('inputText').value = transcript;
 
+            // Get current game time and quarter
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
 
-            // Extract time from voice input
-            // Match patterns like "345", "3:45", "3 45", or "at 3:45"
-            const timeRegex = /^(?:at\s+)?(\d{1,2})[\s:]?(\d{2})\s/i;
-            const timeMatch = transcript.match(timeRegex);
-
-            let inputText = transcript;
-            if (timeMatch) {
-                const minutes = timeMatch[1].padStart(2, '0');
-                const seconds = timeMatch[2].padStart(2, '0');
-                document.getElementById('gameTime').value = `${minutes}:${seconds}`;
-                // Remove time part from input text
-                inputText = transcript.slice(timeMatch[0].length);
-            }
-
-            document.getElementById('inputText').value = inputText;
-
-            const gameTime = document.getElementById('gameTime').value;
-            const quarter = document.getElementById('currentQuarter').value;
-            const formattedGameTime = quarter.startsWith('OT') ? 
-                `${quarter} ${gameTime}` : 
-                `Q${quarter} ${gameTime}`;
-
-            // Immediately process the recognized text            
+            // Immediately process the recognized text
             try {
                 const response = await fetch('/process', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(formattedGameTime)}`
+                    body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
                 });
 
                 if (response.ok) {
@@ -989,9 +948,8 @@
         function addEventToLog(eventText) {
             const minutes = parseInt(document.getElementById('minutes').textContent);
             const seconds = parseInt(document.getElementById('seconds').textContent);
-            const quarter = document.getElementById('currentQuarter').value;
-            const gameTime = document.getElementById('gameTime').value;
-            const formattedGameTime = quarter.startsWith('OT') ? `${quarter} ${gameTime}` : `Q${quarter} ${gameTime}`;
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             const currentTime = minutes * 60 + seconds;
 
             // Update active exclusions - remove expired ones
@@ -1075,7 +1033,7 @@
             // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
-            logEntry.innerHTML = `<strong>${formattedGameTime}:</strong> ${eventText}`;
+            logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
 
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {

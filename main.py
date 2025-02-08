@@ -499,36 +499,18 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
-    # Check for time formats
+    # First check for time at start of input
     import re
-    
-    # Handle various time formats:
-    # - 3-digit format (e.g. "345")
-    # - Minutes:seconds format (e.g. "3:45", "2:30")
-    # - Minutes and seconds spoken (e.g. "2 minutes 30 seconds", "2 minutes 30")
-    time_patterns = [
-        r'^(\d{3})\s+',  # 345
-        r'^(\d{1,2}):(\d{2})\s+',  # 3:45
-        r'^(\d{1,2})\s*minutes?\s+(?:and\s+)?(\d{1,2})\s*(?:seconds?)?\s+'  # 2 minutes 30 seconds
-    ]
+    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
+    match = re.match(time_pattern, text)
     
     input_time = None
-    original_text = text
-    
-    for pattern in time_patterns:
-        match = re.match(pattern, text, re.IGNORECASE)
-        if match:
-            if len(match.groups()) == 1:  # 3-digit format
-                time_str = match.group(1)
-                minutes = int(time_str[0])
-                seconds = int(time_str[1:])
-            else:  # Other formats
-                minutes = int(match.group(1))
-                seconds = int(match.group(2))
-            
-            input_time = (minutes, seconds)
-            text = text[match.end():]  # Remove time from text for further processing
-            break
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        input_time = (minutes, seconds)
+        # Remove time from text for further processing
+        text = text[match.end():]
     
     # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
@@ -1427,46 +1409,26 @@ def phrase(number, action, team):
     else:
         return f"The {team} team {number} performed {action}"
 
-def run(text, game_id):
+def run(text):
     import re
+    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
+    match = re.match(time_pattern, text)
     
-    # Extract time from various formats for logging
-    time_patterns = [
-        r'^(\d{3})',  # 345
-        r'^(\d{1,2}):(\d{2})',  # 3:45
-        r'^(\d{1,2})\s*minutes?\s+(?:and\s+)?(\d{1,2})\s*(?:seconds?)?' # 2 minutes 30 seconds
-    ]
-    
-    time_str = None
-    for pattern in time_patterns:
-        match = re.match(pattern, text, re.IGNORECASE)
-        if match:
-            if len(match.groups()) == 1:  # 3-digit format
-                time_val = match.group(1)
-                minutes = time_val[0]
-                seconds = time_val[1:]
-            else:
-                minutes = match.group(1)
-                seconds = match.group(2)
-            time_str = f"{minutes}:{seconds.zfill(2)}"
-            # Remove the time part from the text for further processing
-            text = text[match.end():].strip()
-            break
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        # Update the game timer with input time
+        timeRemaining = minutes * 60 + seconds
     
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    
-    if game_id not in game_data:
-        game_data[game_id] = {'game_log': [], 'dataWhite': {}, 'dataBlack': {}}
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                event_text = phrase(player, event, team)
-                game_time = time_str if time_str else "7:00"  # Default time if none provided
-                responses.append(f"{current_quarter} {game_time} - {event_text}")
+                responses.append(phrase(player, event, team))
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
@@ -1600,7 +1562,6 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
-        game_time = request.form.get('game_time', 'Q1 7:00')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1615,8 +1576,7 @@ def process_text():
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
-                'game_log': []
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
 
         response = run(text, game_id)
