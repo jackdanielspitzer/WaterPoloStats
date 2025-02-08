@@ -499,20 +499,36 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
-    # First check for time at start of input
+    # Check for time formats
     import re
-    # Only handle 3-digit format (e.g. "345")
-    time_pattern = r'^(\d{3})\s+'
-    match = re.match(time_pattern, text)
+    
+    # Handle various time formats:
+    # - 3-digit format (e.g. "345")
+    # - Minutes:seconds format (e.g. "3:45", "2:30")
+    # - Minutes and seconds spoken (e.g. "2 minutes 30 seconds", "2 minutes 30")
+    time_patterns = [
+        r'^(\d{3})\s+',  # 345
+        r'^(\d{1,2}):(\d{2})\s+',  # 3:45
+        r'^(\d{1,2})\s*minutes?\s+(?:and\s+)?(\d{1,2})\s*(?:seconds?)?\s+'  # 2 minutes 30 seconds
+    ]
     
     input_time = None
-    if match:
-        time_str = match.group(1)
-        minutes = int(time_str[0])
-        seconds = int(time_str[1:])
-        input_time = (minutes, seconds)
-        # Remove time from text for further processing
-        text = text[match.end():]
+    original_text = text
+    
+    for pattern in time_patterns:
+        match = re.match(pattern, text, re.IGNORECASE)
+        if match:
+            if len(match.groups()) == 1:  # 3-digit format
+                time_str = match.group(1)
+                minutes = int(time_str[0])
+                seconds = int(time_str[1:])
+            else:  # Other formats
+                minutes = int(match.group(1))
+                seconds = int(match.group(2))
+            
+            input_time = (minutes, seconds)
+            text = text[match.end():]  # Remove time from text for further processing
+            break
     
     # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
@@ -1413,14 +1429,27 @@ def phrase(number, action, team):
 
 def run(text):
     import re
-    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
-    match = re.match(time_pattern, text)
     
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2))
-        # Update the game timer with input time
-        timeRemaining = minutes * 60 + seconds
+    # Extract time from various formats for logging
+    time_patterns = [
+        r'^(\d{3})',  # 345
+        r'^(\d{1,2}):(\d{2})',  # 3:45
+        r'^(\d{1,2})\s*minutes?\s+(?:and\s+)?(\d{1,2})\s*(?:seconds?)?' # 2 minutes 30 seconds
+    ]
+    
+    time_str = None
+    for pattern in time_patterns:
+        match = re.match(pattern, text, re.IGNORECASE)
+        if match:
+            if len(match.groups()) == 1:  # 3-digit format
+                time_val = match.group(1)
+                minutes = time_val[0]
+                seconds = time_val[1:]
+            else:
+                minutes = match.group(1)
+                seconds = match.group(2)
+            time_str = f"{minutes}:{seconds.zfill(2)}"
+            break
     
     events = extract_key_phrases(text)
     responses = []
