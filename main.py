@@ -19,6 +19,48 @@ def check_email_config():
         return False
     return True
 
+def parse_time_input(text):
+    """Parse time input from various formats and return minutes"""
+    import re
+    
+    # Default time if none provided
+    default_minutes = 7
+    
+    # Check for MM:SS format
+    time_pattern = r'^(\d{1,2}):(\d{2})'
+    match = re.match(time_pattern, text)
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2))
+        return minutes, seconds, text[match.end():].strip()
+        
+    # Check for other numeric patterns
+    numeric_pattern = r'^(\d+)'
+    match = re.match(numeric_pattern, text)
+    if match:
+        raw_time = match.group(1)
+        if len(raw_time) <= 2:  # Assume it's just minutes
+            return int(raw_time), 0, text[match.end():].strip()
+        elif len(raw_time) == 3:  # Format like 330 for 3:30
+            minutes = int(raw_time[0])
+            seconds = int(raw_time[1:])
+            return minutes, seconds, text[match.end():].strip()
+        elif len(raw_time) == 4:  # Format like 1030 for 10:30
+            minutes = int(raw_time[:2])
+            seconds = int(raw_time[2:])
+            return minutes, seconds, text[match.end():].strip()
+            
+    # Check for text format (e.g. "3 minutes 30")
+    text_pattern = r'(\d+)\s*(?:minute|min|m)s?\s*(?:(\d+)\s*(?:second|sec|s)s?)?'
+    match = re.search(text_pattern, text, re.IGNORECASE)
+    if match:
+        minutes = int(match.group(1))
+        seconds = int(match.group(2)) if match.group(2) else 0
+        return minutes, seconds, text[match.end():].strip()
+        
+    return default_minutes, 0, text
+
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -1410,15 +1452,12 @@ def phrase(number, action, team):
         return f"The {team} team {number} performed {action}"
 
 def run(text):
-    import re
-    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
-    match = re.match(time_pattern, text)
+    # Parse time from input
+    minutes, seconds, remaining_text = parse_time_input(text)
+    timeRemaining = minutes * 60 + seconds
     
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2))
-        # Update the game timer with input time
-        timeRemaining = minutes * 60 + seconds
+    # Format time for display
+    formatted_time = f"{minutes}:{seconds:02d}"
     
     events = extract_key_phrases(text)
     responses = []
@@ -1683,7 +1722,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
+                game_data[game_id]['game_log'].append(f"[{formatted_time}] - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 
