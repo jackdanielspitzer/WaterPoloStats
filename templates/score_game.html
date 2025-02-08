@@ -830,8 +830,9 @@
             // Immediately process the recognized text            
             try {
                 const response = await fetch('/process', {
-                    method: 'POST                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: `text=${encodeURIComponent(transcript)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(formattedGameTime)}`
                 });
