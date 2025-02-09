@@ -258,7 +258,7 @@
     <script>
     function finishGame() {
         try {
-            const currentQuarter = document.getElementById('currentQuarter').textContent;
+            const currentQuarter = document.getElementById('currentQuarter').value;
             const awayScore = document.getElementById('awayScore').textContent || '0';
             const homeScore = document.getElementById('homeScore').textContent || '0';
 
@@ -283,396 +283,15 @@
     <script>
         // Initialize game data object
         let game_data = {};
-        // Timer functionality
-        let timerInterval;
-        let timeRemaining = 420; // 7 minutes in seconds
         let currentQuarter = 1;
-        let isTimerRunning = false;
-        let isPaused = false; // Flag to track paused state
 
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            document.getElementById('currentQuarter').textContent = currentQuarter;
+        function updateQuarterDisplay() {
+            document.getElementById('currentQuarter').value = currentQuarter;
         }
 
-        function startPauseTimer() {
-            const button = document.getElementById('startPauseTimer');
-            if (!isTimerRunning && !isPaused) {
-                // Start timer
-                timerInterval = setInterval(() => {
-                    if (timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        endQuarter();
-                    }
-                }, 1000);
-                isTimerRunning = true;
-                button.textContent = 'Pause';
-            } else if (isTimerRunning) {
-                // Pause timer
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                isPaused = true; // Set paused flag
-                button.textContent = 'Resume';
-            } else {
-                //Resume timer
-                timerInterval = setInterval(() => {
-                    if (timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        endQuarter();
-                    }
-                }, 1000);
-                isTimerRunning = true;
-                isPaused = false; // Reset paused flag
-                button.textContent = 'Pause';
-            }
-        }
-
-        function endQuarter() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            isPaused = false;
-
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                if (currentOTQuarter < overtimeQuarters) {
-                    // Move to next overtime quarter
-                    currentOTQuarter++;
-                    currentQuarter = 'OT' + currentOTQuarter;
-                    // Use the stored overtime minutes value
-                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
-                    timeRemaining = parseInt(otMinutes) * 60;
-                    updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
-                    return; // Return here to prevent showing end game options
-                } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                    // Only show end game options after all OT quarters are complete
-                    showEndGameOptions();
-                }
-            } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                if (currentOTQuarter < overtimeQuarters) {
-                    // Continue to next overtime quarter
-                    currentOTQuarter++;
-                    currentQuarter = 'OT' + currentOTQuarter;
-                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
-                    timeRemaining = parseInt(otMinutes) * 60;
-                    updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
-                    return;
-                } else if (currentOTQuarter >= overtimeQuarters) {
-                    // Only show options after all overtime quarters are complete
-                    clearInterval(timerInterval);
-                    isTimerRunning = false;
-                    isPaused = false;
-                    showEndGameOptions();
-                    return;
-                }
-            } else if (currentQuarter < 4) {
-                currentQuarter++;
-                timeRemaining = 420;
-                updateTimerDisplay();
-            } else {
-                showEndGameOptions();
-            }
-
-            document.getElementById('startPauseTimer').textContent = 'Start';
-            document.getElementById('startPauseTimer').disabled = false;
-            document.getElementById('rewindTimer').disabled = false;
-            document.getElementById('endQuarter').disabled = false;
-        }
-
-        function showEndGameOptions() {
-            // Get current OT number if we're in OT
-            let currentOTNum = 0;
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                currentOTNum = parseInt(currentQuarter.substring(2));
-            }
-
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        z-index: 1000;
-    `;
-
-            modal.innerHTML = `
-        <div id="mainOptions" style="text-align: center;">
-            <h3>Game Time Complete</h3>
-            <p>What would you like to do?</p>
-            <div style="margin: 20px 0;">
-                <button onclick="showOvertimeSetup()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-                <button onclick="showShootoutConfirm()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
-                <button onclick="showFinishGameConfirm()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
-            </div>
-        </div>
-        <div id="overtimeSetup" style="display: none; text-align: center;">
-            <h3>Overtime Setup</h3>
-            <div style="margin: 20px 0;">
-                <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
-                <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label>
-            </div>
-            <button onclick="startCustomOvertime()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-        <div id="shootoutConfirm" style="display: none; text-align: center;">
-            <h3>Start Shootout</h3>
-            <p>Are you sure you want to start a shootout?</p>
-            <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-        <div id="finishGameConfirm" style="display: none; text-align: center;">
-            <h3>Finish Game</h3>
-            <p>Are you sure you want to end the game?</p>
-            <button onclick="finishGame() && document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-    `;
-
-                document.body.appendChild(modal);
-
-                // Disable timer controls
-                document.getElementById('startPauseTimer').disabled = true;
-                document.getElementById('rewindTimer').disabled = true;
-                document.getElementById('endQuarter').disabled = true;
-            }
-
-        function rewindTimer() {
-            let maxTime = typeof currentQuarter === 'string' && currentQuarter.startsWith('OT') 
-                ? parseInt(document.getElementById('otMinutes').value) * 60 
-                : 420;
-            const newTime = Math.min(maxTime, timeRemaining + 10);
-            if (newTime !== timeRemaining) {
-                timeRemaining = newTime;
-                updateTimerDisplay();
-            }
-        }
-
-        function showMainOptions() {
-            document.getElementById('mainOptions').style.display = 'block';
-            document.getElementById('overtimeSetup').style.display = 'none';
-            document.getElementById('shootoutConfirm').style.display = 'none';
-            document.getElementById('finishGameConfirm').style.display = 'none';
-        }
-
-        function showOvertimeSetup() {
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('overtimeSetup').style.display = 'block';
-        }
-
-        function showShootoutConfirm() {
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('shootoutConfirm').style.display = 'block';
-        }
-
-        function showFinishGameConfirm() {
-            const form = document.getElementById('endGameForm');
-            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-            form.action = `/end_game?redirect=${encodeURIComponent('/team/' + schoolSlug)}`;
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('finishGameConfirm').style.display = 'block';
-        }
-
-        function startCustomOvertime() {
-            const quarters = parseInt(document.getElementById('otQuarters').value);
-            const minutes = parseInt(document.getElementById('otMinutes').value);
-
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            isPaused = false;
-            timeRemaining = minutes * 60;
-
-            // If already in OT, add the new quarters to existing total
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                overtimeQuarters += quarters;
-                // Keep current OT number
-                currentOTQuarter = parseInt(currentQuarter.substring(2));
-            } else {
-                // Starting fresh OT
-                currentQuarter = 'OT1';
-                overtimeQuarters = quarters;
-                currentOTQuarter = 1;
-            }
-
-            document.getElementById('startPauseTimer').textContent = 'Start';
-            document.getElementById('startPauseTimer').disabled = false;
-            document.querySelector('div[style*="position: fixed"]')?.remove();
-
-            updateTimerDisplay();
-        }
-
-        let isShootout = false;
-        let overtimeQuarters = 2;
-        let shootoutGoalsHome = 0;
-        let shootoutGoalsAway = 0;
-        let regulationHomeScore = 0;
-        let regulationAwayScore = 0;
-
-        function updateShootoutScore() {
-            const homeScoreElement = document.getElementById('homeScore');
-            const awayScoreElement = document.getElementById('awayScore');
-
-            // Get the regulation/overtime scores (as integers)
-            const homeRegScore = Math.floor(parseFloat(homeScoreElement.textContent));
-            const awayRegScore = Math.floor(parseFloat(awayScoreElement.textContent));
-
-            // Add shootout scores as decimals (divided by 10)
-            homeScoreElement.textContent = (homeRegScore + (shootoutGoalsHome / 10)).toFixed(1);
-            awayScoreElement.textContent = (awayRegScore + (shootoutGoalsAway / 10)).toFixed(1);
-        }
-
-        function startShootout() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            isShootout = true;
-            shootoutGoalsHome = 0;
-            shootoutGoalsAway = 0;
-            document.getElementById('startPauseTimer').disabled = true;
-            document.getElementById('rewindTimer').disabled = true;
-            document.getElementById('endQuarter').disabled = true;
-            currentQuarter = 'Shootout';
-            document.querySelector('div[style*="position: fixed"]')?.remove();
-            document.getElementById('minutes').textContent = '-';
-            document.getElementById('seconds').textContent = '--';
-            document.getElementById('currentQuarter').textContent = 'Shootout';
-            // Store regulation scores before shootout begins
-            regulationHomeScore = parseFloat(document.getElementById('homeScore').textContent);
-            regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
-        }
-
-        // Handle shootout goals only in frontend
-        document.getElementById('form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const inputText = document.getElementById('inputText').value.trim();
-
-            if (!inputText) {
-                console.log("Empty input, skipping submission");
-                return false;
-            }
-
-            const form = document.getElementById('form');
-            const gameId = form.getAttribute('data-game-id');
-            const homeTeam = form.querySelector('input[name="home_team"]').value;
-            const awayTeam = form.querySelector('input[name="away_team"]').value;
-
-            // Handle shootout goals only in frontend
-            if (isShootout) {
-                if (!inputText) {
-                    return false;
-                }
-
-                if (inputText.toLowerCase().includes('scored')) {
-                    const isDarkTeam = inputText.toLowerCase().includes('dark');
-                    // Store current scores before updating
-                    if (!regulationHomeScore) regulationHomeScore = Math.floor(parseFloat(document.getElementById('homeScore').textContent));
-                    if (!regulationAwayScore) regulationAwayScore = Math.floor(parseFloat(document.getElementById('awayScore').textContent));
-
-                    if (isDarkTeam) {
-                        shootoutGoalsHome++;
-                        const newScore = (regulationHomeScore + (shootoutGoalsHome * 0.1)).toFixed(1);
-                        document.getElementById('homeScore').textContent = newScore;
-                        // Prevent score from being overwritten
-                        regulationHomeScore = Math.floor(parseFloat(newScore));
-                    } else {
-                        shootoutGoalsAway++;
-                        const newScore = (regulationAwayScore + (shootoutGoalsAway * 0.1)).toFixed(1);
-                        document.getElementById('awayScore').textContent = newScore;
-                        // Prevent score from being overwritten
-                        regulationAwayScore = Math.floor(parseFloat(newScore));
-                    }
-
-                    const team = isDarkTeam ? 'Dark' : 'Light';
-                    const resultText = `${team} team scored in shootout`;
-                    document.getElementById('result').innerText = resultText;
-
-                    // Create shootout event and add to game log
-                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`; // Placeholder for player number
-
-                    // Initialize game data and game log if needed
-                    if (!game_data[gameId]) {
-                        game_data[gameId] = { game_log: [] };
-                    }
-                    if (!game_data[gameId].game_log) {
-                        game_data[gameId].game_log = [];
-                    }
-
-                    // Add shootout event to game log (only once)
-                    addEventToLog(shootoutEvent);
-
-                    // Send shootout event to server
-                    fetch('/process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                    }).then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    }).then(data => {
-                        if (!game_data[gameId]) {
-                            game_data[gameId] = { game_log: [] };
-                        }
-                        game_data[gameId].game_log.push(shootoutEvent);
-                        addEventToLog(shootoutEvent);
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
-                }
-                document.getElementById('inputText').value = '';
-                return false;
-            }
-            // Continue with normal form submission if not in shootout
-        });
-
-        // Handle end game during shootout
-        document.getElementById('endGameForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-
-            // Create hidden inputs for scores if they don't exist
-            let homeScoreInput = this.querySelector('input[name="home_score"]');
-            let awayScoreInput = this.querySelector('input[name="away_score"]');
-
-            if (!homeScoreInput) {
-                homeScoreInput = document.createElement('input');
-                homeScoreInput.type = 'hidden';
-                homeScoreInput.name = 'home_score';
-                this.appendChild(homeScoreInput);
-            }
-            if (!awayScoreInput) {
-                awayScoreInput = document.createElement('input');
-                awayScoreInput.type = 'hidden';
-                awayScoreInput.name = 'away_score';
-                this.appendChild(awayScoreInput);
-            }
-
-            // Set current quarter to SO for shootout
-            document.getElementById('currentQuarterInput').value = isShootout ? 'SO' : document.getElementById('currentQuarter').textContent;
-
-            // Get current scores and ensure they're properly formatted
-            const homeScore = parseFloat(document.getElementById('homeScore').textContent).toFixed(1);
-            const awayScore = parseFloat(document.getElementById('awayScore').textContent).toFixed(1);
-
-            homeScoreInput.value = homeScore;
-            awayScoreInput.value = awayScore;
-
-            // Submit the form
-            this.submit();
-        });
-
-        // Initialize any needed DOM event listeners
+        // Initialize quarter display
         document.addEventListener('DOMContentLoaded', function() {
-            // Add any needed event listeners here
+            updateQuarterDisplay();
         });
 
 
@@ -706,10 +325,8 @@
 
 
             // Get current game time and quarter
-            const minutes = document.getElementById('minutes').textContent;
-            const seconds = document.getElementById('seconds').textContent;
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            const quarter = document.getElementById('currentQuarter').value;
+            const gameTime = `Q${quarter}`;
 
             try {
                 const response = await fetch('/process', {
@@ -765,10 +382,8 @@
             document.getElementById('inputText').value = transcript;
 
             // Get current game time and quarter
-            const minutes = document.getElementById('minutes').textContent;
-            const seconds = document.getElementById('seconds').textContent;
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            const quarter = document.getElementById('currentQuarter').value;
+            const gameTime = `Q${quarter}`;
 
             // Immediately process the recognized text
             try {
@@ -930,18 +545,15 @@
         let activeExclusions = [];
 
         function addEventToLog(eventText) {
-            const minutes = parseInt(document.getElementById('minutes').textContent);
-            const seconds = parseInt(document.getElementById('seconds').textContent);
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            const currentTime = minutes * 60 + seconds;
+            const quarter = document.getElementById('currentQuarter').value;
+            const gameTime = `Q${quarter}`;
 
             // Update active exclusions - remove expired ones
             activeExclusions = activeExclusions.filter(ex => {
                 const sameQuarter = ex.quarter === parseInt(quarter);
-                const nextQuarter = parseInt(quarter) === ex.quarter + 1;
-                const withinExclusionTime = ex.startTime - currentTime <= 20;
-                return withinExclusionTime && (sameQuarter || nextQuarter);
+                //const nextQuarter = parseInt(quarter) === ex.quarter + 1; // Removed as timer is not used
+                //const withinExclusionTime = ex.startTime - currentTime <= 20; // Removed as timer is not used
+                return sameQuarter; // Only check for same quarter
             });
 
             // Handle exclusion events
@@ -949,7 +561,7 @@
                 const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
                 activeExclusions.push({
                     team: team,
-                    startTime: currentTime,
+                    //startTime: currentTime, // Removed as timer is not used
                     quarter: parseInt(quarter)
                 });
                 eventText += ' [20 SEC EXCLUSION]';
