@@ -19,11 +19,6 @@ def check_email_config():
         return False
     return True
 
-def parse_input(text):
-    """Process input text without time parsing"""
-    return text.strip()
-
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -504,19 +499,6 @@ dataBlack = {
 
 
 def extract_key_phrases(text):
-    # First check for time at start of input
-    import re
-    time_pattern = r'^(\d{1,2}):(\d{2})\s+'
-    match = re.match(time_pattern, text)
-    
-    input_time = None
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2))
-        input_time = (minutes, seconds)
-        # Remove time from text for further processing
-        text = text[match.end():]
-    
     # Convert 'goalie' to '1' and standardize penalty terms
     text = text.lower().replace('goalie', '1')
     
@@ -1415,24 +1397,15 @@ def phrase(number, action, team):
         return f"The {team} team {number} performed {action}"
 
 def run(text):
-    # Process input text directly
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    game_time = request.form.get('game_time', 'Q1 7:00')
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                # Simply log the raw input with timestamp
-                game_id = request.form.get('game_id')
-                if game_id not in game_data:
-                    game_data[game_id] = {'game_log': []}
-                
-                # Add the raw input directly to the game log
-                game_data[game_id]['game_log'].append(text)
-                responses.append("Input recorded")
+                responses.append(phrase(player, event, team))
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
@@ -1687,7 +1660,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"[{formatted_time}] - {log_entry}")
+                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 

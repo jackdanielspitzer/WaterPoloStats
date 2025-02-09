@@ -1,15 +1,3 @@
 {
-    "games": [
-        {
-            "home_away": "Away",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": null,
-            "date": "2025-02-17",
-            "game_type": "Non-League Game",
-            "is_scored": false,
-            "formatted_date": "February 17th, 2025",
-            "game_log": []
-        }
-    ]
+    "games": []
 }

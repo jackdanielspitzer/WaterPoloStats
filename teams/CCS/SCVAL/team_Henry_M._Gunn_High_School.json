@@ -213,7 +213,10 @@
             "game_type": "Tournament",
             "is_scored": true,
             "formatted_date": "January 16th, 2025",
-            "game_log": [],
+            "game_log": [
+                "Q1 7:00 - The dark team 1 performed Sprint Won",
+                "Q1 7:00 - The dark team 1 performed Sprint Attempt"
+            ],
             "away_box": {
                 "Player": [
                     "1",
@@ -303,14 +306,12 @@
             "home_box": {
                 "Player": [
                     "1",
-                    "5",
-                    "6",
+                    "2",
+                    "3",
                     "7",
-                    "8",
-                    "10"
+                    "8"
                 ],
                 "Shot": [
-                    1,
                     0,
                     0,
                     0,
@@ -322,11 +323,9 @@
                     0,
                     0,
                     0,
-                    0,
                     0
                 ],
                 "Assists": [
-                    0,
                     0,
                     0,
                     0,
@@ -338,11 +337,9 @@
                     0,
                     0,
                     0,
-                    0,
                     0
                 ],
                 "Steals": [
-                    0,
                     0,
                     0,
                     0,
@@ -354,11 +351,9 @@
                     0,
                     0,
                     0,
-                    0,
                     0
                 ],
                 "Exclusions Drawn": [
-                    0,
                     0,
                     0,
                     0,
@@ -370,7 +365,6 @@
                     0,
                     0,
                     0,
-                    0,
                     0
                 ],
                 "Turnovers": [
@@ -378,20 +372,17 @@
                     0,
                     0,
                     0,
-                    0,
                     0
                 ],
                 "Sprint Won": [
-                    0,
-                    0,
+                    1,
                     0,
                     0,
                     0,
                     0
                 ],
                 "Sprint Attempt": [
-                    0,
-                    0,
+                    1,
                     0,
                     0,
                     0,
@@ -401,7 +392,7 @@
             "is_shootout": false,
             "score": {
                 "white_team_score": 0,
-                "black_team_score": 1,
+                "black_team_score": 0,
                 "game_type": ""
             }
         },
@@ -412,15 +403,9 @@
             "time": null,
             "date": "2025-01-16",
             "game_type": "Non-League Game",
-            "is_scored": true,
+            "is_scored": false,
             "formatted_date": "January 16th, 2025",
-            "game_log": [],
-            "score": {
-                "white_team_score": 0,
-                "black_team_score": 1,
-                "game_type": ""
-            },
-            "is_shootout": false
+            "game_log": []
         },
         {
             "home_away": "Away",
