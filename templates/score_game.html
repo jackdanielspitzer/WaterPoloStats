@@ -802,7 +802,7 @@
                     addEventToLog(resultText);
                 } else {
                     console.error("Error in response:", response.status);
-                    document.getElementById('result').innerText = 'Error processing text.';
+                    document.getElementById('result').innerText = 'Errorprocessing text.';
                 }
             } catch (error) {
                 console.error("Error processing text:", error);
@@ -1018,6 +1018,23 @@
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
         }
 
+        function addEventToLog(playerNum, statType, team) {
+            const minutes = parseInt(document.getElementById('minutes').textContent);
+            const seconds = parseInt(document.getElementById('seconds').textContent);
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const gameId = document.getElementById('form').getAttribute('data-game-id');
+            const eventText = `${playerNum} ${statType}`;
+            const fullEventText = `[${gameTime}] - ${eventText}`;
+            if (!game_data[gameId]) game_data[gameId] = {game_log: []};
+            game_data[gameId].game_log.push(fullEventText);
+            const gameLogDiv = document.getElementById('gameLog');
+            const logEntry = document.createElement('div');
+            logEntry.className = "gameLogEntry";
+            logEntry.innerHTML = fullEventText;
+            gameLogDiv.appendChild(logEntry);
+            gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
+        }
 
     </script>
 </body>
