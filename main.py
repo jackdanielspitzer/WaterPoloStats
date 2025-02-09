@@ -1456,18 +1456,25 @@ def run(text):
     minutes, seconds, remaining_text = parse_time_input(text)
     timeRemaining = minutes * 60 + seconds
     
-    # Format time for display
-    formatted_time = f"{minutes}:{seconds:02d}"
-    
-    events = extract_key_phrases(text)
+    events = extract_key_phrases(remaining_text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
+    game_time = request.form.get('game_time', 'Q1 7:00')
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                responses.append(phrase(player, event, team))
+                log_entry = phrase(player, event, team)
+                responses.append(log_entry)
+
+                # Initialize game data structure if needed
+                game_id = request.form.get('game_id')
+                if game_id not in game_data:
+                    game_data[game_id] = {'game_log': []}
+
+                # Add entry to game log with game time
+                game_data[game_id]['game_log'].append(f"[{game_time}] - {log_entry}")
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
