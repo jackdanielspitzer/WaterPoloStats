@@ -1000,15 +1000,15 @@
             logEntry.innerHTML = fullEventText;
 
             // Add color coding based on event type
-            if (entry.includes('[ADVANTAGE GOAL]')) {
+            if (fullEventText.includes('[ADVANTAGE GOAL]')) {
                 logEntry.style.color = '#e74c3c';
-            } else if (entry.includes('[PENALTY GOAL]')) {
+            } else if (fullEventText.includes('[PENALTY GOAL]')) {
                 logEntry.style.color = '#e67e22';
-            } else if (entry.includes('[NATURAL GOAL]')) {
+            } else if (fullEventText.includes('[NATURAL GOAL]')) {
                 logEntry.style.color = '#2ecc71';
-            } else if (entry.includes('[20 SEC EXCLUSION]')) {
+            } else if (fullEventText.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
-            } else if (entry.includes('[SHOOTOUT GOAL]')) {
+            } else if (fullEventText.includes('[SHOOTOUT GOAL]')) {
                 logEntry.style.color = '#9b59b6';
             }
 
