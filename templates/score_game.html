@@ -694,45 +694,33 @@
         let activeExclusions = [];
 
         function addEventToLog(text) {
-            const gameTime = getFormattedTime(); // Use helper function here
-            const gameId = document.getElementById('form').getAttribute('data-game-id');
-            const fullEventText = `[${gameTime}] - ${text}`;
-
-            if (!window.game_data) window.game_data = {};
-            if (!window.game_data[gameId]) window.game_data[gameId] = {game_log: []};
-            window.game_data[gameId].game_log.push(fullEventText);
-
             const gameLogDiv = document.getElementById('gameLog');
             const logEntry = document.createElement('div');
             logEntry.className = "gameLogEntry";
-            logEntry.innerHTML = fullEventText;
+
+            // Add timestamp to the log entry
+            const gameTime = document.getElementById('currentQuarter').textContent;
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            const timestamp = `[${gameTime} ${minutes}:${seconds}]`;
+
+            logEntry.innerHTML = `${timestamp} - ${text}`;
 
             // Add color coding based on event type
-            if (fullEventText.includes('[ADVANTAGE GOAL]')) {
+            if (text.includes('[ADVANTAGE GOAL]')) {
                 logEntry.style.color = '#e74c3c';
-            } else if (fullEventText.includes('[PENALTY GOAL]')) {
+            } else if (text.includes('[PENALTY GOAL]')) {
                 logEntry.style.color = '#e67e22';
-            } else if (fullEventText.includes('[NATURAL GOAL]')) {
+            } else if (text.includes('[NATURAL GOAL]')) {
                 logEntry.style.color = '#2ecc71';
-            } else if (fullEventText.includes('[20 SEC EXCLUSION]')) {
+            } else if (text.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
-            } else if (fullEventText.includes('[SHOOTOUT GOAL]')) {
+            } else if (text.includes('[SHOOTOUT GOAL]')) {
                 logEntry.style.color = '#9b59b6';
             }
 
-            document.getElementById('gameLog').appendChild(logEntry);
+            gameLogDiv.appendChild(logEntry);
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
-
-            // Update stats immediately after adding log entry
-            updateTables();
-
-            // Helper function to get formatted time string
-            function getFormattedTime() {
-                const quarter = document.getElementById('currentQuarter').textContent;
-                const minutes = document.getElementById('minutes').textContent;
-                const seconds = document.getElementById('seconds').textContent;
-                return quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
-            }
         }
 
     </script>
