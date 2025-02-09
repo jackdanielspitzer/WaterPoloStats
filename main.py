@@ -1474,16 +1474,14 @@ def run(text):
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                log_entry = phrase(player, event, team)
-                responses.append(log_entry)
-
-                # Initialize game data structure if needed
+                # Simply log the raw input with timestamp
                 game_id = request.form.get('game_id')
                 if game_id not in game_data:
                     game_data[game_id] = {'game_log': []}
-
-                # Add entry to game log with game time
-                game_data[game_id]['game_log'].append(f"[{game_time}] - {log_entry}")
+                
+                # Add the raw input to the game log
+                game_data[game_id]['game_log'].append(f"[{game_time}] - {text}")
+                responses.append("Input recorded")
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
