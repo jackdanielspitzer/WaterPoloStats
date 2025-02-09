@@ -778,6 +778,17 @@
         },
         {
             "home_away": "Home",
+            "opponent": "Los Altos High School",
+            "opponent_logo": "images/Los Altos High School.png",
+            "time": null,
+            "date": "2025-02-17",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "February 17th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Home",
             "opponent": "Henry M. Gunn High School",
             "opponent_logo": "images/Henry M. Gunn High School.png",
             "time": "15:00",
