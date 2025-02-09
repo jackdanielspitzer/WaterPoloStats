@@ -807,7 +807,7 @@
                     console.error("Error in response:", response.status);
                     document.getElementById('result').innerText = 'Errorprocessing text.';
                 }
-            } catch (error) {
+            } catch (error{
                 console.error("Error processing text:", error);
                 document.getElementById('result').innerText = 'Error processing text.';
             }
@@ -946,80 +946,6 @@
 
         // Track exclusions with timing
         let activeExclusions = [];
-
-        function addEventToLog(eventText) {
-            const minutes = parseInt(document.getElementById('minutes').textContent);
-            const seconds = parseInt(document.getElementById('seconds').textContent);
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
-            const currentTime = minutes * 60 + seconds;
-            const gameId = document.getElementById('form').getAttribute('data-game-id');
-
-            // Initialize game data if needed
-            if (!window.game_data) {
-                window.game_data = {};
-            }
-            if (!window.game_data[gameId]) {
-                window.game_data[gameId] = {};
-            }
-            if (!window.game_data[gameId].game_log) {
-                window.game_data[gameId].game_log = [];
-            }
-
-            // Update active exclusions - remove expired ones
-            activeExclusions = activeExclusions.filter(ex => {
-                const sameQuarter = ex.quarter === parseInt(quarter);
-                const nextQuarter = parseInt(quarter) === ex.quarter + 1;
-                const withinExclusionTime = ex.startTime - currentTime <= 20;
-                return withinExclusionTime && (sameQuarter || nextQuarter);
-            });
-
-            // Handle exclusion events
-            if (eventText.toLowerCase().includes('excluded') || eventText.toLowerCase().includes('kicked out')) {
-                const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                activeExclusions.push({
-                    team: team,
-                    startTime: currentTime,
-                    quarter: parseInt(quarter)
-                });
-                eventText += ' [20 SEC EXCLUSION]';
-            }
-
-            // Format the complete log entry
-            const fullEventText = `[${gameTime}] - ${eventText}`;
-
-            // Initialize game log if needed
-            if (!game_data[gameId].game_log) {
-                game_data[gameId].game_log = [];
-            }
-
-            // Add to game_data
-            game_data[gameId].game_log.push(fullEventText);
-
-            // Update game log display
-            const gameLogDiv = document.getElementById('gameLog');
-            const logEntry = document.createElement('div');
-            logEntry.className = "gameLogEntry";
-            logEntry.innerHTML = fullEventText;
-
-            // Add color coding based on event type
-            if (fullEventText.includes('[ADVANTAGE GOAL]')) {
-                logEntry.style.color = '#e74c3c';
-            } else if (fullEventText.includes('[PENALTY GOAL]')) {
-                logEntry.style.color = '#e67e22';
-            } else if (fullEventText.includes('[NATURAL GOAL]')) {
-                logEntry.style.color = '#2ecc71';
-            } else if (fullEventText.includes('[20 SEC EXCLUSION]')) {
-                logEntry.style.color = '#3498db';
-            } else if (fullEventText.includes('[SHOOTOUT GOAL]')) {
-                logEntry.style.color = '#9b59b6';
-            }
-
-            gameLogDiv.appendChild(logEntry);
-
-            // Auto-scroll to bottom
-            gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
-        }
 
         function addEventToLog(text) {
             const minutes = parseInt(document.getElementById('minutes').textContent);
