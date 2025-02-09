@@ -26,6 +26,15 @@ def parse_time_input(text):
     # Default time if none provided
     default_minutes = 7
     
+    # First check for 3-digit time format at start (e.g. "345" -> "3:45")
+    three_digit_pattern = r'^(\d{3})'
+    match = re.match(three_digit_pattern, text)
+    if match:
+        time_str = match.group(1)
+        minutes = int(time_str[0])
+        seconds = int(time_str[1:])
+        return minutes, seconds, text[match.end():].strip()
+        
     # Check for MM:SS format
     time_pattern = r'^(\d{1,2}):(\d{2})'
     match = re.match(time_pattern, text)
