@@ -275,9 +275,8 @@
     </script>
     </form>
 
-    <div id="gameLog">
-        </div>
-
+    <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
+    </div>
 
     <script>
         // Initialize game data object
@@ -954,11 +953,14 @@
             const gameId = document.getElementById('form').getAttribute('data-game-id');
 
             // Initialize game data if needed
-            if (!game_data[gameId]) {
-                game_data[gameId] = {};
+            if (!window.game_data) {
+                window.game_data = {};
             }
-            if (!game_data[gameId].game_log) {
-                game_data[gameId].game_log = [];
+            if (!window.game_data[gameId]) {
+                window.game_data[gameId] = {};
+            }
+            if (!window.game_data[gameId].game_log) {
+                window.game_data[gameId].game_log = [];
             }
 
             // Update active exclusions - remove expired ones
@@ -987,8 +989,9 @@
             game_data[gameId].game_log.push(fullEventText);
 
             // Create and style the log entry
+            const gameLogDiv = document.getElementById('gameLog');
             const logEntry = document.createElement('div');
-            logEntry.id = "gameLogEntry";
+            logEntry.className = "gameLogEntry";
             logEntry.innerHTML = fullEventText;
 
             // Add color coding for different types of events
