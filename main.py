@@ -1479,8 +1479,8 @@ def run(text):
                 if game_id not in game_data:
                     game_data[game_id] = {'game_log': []}
                 
-                # Add the raw input to the game log
-                game_data[game_id]['game_log'].append(f"[{game_time}] - {text}")
+                # Add the raw input directly to the game log
+                game_data[game_id]['game_log'].append(text)
                 responses.append("Input recorded")
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
