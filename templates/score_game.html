@@ -1021,20 +1021,35 @@
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
         }
 
-        function addEventToLog(playerNum, statType, team) {
+        function addEventToLog(text) {
             const minutes = parseInt(document.getElementById('minutes').textContent);
             const seconds = parseInt(document.getElementById('seconds').textContent);
             const quarter = document.getElementById('currentQuarter').textContent;
             const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             const gameId = document.getElementById('form').getAttribute('data-game-id');
-            const eventText = `${playerNum} ${statType}`;
-            const fullEventText = `[${gameTime}] - ${eventText}`;
+            const fullEventText = `[${gameTime}] - ${text}`;
+
             if (!game_data[gameId]) game_data[gameId] = {game_log: []};
             game_data[gameId].game_log.push(fullEventText);
+
             const gameLogDiv = document.getElementById('gameLog');
             const logEntry = document.createElement('div');
             logEntry.className = "gameLogEntry";
             logEntry.innerHTML = fullEventText;
+
+            // Add color coding based on event type
+            if (fullEventText.includes('[ADVANTAGE GOAL]')) {
+                logEntry.style.color = '#e74c3c';
+            } else if (fullEventText.includes('[PENALTY GOAL]')) {
+                logEntry.style.color = '#e67e22';
+            } else if (fullEventText.includes('[NATURAL GOAL]')) {
+                logEntry.style.color = '#2ecc71';
+            } else if (fullEventText.includes('[20 SEC EXCLUSION]')) {
+                logEntry.style.color = '#3498db';
+            } else if (fullEventText.includes('[SHOOTOUT GOAL]')) {
+                logEntry.style.color = '#9b59b6';
+            }
+
             gameLogDiv.appendChild(logEntry);
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
         }
