@@ -1025,9 +1025,9 @@
             const minutes = parseInt(document.getElementById('minutes').textContent);
             const seconds = parseInt(document.getElementById('seconds').textContent);
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const formattedTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             const gameId = document.getElementById('form').getAttribute('data-game-id');
-            const fullEventText = `[${gameTime}] - ${text}`;
+            const fullEventText = `[${formattedTime}] - ${text}`;
 
             if (!window.game_data) window.game_data = {};
             if (!window.game_data[gameId]) window.game_data[gameId] = {game_log: []};
