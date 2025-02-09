@@ -158,14 +158,15 @@
     </div>
     <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Water Polo Statistics Tracker</h1>
 
-    <!-- Score Display -->
-    <div class="timer-container" style="text-align: center; margin-bottom: 20px;">
-        <div class="quarter-display" style="font-size: 1.5em; margin-bottom: 10px;">Quarter: <span id="currentQuarter">1</span></div>
-        <div class="timer-display" style="font-size: 2em; margin-bottom: 10px;"><span id="minutes">7</span>:<span id="seconds">00</span></div>
-        <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
-        <button id="rewindTimer" style="padding: 10px 20px; margin-right: 10px;">Rewind 10s</button>
-        <button id="endQuarter" style="padding: 10px 20px; margin-right: 10px;">End Quarter</button>
-        <button id="overtime" style="padding: 10px 20px;">Overtime</button>
+    <!-- Quarter Selection -->
+    <div style="text-align: center; margin-bottom: 20px;">
+        <label for="quarterSelect" style="font-size: 1.5em;">Quarter:</label>
+        <select id="currentQuarter" style="font-size: 1.2em; padding: 5px; margin-left: 10px;">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select>
     </div>
     <div class="score-container">
         <div class="team-score away-team">
