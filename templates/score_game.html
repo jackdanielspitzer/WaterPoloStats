@@ -951,6 +951,15 @@
             const quarter = document.getElementById('currentQuarter').textContent;
             const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             const currentTime = minutes * 60 + seconds;
+            const gameId = document.getElementById('form').getAttribute('data-game-id');
+
+            // Initialize game data if needed
+            if (!game_data[gameId]) {
+                game_data[gameId] = {};
+            }
+            if (!game_data[gameId].game_log) {
+                game_data[gameId].game_log = [];
+            }
 
             // Update active exclusions - remove expired ones
             activeExclusions = activeExclusions.filter(ex => {
@@ -971,69 +980,16 @@
                 eventText += ' [20 SEC EXCLUSION]';
             }
 
-            // Handle goals and add appropriate tags
-            if (eventText.toLowerCase().includes('scored')) {
-                if (isShootout) {
-                    // Create shootout event text
-                    const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                    const first_event = {player: 'Player #'}; // Placeholder - needs proper logic to get player number.
-                    const shootoutEvent = `SO: ${team} team ${first_event.player || ''} scored in shootout [SHOOTOUT GOAL]`;
-                    const homeTeam = document.querySelector('input[name="home_team"]').value;
-                    const awayTeam = document.querySelector('input[name="away_team"]').value;
-                    const gameId = document.querySelector('input[name="game_id"]').value;
+            // Format the complete log entry
+            const fullEventText = `[${gameTime}] - ${eventText}`;
 
-                    // Send shootout event to server
-                    fetch('/process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                    });
-
-                    // Add to visual game log
-                    const logEntry = document.createElement('div');
-                    logEntry.id = "gameLogEntry";
-                    logEntry.innerHTML = shootoutEvent;
-                    logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
-                    document.getElementById('gameLog').appendChild(logEntry);
-
-                    // Auto-scroll to bottom
-                    const gameLog = document.getElementById('gameLog');
-                    gameLog.scrollTop = gameLog.scrollHeight;
-
-                    // Add shootout event to the game log array
-                    if (!game_data[gameId]) {
-                        game_data[gameId] = { game_log: [] };
-                    }
-                    if (!game_data[gameId].game_log) {
-                        game_data[gameId].game_log = [];
-                    }
-                    game_data[gameId].game_log.push(shootoutEvent);
-                    return;
-                } else {
-                    const scoringTeam = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                    const oppositeTeam = scoringTeam === 'dark' ? 'light' : 'dark';
-
-                    // Check if opposing team has an active exclusion
-                    const hasAdvantage = activeExclusions.some(ex => ex.team === oppositeTeam);
-
-                    if (hasAdvantage) {
-                        eventText += ' [ADVANTAGE GOAL]';
-                    } else if (eventText.toLowerCase().includes('penalty') ||
-                              eventText.toLowerCase().includes('5 meter') ||
-                              eventText.toLowerCase().includes('5-meter')) {
-                        eventText += ' [PENALTY GOAL]';
-                    } else {
-                        eventText += ' [NATURAL GOAL]';
-                    }
-                }
-            }
+            // Add to game_data
+            game_data[gameId].game_log.push(fullEventText);
 
             // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
-            logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
+            logEntry.innerHTML = fullEventText;
 
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
@@ -1044,6 +1000,8 @@
                 logEntry.style.color = '#2ecc71';
             } else if (eventText.includes('[20 SEC EXCLUSION]')) {
                 logEntry.style.color = '#3498db';
+            } else if (eventText.includes('[SHOOTOUT GOAL]')) {
+                logEntry.style.color = '#9b59b6';
             }
 
             document.getElementById('gameLog').appendChild(logEntry);
