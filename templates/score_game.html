@@ -467,7 +467,7 @@
             const minutes = document.getElementById('minutes').textContent;
             const seconds = document.getElementById('seconds').textContent;
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            const gameTime = getFormattedTime(); // Use the helper function
 
             try {
                 const response = await fetch('/process', {
@@ -529,7 +529,7 @@
             const minutes = document.getElementById('minutes').textContent;
             const seconds = document.getElementById('seconds').textContent;
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            const gameTime = getFormattedTime(); // Use the helper function
 
             // Immediately process the recognized text
             try {
@@ -686,10 +686,7 @@
         let activeExclusions = [];
 
         function addEventToLog(text) {
-            const minutes = parseInt(document.getElementById('minutes').textContent);
-            const seconds = parseInt(document.getElementById('seconds').textContent);
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            const gameTime = getFormattedTime(); // Use helper function here
             const gameId = document.getElementById('form').getAttribute('data-game-id');
             const fullEventText = `[${gameTime}] - ${text}`;
 
@@ -715,11 +712,19 @@
                 logEntry.style.color = '#9b59b6';
             }
 
-            gameLogDiv.appendChild(logEntry);
+            document.getElementById('gameLog').appendChild(logEntry);
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
 
             // Update stats immediately after adding log entry
             updateTables();
+
+            // Helper function to get formatted time string
+            function getFormattedTime() {
+                const quarter = document.getElementById('currentQuarter').textContent;
+                const minutes = document.getElementById('minutes').textContent;
+                const seconds = document.getElementById('seconds').textContent;
+                return quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            }
         }
 
     </script>
