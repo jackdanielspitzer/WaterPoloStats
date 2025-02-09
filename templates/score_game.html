@@ -739,10 +739,13 @@
                     const data = await response.json();
                     const resultText = data.response || 'Success';
                     document.getElementById('result').innerText = resultText;
-                    addEventToLog(resultText);
+                    if (resultText && resultText !== 'Could not parse the input.') {
+                        addEventToLog(resultText);
+                    }
                 } else {
                     console.error("Error in response:", response.status);
-                    document.getElementById('result').innerText = 'Error processing text.';
+                    const data = await response.json();
+                    document.getElementById('result').innerText = data.error || 'Error processing text.';
                 }
                 document.getElementById('inputText').value = '';
             } catch (error) {
