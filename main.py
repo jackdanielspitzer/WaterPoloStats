@@ -3006,7 +3006,19 @@ def sort_cap_number(cap_number):
 
 
 
-# Time formatting removed
+def format_time(time_str):
+    if not time_str:
+        return "TBD"
+    try:
+        # Parse the time string
+        time_obj = datetime.strptime(time_str, '%H:%M')
+        # Format in 12-hour format with AM/PM
+        return time_obj.strftime('%I:%M %p')
+    except ValueError:
+        return time_str
+
+# Register the filter with the Jinja environment
+app.jinja_env.filters['format_time'] = format_time
 
 @app.template_filter('from_json')
 def from_json(value):
