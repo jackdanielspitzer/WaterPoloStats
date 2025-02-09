@@ -19,55 +19,9 @@ def check_email_config():
         return False
     return True
 
-def parse_time_input(text):
-    """Parse time input from various formats and return minutes"""
-    import re
-    
-    # Default time if none provided
-    default_minutes = 7
-    
-    # First check for 3-digit time format at start (e.g. "345" -> "3:45")
-    three_digit_pattern = r'^(\d{3})'
-    match = re.match(three_digit_pattern, text)
-    if match:
-        time_str = match.group(1)
-        minutes = int(time_str[0])
-        seconds = int(time_str[1:])
-        return minutes, seconds, text[match.end():].strip()
-        
-    # Check for MM:SS format
-    time_pattern = r'^(\d{1,2}):(\d{2})'
-    match = re.match(time_pattern, text)
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2))
-        return minutes, seconds, text[match.end():].strip()
-        
-    # Check for other numeric patterns
-    numeric_pattern = r'^(\d+)'
-    match = re.match(numeric_pattern, text)
-    if match:
-        raw_time = match.group(1)
-        if len(raw_time) <= 2:  # Assume it's just minutes
-            return int(raw_time), 0, text[match.end():].strip()
-        elif len(raw_time) == 3:  # Format like 330 for 3:30
-            minutes = int(raw_time[0])
-            seconds = int(raw_time[1:])
-            return minutes, seconds, text[match.end():].strip()
-        elif len(raw_time) == 4:  # Format like 1030 for 10:30
-            minutes = int(raw_time[:2])
-            seconds = int(raw_time[2:])
-            return minutes, seconds, text[match.end():].strip()
-            
-    # Check for text format (e.g. "3 minutes 30")
-    text_pattern = r'(\d+)\s*(?:minute|min|m)s?\s*(?:(\d+)\s*(?:second|sec|s)s?)?'
-    match = re.search(text_pattern, text, re.IGNORECASE)
-    if match:
-        minutes = int(match.group(1))
-        seconds = int(match.group(2)) if match.group(2) else 0
-        return minutes, seconds, text[match.end():].strip()
-        
-    return default_minutes, 0, text
+def parse_input(text):
+    """Process input text without time parsing"""
+    return text.strip()
 
 
 app = Flask(__name__)
@@ -1461,11 +1415,8 @@ def phrase(number, action, team):
         return f"The {team} team {number} performed {action}"
 
 def run(text):
-    # Parse time from input
-    minutes, seconds, remaining_text = parse_time_input(text)
-    timeRemaining = minutes * 60 + seconds
-    
-    events = extract_key_phrases(remaining_text)
+    # Process input text directly
+    events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
