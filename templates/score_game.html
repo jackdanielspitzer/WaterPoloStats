@@ -669,6 +669,10 @@
         });
 
         // Initialize button event listeners when DOM is loaded
+        function showOvertimeOptions() {
+            showOvertimeSetup();
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('startPauseTimer').addEventListener('click', startPauseTimer);
             document.getElementById('rewindTimer').addEventListener('click', rewindTimer);
@@ -807,7 +811,7 @@
                     console.error("Error in response:", response.status);
                     document.getElementById('result').innerText = 'Errorprocessing text.';
                 }
-            } catch (error{
+            } catch (error) {
                 console.error("Error processing text:", error);
                 document.getElementById('result').innerText = 'Error processing text.';
             }
