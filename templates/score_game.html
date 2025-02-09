@@ -808,7 +808,7 @@
                     document.getElementById('result').innerText = 'Errorprocessing text.';
                 }
             } catch (error) {
-                console.error("Error processing text:, error);
+                console.error("Error processing text:", error);
                 document.getElementById('result').innerText = 'Error processing text.';
             }
         };
@@ -1029,8 +1029,9 @@
             const gameId = document.getElementById('form').getAttribute('data-game-id');
             const fullEventText = `[${gameTime}] - ${text}`;
 
-            if (!game_data[gameId]) game_data[gameId] = {game_log: []};
-            game_data[gameId].game_log.push(fullEventText);
+            if (!window.game_data) window.game_data = {};
+            if (!window.game_data[gameId]) window.game_data[gameId] = {game_log: []};
+            window.game_data[gameId].game_log.push(fullEventText);
 
             const gameLogDiv = document.getElementById('gameLog');
             const logEntry = document.createElement('div');
@@ -1052,6 +1053,9 @@
 
             gameLogDiv.appendChild(logEntry);
             gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
+
+            // Update stats immediately after adding log entry
+            updateTables();
         }
 
     </script>
