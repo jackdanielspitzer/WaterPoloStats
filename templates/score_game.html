@@ -142,7 +142,7 @@
             border: 1px solid #ccc;
             background-color: #fff;
             overflow-y: auto;
-            height: 200px; /* Adjust as needed */
+            height: 300px; /* Adjust as needed */
         }
         #gameLogEntry {
             margin-bottom: 5px;
@@ -275,7 +275,7 @@
     </script>
     </form>
 
-    <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
+    <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 300px;">
     </div>
 
     <script>
@@ -810,7 +810,7 @@
             }
         };
 
-        // Show or hide the box score when the button is clicked
+        // Show or hide the box score when the buttonis clicked
         const showBoxScoreButton = document.getElementById('showBoxScoreButton');
         const tablesContainer = document.getElementById('tablesContainer');
 
@@ -996,7 +996,7 @@
             // Clear and update game log display
             const gameLogDiv = document.getElementById('gameLog');
             gameLogDiv.innerHTML = ''; // Clear existing entries
-            
+
             // Re-add all entries to ensure proper display
             game_data[gameId].game_log.forEach(entry => {
                 const logEntry = document.createElement('div');
@@ -1015,7 +1015,7 @@
                 } else if (entry.includes('[SHOOTOUT GOAL]')) {
                     logEntry.style.color = '#9b59b6';
                 }
-                
+
                 gameLogDiv.appendChild(logEntry);
             });
 
@@ -1032,11 +1032,10 @@
                 logEntry.style.color = '#9b59b6';
             }
 
-            document.getElementById('gameLog').appendChild(logEntry);
+            gameLogDiv.appendChild(logEntry);
 
             // Auto-scroll to bottom
-            const gameLog = document.getElementById('gameLog');
-            gameLog.scrollTop = gameLog.scrollHeight;
+            gameLogDiv.scrollTop = gameLogDiv.scrollHeight;
         }
 
 
