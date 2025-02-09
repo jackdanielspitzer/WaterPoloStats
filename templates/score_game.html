@@ -447,6 +447,14 @@
         }
 
         // Process form submission for text input
+        // Helper function to get formatted time string
+        function getFormattedTime() {
+            const quarter = document.getElementById('currentQuarter').textContent;
+            const minutes = document.getElementById('minutes').textContent;
+            const seconds = document.getElementById('seconds').textContent;
+            return quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+        }
+
         document.getElementById('form').addEventListener('submit', async function(e) {
             e.preventDefault();
             const inputText = document.getElementById('inputText').value.trim();
