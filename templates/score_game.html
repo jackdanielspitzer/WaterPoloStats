@@ -653,25 +653,21 @@
                     const awayScoreEl = document.getElementById('awayScore');
                     const homeScoreEl = document.getElementById('homeScore');
 
-                    awayScoreEl.textContent = awayScore;
-                    homeScoreEl.textContent = homeScore;
+                    if (awayScoreEl && homeScoreEl) {
+                        awayScoreEl.textContent = awayScore;
+                        homeScoreEl.textContent = homeScore;
 
-                // Get score elements
-                const awayScoreEl = document.getElementById('awayScore');
-                const homeScoreEl = document.getElementById('homeScore');
+                        // Reset classes
+                        awayScoreEl.classList.remove('winning-score');
+                        homeScoreEl.classList.remove('winning-score');
 
-                if (awayScoreEl && homeScoreEl) {
-                    // Reset classes
-                    awayScoreEl.classList.remove('winning-score');
-                    homeScoreEl.classList.remove('winning-score');
-
-                    // Add winning-score class to the higher score
-                    if (parseFloat(awayScore) > parseFloat(homeScore)) {
-                        awayScoreEl.classList.add('winning-score');
-                    } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
-                        homeScoreEl.classList.add('winning-score');
+                        // Add winning-score class to the higher score
+                        if (parseFloat(awayScore) > parseFloat(homeScore)) {
+                            awayScoreEl.classList.add('winning-score');
+                        } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
+                            homeScoreEl.classList.add('winning-score');
+                        }
                     }
-                }
 
                 console.log("Tables updated successfully.");
 
