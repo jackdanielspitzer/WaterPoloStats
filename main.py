@@ -1539,6 +1539,7 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', 'Q1')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1554,7 +1555,10 @@ def process_text():
         if not home_roster or not away_roster:
             return jsonify({'error': 'Team rosters not found'}), 400
 
+        # Initialize game_data entry if it doesn't exist
         if game_id not in game_data:
+            game_data[game_id] = {
+                'game_log': [],
             # Initialize game data with roster information
             game_data[game_id] = {
                 'dataWhite': {
@@ -1599,17 +1603,23 @@ def run(text, game_id):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
+    game_time = request.form.get('game_time', 'Q1')
+
+    # Ensure game_data[game_id] exists with game_log
+    if game_id not in game_data:
+        game_data[game_id] = {'game_log': []}
+    elif 'game_log' not in game_data[game_id]:
+        game_data[game_id]['game_log'] = []
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name, game_id):
                 log_entry = phrase(player, event, team)
                 responses.append(log_entry)
-
-                # Initialize game logs if needed
-                if 'game_log' not in game_data[game_id]:
-                    game_data[game_id]['game_log'] = []
+                
+                # Add the log entry with game time
+                formatted_entry = f"{game_time} - {log_entry}"
+                game_data[game_id]['game_log'].append(formatted_entry)
 
                 # Format quarter display correctly (OT instead of QOT)
                 quarter_part = game_time.split(' ')[0]
