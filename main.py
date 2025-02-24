@@ -1547,13 +1547,42 @@ def process_text():
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
 
+        # Load rosters first to validate they exist
+        home_roster = get_team_roster(home_team)
+        away_roster = get_team_roster(away_team)
+        
+        if not home_roster or not away_roster:
+            return jsonify({'error': 'Team rosters not found'}), 400
+
         if game_id not in game_data:
-            # Initialize game data if it doesn't exist
+            # Initialize game data with roster information
             game_data[game_id] = {
-                'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
-                'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                'dataWhite': {
+                    'Player': [str(p['cap_number']) for p in away_roster],
+                    'Shot': [0] * len(away_roster),
+                    'Shot Attempt': [0] * len(away_roster),
+                    'Blocks': [0] * len(away_roster),
+                    'Steals': [0] * len(away_roster),
+                    'Exclusions': [0] * len(away_roster),
+                    'Exclusions Drawn': [0] * len(away_roster),
+                    'Penalties': [0] * len(away_roster),
+                    'Turnovers': [0] * len(away_roster),
+                    'Sprint Won': [0] * len(away_roster),
+                    'Sprint Attempt': [0] * len(away_roster)
+                },
+                'dataBlack': {
+                    'Player': [str(p['cap_number']) for p in home_roster],
+                    'Shot': [0] * len(home_roster),
+                    'Shot Attempt': [0] * len(home_roster),
+                    'Blocks': [0] * len(home_roster),
+                    'Steals': [0] * len(home_roster),
+                    'Exclusions': [0] * len(home_roster),
+                    'Exclusions Drawn': [0] * len(home_roster),
+                    'Penalties': [0] * len(home_roster),
+                    'Turnovers': [0] * len(home_roster),
+                    'Sprint Won': [0] * len(home_roster),
+                    'Sprint Attempt': [0] * len(home_roster)
+                }
             }
 
         response = run(text, game_id)
@@ -1563,8 +1592,7 @@ def process_text():
             return jsonify({'response': 'Action recorded successfully'})
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
-        # Still return a 200 status since the action was likely completed
-        return jsonify({'response': 'Action recorded but encountered an error in processing response'})
+        return jsonify({'error': str(e)}), 500
 
 def run(text, game_id):
     events = extract_key_phrases(text)
