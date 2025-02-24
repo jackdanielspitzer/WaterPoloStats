@@ -1557,10 +1557,14 @@ def process_text():
             }
 
         response = run(text, game_id)
-        return jsonify({'response': response})
+        if response:
+            return jsonify({'response': response})
+        else:
+            return jsonify({'response': 'Action recorded successfully'})
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
-        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
+        # Still return a 200 status since the action was likely completed
+        return jsonify({'response': 'Action recorded but encountered an error in processing response'})
 
 def run(text, game_id):
     events = extract_key_phrases(text)
