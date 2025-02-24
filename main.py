@@ -1559,7 +1559,33 @@ def process_text():
         if game_id not in game_data:
             game_data[game_id] = {
                 'game_log': [],
-            # Initialize game data with roster information
+                'dataWhite': {
+                    'Player': [str(p['cap_number']) for p in away_roster],
+                    'Shot': [0] * len(away_roster),
+                    'Shot Attempt': [0] * len(away_roster),
+                    'Blocks': [0] * len(away_roster),
+                    'Steals': [0] * len(away_roster),
+                    'Exclusions': [0] * len(away_roster),
+                    'Exclusions Drawn': [0] * len(away_roster),
+                    'Penalties': [0] * len(away_roster),
+                    'Turnovers': [0] * len(away_roster),
+                    'Sprint Won': [0] * len(away_roster),
+                    'Sprint Attempt': [0] * len(away_roster)
+                },
+                'dataBlack': {
+                    'Player': [str(p['cap_number']) for p in home_roster],
+                    'Shot': [0] * len(home_roster),
+                    'Shot Attempt': [0] * len(home_roster),
+                    'Blocks': [0] * len(home_roster),
+                    'Steals': [0] * len(home_roster),
+                    'Exclusions': [0] * len(home_roster),
+                    'Exclusions Drawn': [0] * len(home_roster),
+                    'Penalties': [0] * len(home_roster),
+                    'Turnovers': [0] * len(home_roster),
+                    'Sprint Won': [0] * len(home_roster),
+                    'Sprint Attempt': [0] * len(home_roster)
+                }
+            }
             game_data[game_id] = {
                 'dataWhite': {
                     'Player': [str(p['cap_number']) for p in away_roster],
