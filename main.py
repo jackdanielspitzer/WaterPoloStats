@@ -1556,16 +1556,20 @@ def process_text():
             return jsonify({'error': 'Team rosters not found'}), 400
 
         # Initialize game_data entry if it doesn't exist
-        if game_id not in game_data:
-            # Get rosters first
+        try:
+            # Load rosters
+            with open('team_rosters.json', 'r') as file:
+                team_rosters = json.load(file)
+
             home_roster = team_rosters.get(home_team_name, [])
             away_roster = team_rosters.get(away_team_name, [])
-            
+
             if not home_roster or not away_roster:
                 print(f"Empty rosters: home={len(home_roster)}, away={len(away_roster)}")
                 return jsonify({'error': 'Team rosters not found'}), 404
-                
-            game_data[game_id] = {
+
+            if game_id not in game_data:
+                game_data[game_id] = {
                 'game_log': [],
                 'dataWhite': {
                     'Player': [str(p['cap_number']) for p in away_roster],
@@ -1754,6 +1758,7 @@ game_data = {}
 @login_required
 def get_data():
     try:
+    try:
         # Load team rosters
         team_rosters = load_team_rosters()
 
@@ -1856,12 +1861,15 @@ def get_data():
             away_box = game_data[game_id]['dataWhite']
 
         # Return the current game data with roster cap numbers
-        return jsonify({
+        response = {
             'home_box': home_box,
             'away_box': away_box
-        })
+        }
+        print("Sending response:", response)
+        return jsonify(response)
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        print("Error in get_data:", str(e))
+        return jsonify({'error': str(e), 'details': 'Error fetching game data'}), 500
 
 
 @app.route('/game_details/<int:game_id>', methods=['GET'])
