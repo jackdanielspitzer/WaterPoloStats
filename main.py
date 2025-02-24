@@ -1557,6 +1557,14 @@ def process_text():
 
         # Initialize game_data entry if it doesn't exist
         if game_id not in game_data:
+            # Get rosters first
+            home_roster = team_rosters.get(home_team_name, [])
+            away_roster = team_rosters.get(away_team_name, [])
+            
+            if not home_roster or not away_roster:
+                print(f"Empty rosters: home={len(home_roster)}, away={len(away_roster)}")
+                return jsonify({'error': 'Team rosters not found'}), 404
+                
             game_data[game_id] = {
                 'game_log': [],
                 'dataWhite': {
@@ -1755,7 +1763,12 @@ def get_data():
         game_id = request.args.get('game_id')
 
         if not all([home_team_name, away_team_name, game_id]):
+            print(f"Missing parameters: home={home_team_name}, away={away_team_name}, game_id={game_id}")
             return jsonify({'error': 'Missing required parameters'}), 400
+
+        # Initialize game data if not exists
+        if game_id not in game_data:
+            game_data[game_id] = {}
 
         # Get rosters for both teams
         home_roster = team_rosters.get(home_team_name, [])
