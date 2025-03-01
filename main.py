@@ -2810,12 +2810,23 @@ def end_game():
         if game_id in game_data:
             del game_data[game_id]
 
+        # Get the school slug from the form or determine it from the team names
         school_slug = request.form.get('school_slug')
         if not school_slug:
+            # First try to find the white team's slug
             school_slug = next((slug for slug, school in schools.items() 
                               if school['name'] == white_team_name), None)
+            # If not found, try the black team
+            if not school_slug:
+                school_slug = next((slug for slug, school in schools.items() 
+                                  if school['name'] == black_team_name), None)
 
-        return redirect(url_for('team_page', school_slug=school_slug))
+        # Make sure we have a redirect destination
+        if school_slug:
+            return redirect(url_for('team_page', school_slug=school_slug))
+        else:
+            # If all else fails, redirect to home
+            return redirect(url_for('home'))
 
     except Exception as e:
         print(f"Error in end_game: {str(e)}")
