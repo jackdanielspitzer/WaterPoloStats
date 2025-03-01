@@ -1539,6 +1539,7 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
+        game_time = request.form.get('game_time', 'Q1 N/A')  # Get game time or use default
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1553,7 +1554,8 @@ def process_text():
                 'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
                              'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
                 'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
-                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                'game_log': []
             }
 
         response = run(text, game_id)
@@ -1606,76 +1608,69 @@ def run(text, game_id):
                     quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
-                event_time = datetime.strptime(time_part, '%M:%S')
                 
                 # Check if this is a goal event
                 if 'scored' in log_entry.lower():
-                    # Look back in game log for recent exclusions or penalties
-                    recent_events = game_data[game_id].get('game_log', [])[-4:]  # Look at last 4 events
-                    scoring_team = 'dark' if 'dark' in log_entry.lower() else 'light'
+                    # For non-custom time entries, skip the datetime parsing
                     found_advantage = False
                     found_penalty = False
                     
-                    # Check for exclusion advantage first
-                    for prev_event in recent_events:
-                        if ' - ' in prev_event:
-                            try:
-                                prev_time_str = prev_event.split(' - ')[0].split(' ')[1]
-                                prev_time = datetime.strptime(prev_time_str, '%M:%S')
-                                time_diff = (event_time - prev_time).total_seconds()
-                                
-                                if 'excluded' in prev_event.lower() and time_diff <= 20:
-                                    found_advantage = True
-                                    break
-                            except (ValueError, IndexError):
-                                continue
+                    if time_part != 'N/A':
+                        try:
+                            event_time = datetime.strptime(time_part, '%M:%S')
+                            
+                            # Look back in game log for recent exclusions or penalties
+                            recent_events = game_data[game_id].get('game_log', [])[-4:]  # Look at last 4 events
+                            scoring_team = 'dark' if 'dark' in log_entry.lower() else 'light'
+                            
+                            # Check for exclusion advantage first
+                            for prev_event in recent_events:
+                                if ' - ' in prev_event:
+                                    try:
+                                        prev_time_str = prev_event.split(' - ')[0].split(' ')[1]
+                                        if prev_time_str != 'N/A':
+                                            prev_time = datetime.strptime(prev_time_str, '%M:%S')
+                                            time_diff = (event_time - prev_time).total_seconds()
+                                            
+                                            if 'excluded' in prev_event.lower() and time_diff <= 20:
+                                                found_advantage = True
+                                                break
+                                    except (ValueError, IndexError):
+                                        continue
 
-                    # Check for correct penalty sequence if no advantage found
-                    if not found_advantage and len(recent_events) >= 4:
-                        penalty_team = None
-                        exclusion_team = None
-                        attempt_team = None
-                        sequence_found = True
+                            # Check for correct penalty sequence if no advantage found
+                            if not found_advantage and len(recent_events) >= 4:
+                                penalty_team = None
+                                exclusion_team = None
+                                attempt_team = None
+                                sequence_found = True
 
-                        print("\n=== Penalty Sequence Debug ===")
-                        print(f"Recent events:")
-                        for i, event in enumerate(recent_events):
-                            print(f"{i}: {event}")
+                                # Check penalty drawn event
+                                if 'drew a penalty' in recent_events[0].lower() or 'drew penalty' in recent_events[0].lower():
+                                    penalty_team = 'dark' if 'dark' in recent_events[0].lower() else 'light'
+                                else:
+                                    sequence_found = False
 
-                        # Check penalty drawn event
-                        if 'drew a penalty' in recent_events[0].lower() or 'drew penalty' in recent_events[0].lower():
-                            penalty_team = 'dark' if 'dark' in recent_events[0].lower() else 'light'
-                            print(f"1. Penalty drawn by {penalty_team} team")
-                        else:
-                            sequence_found = False
-                            print("1. No penalty drawn event found in position 0")
+                                # Check exclusion event
+                                if sequence_found and 'excluded' in recent_events[1].lower():
+                                    exclusion_team = 'dark' if 'dark' in recent_events[1].lower() else 'light'
+                                    if exclusion_team == penalty_team:
+                                        sequence_found = False
+                                else:
+                                    sequence_found = False
 
-                        # Check exclusion event
-                        if sequence_found and 'excluded' in recent_events[1].lower():
-                            exclusion_team = 'dark' if 'dark' in recent_events[1].lower() else 'light'
-                            print(f"2. Exclusion on {exclusion_team} team")
-                            if exclusion_team == penalty_team:
-                                print("   ERROR: Exclusion on same team as penalty drawer")
-                                sequence_found = False
-                        else:
-                            sequence_found = False
-                            print("2. No exclusion event found in position 1")
+                                # Check attempt event
+                                if sequence_found and 'attempt' in recent_events[3].lower():
+                                    attempt_team = 'dark' if 'dark' in recent_events[3].lower() else 'light'
+                                    if attempt_team != penalty_team:
+                                        sequence_found = False
+                                else:
+                                    sequence_found = False
 
-                        # Check attempt event
-                        if sequence_found and 'attempt' in recent_events[3].lower():
-                            attempt_team = 'dark' if 'dark' in recent_events[3].lower() else 'light'
-                            print(f"3. Attempt by {attempt_team} team")
-                            if attempt_team != penalty_team:
-                                print("   ERROR: Attempt not by penalty drawing team")
-                                sequence_found = False
-                        else:
-                            sequence_found = False
-                            print("3. No attempt event found in position 3")
-
-                        found_penalty = sequence_found and penalty_team == scoring_team
-                        print(f"\nSequence valid: {sequence_found}")
-                        print(f"Scoring team: {scoring_team}")
-                        print(f"Is penalty goal: {found_penalty}\n")
+                                found_penalty = sequence_found and penalty_team == scoring_team
+                        except (ValueError, TypeError):
+                            # If there's an error parsing the time, just continue
+                            pass
 
                     if found_advantage:
                         log_entry += " [ADVANTAGE GOAL]"
