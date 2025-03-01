@@ -640,8 +640,16 @@ def extract_key_phrases(text):
                 elif tokens[i+1] in penalty_keywords or 'penalty' in doc_text:
                     first_event['event'] = 'Penalties'
 
+        # Skip penalty detection if this is a missed shot event
+        if ('missed' in doc_text.lower() or 'miss' in doc_text.lower()) and not ('penalty' in doc_text.lower() or '5 meter' in doc_text.lower() or '5-meter' in doc_text.lower()):
+            # This is just a missed shot, not a penalty
+            if first_event['player'] is None:
+                first_event['player'] = all_numbers[0] if all_numbers else None
+            first_event['event'] = 'Shot Attempt'
+            first_event['team'] = current_team
+            break
         # Extract event type for penalties and exclusions
-        if any(phrase in doc_text for phrase in penalty_keywords):
+        elif any(phrase in doc_text for phrase in penalty_keywords):
             if '5 m by' in doc_text or 'five meter by' in doc_text:
                 # Player who drew gets penalty, other player gets exclusion
                 if len(all_numbers) >= 2:
@@ -843,8 +851,8 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['team'] = current_team
 
-                # Check specifically for missed shots first
-                if any(word in doc_text.lower() for word in ['missed', 'miss']):
+                # Check specifically for missed shots - make sure this is prioritized over penalty interpretation
+                if 'missed' in doc_text.lower() or 'miss' in doc_text.lower():
                     first_event['event'] = 'Shot Attempt'
                 # If it's a goal (scored) and not missed
                 elif 'scored' in doc_text or 'score' in doc_text:
