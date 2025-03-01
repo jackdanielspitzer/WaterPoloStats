@@ -309,9 +309,17 @@
                         {% set opponent_slug = slug %}
                     {% endif %}
                 {% endfor %}
-                <a href="{{ url_for('team_page', school_slug=opponent_slug) }}">
-                    <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
-                </a>
+                {% if opponent_slug %}
+                    <a href="{{ url_for('team_page', school_slug=opponent_slug) }}">
+                        <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
+                    </a>
+                {% else %}
+                    <!-- If no slug found, use the name to create a fallback slug -->
+                    {% set fallback_slug = game.opponent.lower().replace(' high school', '').replace(' ', '-') %}
+                    <a href="{{ url_for('team_page', school_slug=fallback_slug) }}">
+                        <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
+                    </a>
+                {% endif %}
                 <div class="game-info">
                     <strong>{{ game.formatted_date }} - {{ game.time|format_time }}</strong>
                     {{ game.home_away }} vs {{ game.opponent }}<br>
