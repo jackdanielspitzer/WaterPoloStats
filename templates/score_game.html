@@ -786,6 +786,21 @@
         let activeExclusions = [];
 
         function addEventToLog(eventText) {
+            // Check if the event already exists in the game log to prevent duplicates
+            const gameLog = document.getElementById('gameLog');
+            const existingEntries = Array.from(gameLog.children);
+            const gameId = document.querySelector('input[name="game_id"]').value;
+
+            // For shootout entries, check if the exact same entry already exists
+            if (eventText.startsWith('SO:') && eventText.includes('[SHOOTOUT GOAL]')) {
+                for (const entry of existingEntries) {
+                    if (entry.textContent === eventText) {
+                        console.log("Duplicate shootout entry prevented");
+                        return; // Skip adding duplicate entry
+                    }
+                }
+            }
+
             // Check if the last submitted text had a custom time (from the inputText field)
             const inputText = document.getElementById('inputText').value.trim();
 
@@ -804,7 +819,7 @@
             const quarter = document.getElementById('quarterSelect').value;
 
             if (timeMatch) {
-                // Use custom time if specified in input
+                //                // Use custom time if specified in input
                 const customTime = timeMatch[1] || timeMatch[2]; // Different groups based on pattern matched
                 gameTime = `${quarter} ${customTime}`;
             } else {
@@ -843,6 +858,15 @@
                     const playerNumberMatch = inputText.match(/(\d+)/); // Extract player number
                     const playerNumber = playerNumberMatch ? playerNumberMatch[0] : "?"; // Use "?" if no number is found
                     const shootoutEvent = `SO: ${team} team Player ${playerNumber} scored in shootout [SHOOTOUT GOAL]`;
+
+                    // Check if this event already exists in the log
+                    for (const entry of existingEntries) {
+                        if (entry.textContent === shootoutEvent) {
+                            console.log("Duplicate shootout entry prevented");
+                            return; // Skip adding duplicate entry
+                        }
+                    }
+
                     const homeTeam = document.querySelector('input[name="home_team"]').value;
                     const awayTeam = document.querySelector('input[name="away_team"]').value;
                     const gameId = document.querySelector('input[name="game_id"]').value;
