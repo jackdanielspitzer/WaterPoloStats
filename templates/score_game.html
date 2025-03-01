@@ -904,10 +904,36 @@
             gameLog.scrollTop = gameLog.scrollHeight;
         }
         
-        // Simplified function that no longer sorts entries
+        // Sort game log entries first by quarter, then by time within quarter
         function sortGameLog() {
-            // No longer sorting - events appear in the order they were added
-            return;
+            const gameLog = document.getElementById('gameLog');
+            const entries = Array.from(gameLog.children);
+            
+            // Define quarter order for sorting
+            const quarterOrder = {
+                'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4, 
+                'OT1': 5, 'OT2': 6, 'OT3': 7, 'OT4': 8,
+                'SO': 9
+            };
+            
+            entries.sort((a, b) => {
+                // Extract quarters from strong tags
+                const quarterA = a.querySelector('strong').textContent.split(' ')[0];
+                const quarterB = b.querySelector('strong').textContent.split(' ')[0];
+                
+                // Compare quarters based on predefined order
+                return quarterOrder[quarterA] - quarterOrder[quarterB];
+            });
+            
+            // Clear and re-append in sorted order
+            while (gameLog.firstChild) {
+                gameLog.removeChild(gameLog.firstChild);
+            }
+            
+            entries.forEach(entry => gameLog.appendChild(entry));
+            
+            // Auto-scroll to bottom after sorting
+            gameLog.scrollTop = gameLog.scrollHeight;
         }
 
 
