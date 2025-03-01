@@ -1073,7 +1073,8 @@
             logEntry.dataset.quarter = quarter;
             logEntry.dataset.minutes = minutes;
             logEntry.dataset.seconds = seconds;
-            logEntry.dataset.sortTime = (parseInt(quarter) * 10000) + (7 * 60 - currentTime); // Higher value = earlier in the quarter
+            // Calculate time in seconds from beginning of quarter (higher values = later in quarter)
+            logEntry.dataset.sortTime = (parseInt(quarter) * 10000) + (420 - currentTime); // 420 seconds = 7 minutes
 
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
@@ -1131,8 +1132,9 @@
                     return parseInt(quarterA) - parseInt(quarterB);
                 }
                 
-                // Within the same quarter, sort by time (higher value = earlier in quarter)
-                return parseFloat(b.dataset.sortTime) - parseFloat(a.dataset.sortTime);
+                // Within the same quarter, sort by time (lower minutes/seconds = earlier in quarter)
+                // This ensures that 7:00 appears before 6:00, and 6:00 appears before 3:45
+                return parseFloat(a.dataset.sortTime) - parseFloat(b.dataset.sortTime);
             });
             
             // Clear and re-append in sorted order
