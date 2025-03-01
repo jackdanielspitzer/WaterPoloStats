@@ -1539,7 +1539,6 @@ def process_text():
         game_id = request.form.get('game_id')
         home_team = request.form.get('home_team')
         away_team = request.form.get('away_team')
-        game_time = request.form.get('game_time', 'Q1')
 
         if not text:
             return jsonify({'error': 'No text provided'}), 400
@@ -1548,116 +1547,37 @@ def process_text():
         if not home_team or not away_team:
             return jsonify({'error': 'Team information missing'}), 400
 
-        # Load rosters first to validate they exist
-        home_roster = get_team_roster(home_team)
-        away_roster = get_team_roster(away_team)
-        
-        if not home_roster or not away_roster:
-            return jsonify({'error': 'Team rosters not found'}), 400
-
-        # Initialize game_data entry if it doesn't exist
-        try:
-            # Load rosters
-            with open('team_rosters.json', 'r') as file:
-                team_rosters = json.load(file)
-
-            home_roster = team_rosters.get(home_team_name, [])
-            away_roster = team_rosters.get(away_team_name, [])
-
-            if not home_roster or not away_roster:
-                print(f"Empty rosters: home={len(home_roster)}, away={len(away_roster)}")
-                return jsonify({'error': 'Team rosters not found'}), 404
-
-            if game_id not in game_data:
-                game_data[game_id] = {
-                'game_log': [],
-                'dataWhite': {
-                    'Player': [str(p['cap_number']) for p in away_roster],
-                    'Shot': [0] * len(away_roster),
-                    'Shot Attempt': [0] * len(away_roster),
-                    'Blocks': [0] * len(away_roster),
-                    'Steals': [0] * len(away_roster),
-                    'Exclusions': [0] * len(away_roster),
-                    'Exclusions Drawn': [0] * len(away_roster),
-                    'Penalties': [0] * len(away_roster),
-                    'Turnovers': [0] * len(away_roster),
-                    'Sprint Won': [0] * len(away_roster),
-                    'Sprint Attempt': [0] * len(away_roster)
-                },
-                'dataBlack': {
-                    'Player': [str(p['cap_number']) for p in home_roster],
-                    'Shot': [0] * len(home_roster),
-                    'Shot Attempt': [0] * len(home_roster),
-                    'Blocks': [0] * len(home_roster),
-                    'Steals': [0] * len(home_roster),
-                    'Exclusions': [0] * len(home_roster),
-                    'Exclusions Drawn': [0] * len(home_roster),
-                    'Penalties': [0] * len(home_roster),
-                    'Turnovers': [0] * len(home_roster),
-                    'Sprint Won': [0] * len(home_roster),
-                    'Sprint Attempt': [0] * len(home_roster)
-                }
-            }
+        if game_id not in game_data:
+            # Initialize game data if it doesn't exist
             game_data[game_id] = {
-                'dataWhite': {
-                    'Player': [str(p['cap_number']) for p in away_roster],
-                    'Shot': [0] * len(away_roster),
-                    'Shot Attempt': [0] * len(away_roster),
-                    'Blocks': [0] * len(away_roster),
-                    'Steals': [0] * len(away_roster),
-                    'Exclusions': [0] * len(away_roster),
-                    'Exclusions Drawn': [0] * len(away_roster),
-                    'Penalties': [0] * len(away_roster),
-                    'Turnovers': [0] * len(away_roster),
-                    'Sprint Won': [0] * len(away_roster),
-                    'Sprint Attempt': [0] * len(away_roster)
-                },
-                'dataBlack': {
-                    'Player': [str(p['cap_number']) for p in home_roster],
-                    'Shot': [0] * len(home_roster),
-                    'Shot Attempt': [0] * len(home_roster),
-                    'Blocks': [0] * len(home_roster),
-                    'Steals': [0] * len(home_roster),
-                    'Exclusions': [0] * len(home_roster),
-                    'Exclusions Drawn': [0] * len(home_roster),
-                    'Penalties': [0] * len(home_roster),
-                    'Turnovers': [0] * len(home_roster),
-                    'Sprint Won': [0] * len(home_roster),
-                    'Sprint Attempt': [0] * len(home_roster)
-                }
+                'dataWhite': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []},
+                'dataBlack': {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 
+                             'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
             }
 
         response = run(text, game_id)
-        if response:
-            return jsonify({'response': response})
-        else:
-            return jsonify({'response': 'Action recorded successfully'})
+        return jsonify({'response': response})
     except Exception as e:
         app.logger.error(f"Error processing text: {str(e)}")
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': f'Error processing text: {str(e)}'}), 500
 
 def run(text, game_id):
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    game_time = request.form.get('game_time', 'Q1')
-
-    # Ensure game_data[game_id] exists with game_log
-    if game_id not in game_data:
-        game_data[game_id] = {'game_log': []}
-    elif 'game_log' not in game_data[game_id]:
-        game_data[game_id]['game_log'] = []
+    game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
 
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name, game_id):
                 log_entry = phrase(player, event, team)
                 responses.append(log_entry)
-                
-                # Add the log entry with game time
-                formatted_entry = f"{game_time} - {log_entry}"
-                game_data[game_id]['game_log'].append(formatted_entry)
+
+                # Initialize game logs if needed
+                if 'game_log' not in game_data[game_id]:
+                    game_data[game_id]['game_log'] = []
 
                 # Format quarter display correctly (OT instead of QOT)
                 quarter_part = game_time.split(' ')[0]
@@ -1758,7 +1678,6 @@ game_data = {}
 @login_required
 def get_data():
     try:
-    try:
         # Load team rosters
         team_rosters = load_team_rosters()
 
@@ -1768,12 +1687,7 @@ def get_data():
         game_id = request.args.get('game_id')
 
         if not all([home_team_name, away_team_name, game_id]):
-            print(f"Missing parameters: home={home_team_name}, away={away_team_name}, game_id={game_id}")
             return jsonify({'error': 'Missing required parameters'}), 400
-
-        # Initialize game data if not exists
-        if game_id not in game_data:
-            game_data[game_id] = {}
 
         # Get rosters for both teams
         home_roster = team_rosters.get(home_team_name, [])
@@ -1860,20 +1774,13 @@ def get_data():
             home_box = game_data[game_id]['dataBlack']
             away_box = game_data[game_id]['dataWhite']
 
-        try:
-            # Return the current game data with roster cap numbers
-            response = {
-                'home_box': home_box,
-                'away_box': away_box
-            }
-            print("Sending response:", response)
-            return jsonify(response)
-        except Exception as e:
-            print("Error in get_data:", str(e))
-            return jsonify({'error': str(e), 'details': 'Error fetching game data'}), 500
+        # Return the current game data with roster cap numbers
+        return jsonify({
+            'home_box': home_box,
+            'away_box': away_box
+        })
     except Exception as e:
-        print("Error in get_data:", str(e))
-        return jsonify({'error': str(e), 'details': 'Error fetching game data'}), 500
+        return jsonify({'error': str(e)}), 500
 
 
 @app.route('/game_details/<int:game_id>', methods=['GET'])
