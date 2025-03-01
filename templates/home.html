@@ -245,14 +245,25 @@
                         <div class="vs">vs</div>
                         <div class="team">
                             {% if game.home_away == "Away" %}
+                                {% set opponent_slug = '' %}
                                 {% for slug, s in schools.items() %}
                                     {% if s.name == game.opponent %}
+                                        {% set opponent_slug = slug %}
                                         <a href="{{ url_for('team_page', school_slug=slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
                                             <img src="{{ url_for('static', filename=s.logo) }}" alt="{{ game.opponent }}" style="margin-bottom: 8px;">
                                             <span>{{ game.opponent }}</span>
                                         </a>
                                     {% endif %}
                                 {% endfor %}
+                                
+                                <!-- Fallback if slug not found -->
+                                {% if not opponent_slug %}
+                                    {% set fallback_slug = game.opponent.lower().replace(' high school', '').replace(' ', '-') %}
+                                    <a href="{{ url_for('team_page', school_slug=fallback_slug) }}" style="text-decoration: none; color: inherit; display: flex; flex-direction: column; align-items: center;">
+                                        <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }}" style="margin-bottom: 8px;">
+                                        <span>{{ game.opponent }}</span>
+                                    </a>
+                                {% endif %}
                             {% else %}
                                 {% for slug, s in schools.items() %}
                                     {% if s.name == game.school_name %}
