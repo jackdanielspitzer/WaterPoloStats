@@ -214,9 +214,22 @@
             "is_scored": false,
             "formatted_date": "January 16th, 2025",
             "game_log": [
-                "Q1 7:00 - Turnover on dark 1",
-                "Q1 7:00 - The dark team #5 scored a goal [NATURAL GOAL]",
-                "Q1 7:00 - The dark team #5 attempted a shot"
+                "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "Q2 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q2 3:45 - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 6:00 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 6:00 - The dark team goalie attempted a shot",
+                "OT3 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "OT3 N/A - The dark team goalie attempted a shot",
+                "OT3 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "OT3 3:45 - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot"
             ]
         },
         {
