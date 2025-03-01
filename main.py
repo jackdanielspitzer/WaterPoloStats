@@ -824,12 +824,18 @@ def extract_key_phrases(text):
                 first_event['player'] = '1'  # Goalie is always number 1
                 first_event['team'] = current_team
 
+                # Check if it's a successful shot
                 if 'scored' in doc_text or 'score' in doc_text or 'goal' in doc_text.lower():
-                    first_event['event'] = 'Shot'
-                    # Add shot attempt for goalie
-                    second_event['event'] = 'Shot Attempt'
-                    second_event['player'] = '1'
-                    second_event['team'] = current_team
+                    # Only count as a goal if not missed
+                    if not any(word in doc_text.lower() for word in ['missed', 'miss']):
+                        first_event['event'] = 'Shot'
+                        # Add shot attempt for goalie
+                        second_event['event'] = 'Shot Attempt'
+                        second_event['player'] = '1'
+                        second_event['team'] = current_team
+                    else:
+                        # If missed, only count as attempt
+                        first_event['event'] = 'Shot Attempt'
                 else:
                     first_event['event'] = 'Shot Attempt'
                     first_event['team'] = current_team
@@ -837,11 +843,11 @@ def extract_key_phrases(text):
                 first_event['player'] = all_numbers[0] if all_numbers else None
                 first_event['team'] = current_team
 
+                # Check specifically for missed shots first
                 if any(word in doc_text.lower() for word in ['missed', 'miss']):
                     first_event['event'] = 'Shot Attempt'
-
-                # If it's a goal (scored)
-                if 'scored' in doc_text or 'score' in doc_text:
+                # If it's a goal (scored) and not missed
+                elif 'scored' in doc_text or 'score' in doc_text:
                     first_event['event'] = 'Shot'
                     # Add second event for shot attempt
                     second_event['event'] = 'Shot Attempt'
