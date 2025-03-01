@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>California High Schools</title>
     <style>
-        /* Style unchanged from your original code */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -52,10 +52,11 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         a {
-            display: block;
+            display: flex;
             padding: 15px;
             text-decoration: none;
             color: #007BFF;
+            align-items: center;
         }
         a:hover {
             text-decoration: underline;
@@ -66,6 +67,12 @@
             text-align: center;
             font-size: 16px;
         }
+        .school-logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 15px;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
@@ -74,15 +81,15 @@
         <input type="text" id="searchBar" onkeyup="filterSchools()" placeholder="Search for a high school...">
     </div>
     <ul id="schoolList">
-        <li><a href="/team/palo-alto">Palo Alto High School</a></li>
-        <li><a href="/team/gunn">Henry M. Gunn High School</a></li>
-        <li><a href="/team/harker">Harker High School</a></li>
-        <li><a href="/team/los-gatos">Los Gatos High School</a></li>
-        <li><a href="/team/los-altos">Los Altos High School</a></li>
-        <li><a href="/team/fremont">Fremont High School</a></li>
-        <li><a href="/team/mountain-view">Mountain View High School</a></li>
-        <li><a href="/team/sj-express">SJ Express</a></li>
-        <li><a href="/team/sf-polo">SF Polo</a></li>
+        <li><a href="/team/palo-alto"><img src="/static/images/Palo Alto High School.png" alt="Palo Alto Logo" class="school-logo">Palo Alto High School</a></li>
+        <li><a href="/team/gunn"><img src="/static/images/Henry M. Gunn High School.png" alt="Gunn Logo" class="school-logo">Henry M. Gunn High School</a></li>
+        <li><a href="/team/harker"><img src="/static/images/Harker High School.png" alt="Harker Logo" class="school-logo">Harker High School</a></li>
+        <li><a href="/team/los-gatos"><img src="/static/images/Los Gatos High School.png" alt="Los Gatos Logo" class="school-logo">Los Gatos High School</a></li>
+        <li><a href="/team/los-altos"><img src="/static/images/Los Altos High School.png" alt="Los Altos Logo" class="school-logo">Los Altos High School</a></li>
+        <li><a href="/team/fremont"><img src="/static/images/Fremont High School.png" alt="Fremont Logo" class="school-logo">Fremont High School</a></li>
+        <li><a href="/team/mountain-view"><img src="/static/images/Mountain View High School.png" alt="Mountain View Logo" class="school-logo">Mountain View High School</a></li>
+        <li><a href="/team/sj-express"><img src="/static/images/sj.jpeg" alt="SJ Express Logo" class="school-logo">SJ Express</a></li>
+        <li><a href="/team/sf-polo"><img src="/static/images/sf.png" alt="SF Polo Logo" class="school-logo">SF Polo</a></li>
     </ul>
     <p id="noResults" class="no-results" style="display: none;">No results found.</p>
 
@@ -120,6 +127,11 @@
                 noResultsMessage.style.display = "block";
             }
         }
+
+        // Show the search results by default when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('schoolList').style.display = "block";
+        });
     </script>
 </body>
 </html>
