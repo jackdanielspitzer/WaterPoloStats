@@ -1070,6 +1070,10 @@
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
             logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
+            logEntry.dataset.quarter = quarter;
+            logEntry.dataset.minutes = minutes;
+            logEntry.dataset.seconds = seconds;
+            logEntry.dataset.sortTime = (parseInt(quarter) * 10000) + (7 * 60 - currentTime); // Higher value = earlier in the quarter
 
             // Add color coding for different types of events
             if (eventText.includes('[ADVANTAGE GOAL]')) {
@@ -1082,11 +1086,61 @@
                 logEntry.style.color = '#3498db';
             }
 
-            document.getElementById('gameLog').appendChild(logEntry);
-
-            // Auto-scroll to bottom
+            // Get the game log container
             const gameLog = document.getElementById('gameLog');
+            
+            // Add the entry to the game log
+            gameLog.appendChild(logEntry);
+
+            // Sort the entries by quarter and time
+            sortGameLog();
+            
+            // Auto-scroll to bottom
             gameLog.scrollTop = gameLog.scrollHeight;
+        }
+        
+        // Function to sort game log entries by quarter and time
+        function sortGameLog() {
+            const gameLog = document.getElementById('gameLog');
+            const entries = Array.from(gameLog.children);
+            
+            entries.sort((a, b) => {
+                // First sort by quarter
+                const quarterA = a.dataset.quarter;
+                const quarterB = b.dataset.quarter;
+                
+                // Handle different quarter formats (Q1, OT1, SO)
+                if (quarterA !== quarterB) {
+                    // Special case for Shootout
+                    if (quarterA === 'SO') return 1;
+                    if (quarterB === 'SO') return -1;
+                    
+                    // Handle OT vs regular quarters
+                    const isOTA = quarterA.startsWith('OT');
+                    const isOTB = quarterB.startsWith('OT');
+                    
+                    if (isOTA && !isOTB) return 1;
+                    if (!isOTA && isOTB) return -1;
+                    
+                    if (isOTA && isOTB) {
+                        // Both are OT, compare OT numbers
+                        return parseInt(quarterA.substring(2)) - parseInt(quarterB.substring(2));
+                    }
+                    
+                    // Both are regular quarters
+                    return parseInt(quarterA) - parseInt(quarterB);
+                }
+                
+                // Within the same quarter, sort by time (higher value = earlier in quarter)
+                return parseFloat(b.dataset.sortTime) - parseFloat(a.dataset.sortTime);
+            });
+            
+            // Clear and re-append in sorted order
+            while (gameLog.firstChild) {
+                gameLog.removeChild(gameLog.firstChild);
+            }
+            
+            entries.forEach(entry => gameLog.appendChild(entry));
         }
 
 
