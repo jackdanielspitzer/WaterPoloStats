@@ -2599,7 +2599,7 @@ def end_game():
                         break
         
         if white_game_index is None or black_game_index is None:
-            return jsonify({'error': 'Could not find matching games in both teams\' schedules'}), 404
+            return jsonify({'error': 'Corresponding games not found'}), 404
         
         # Get the current memory-based game data
         current_game_data = game_data.get(game_id, {})
@@ -2607,32 +2607,12 @@ def end_game():
         # Determine if this was a shootout
         is_shootout = current_quarter == 'SO'
         
-        # Preserve existing game logs if they exist (especially important for shootout mode)
-        white_existing_game_log = white_team_data["games"][white_game_index].get("game_log", [])
-        black_existing_game_log = black_team_data["games"][black_game_index].get("game_log", [])
-        
         # Get memory game log
         current_game_log = current_game_data.get('game_log', [])
         
-        # Use existing game log if available and in shootout mode, otherwise use current memory log
-        if is_shootout:
-            # In shootout mode, we want to preserve existing box scores and only update the score
-            white_box = white_team_data["games"][white_game_index].get("away_box", {})
-            black_box = black_team_data["games"][black_game_index].get("home_box", {})
-            
-            # If we don't have existing box scores but do have current memory data, use that
-            if not white_box and current_game_data.get('dataWhite'):
-                white_box = current_game_data.get('dataWhite', {})
-            if not black_box and current_game_data.get('dataBlack'):
-                black_box = current_game_data.get('dataBlack', {})
-                
-            # Use existing game logs if they exist, otherwise use current memory log
-            final_game_log = white_existing_game_log if white_existing_game_log else current_game_log
-        else:
-            # For regular games, use the current box scores and game log from memory
-            white_box = current_game_data.get('dataWhite', {})
-            black_box = current_game_data.get('dataBlack', {})
-            final_game_log = current_game_log
+        # Set up box scores
+        white_box = current_game_data.get('dataWhite', {})
+        black_box = current_game_data.get('dataBlack', {})
         
         # Prepare score information
         if is_shootout:
@@ -2644,61 +2624,52 @@ def end_game():
             white_score = int(white_score)
             black_score = int(black_score)
         
-        # Score info for white team's perspective
+        # Score info for white team's perspective (away team)
         white_score_info = {
             "white_team_score": white_score,
             "black_team_score": black_score,
             "game_type": "(SO)" if is_shootout else f"({current_quarter})" if "OT" in str(current_quarter) else ""
         }
         
-        # Score info for black team's perspective (scores are reversed)
+        # Score info for black team's perspective (home team)
         black_score_info = {
             "white_team_score": black_score,
             "black_team_score": white_score,
             "game_type": white_score_info["game_type"]
         }
         
-        # Update white team's game
-        white_team_data["games"][white_game_index].update({
+        # Ensure all required fields exist in box scores
+        required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
+                        'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
+                        'Sprint Won', 'Sprint Attempt']
+        
+        for field in required_fields:
+            if field not in white_box:
+                white_box[field] = [0] * len(white_box.get('Player', []))
+            if field not in black_box:
+                black_box[field] = [0] * len(black_box.get('Player', []))
+        
+        # Update white team's game (away team)
+        white_team_data["games"][white_game_index] = {
+            **white_team_data["games"][white_game_index],
             "is_scored": True,
             "is_shootout": is_shootout,
             "score": white_score_info,
-            "game_log": final_game_log
-        })
+            "game_log": current_game_log,
+            "away_box": white_box,
+            "home_box": black_box
+        }
         
-        # Only update box scores if not in shootout mode
-        if not is_shootout:
-            white_team_data["games"][white_game_index].update({
-                "away_box": white_box,
-                "home_box": black_box
-            })
-        
-        # Update black team's game
-        black_team_data["games"][black_game_index].update({
+        # Update black team's game (home team)
+        black_team_data["games"][black_game_index] = {
+            **black_team_data["games"][black_game_index],
             "is_scored": True,
             "is_shootout": is_shootout,
             "score": black_score_info,
-            "game_log": final_game_log
-        })
-        
-        # Only update box scores if not in shootout mode
-        if not is_shootout:
-            black_team_data["games"][black_game_index].update({
-                "home_box": black_box,
-                "away_box": white_box
-            })
-        
-        # Ensure box scores have all the necessary fields (only for non-shootout games)
-        if not is_shootout:
-            required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
-                            'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
-                            'Sprint Won', 'Sprint Attempt']
-            
-            for field in required_fields:
-                if field not in white_box:
-                    white_box[field] = [0] * len(white_box.get('Player', []))
-                if field not in black_box:
-                    black_box[field] = [0] * len(black_box.get('Player', []))
+            "game_log": current_game_log,
+            "home_box": black_box,
+            "away_box": white_box
+        }
         
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)
@@ -2708,7 +2679,7 @@ def end_game():
         if game_id in game_data:
             del game_data[game_id]
         
-        print(f"Redirecting to: {redirect_url}")
+        print(f"Game successfully marked as scored. Redirecting to: {redirect_url}")
         
         # Redirect to the specified URL or team page
         return redirect(redirect_url)
