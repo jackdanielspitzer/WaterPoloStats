@@ -720,12 +720,26 @@
             console.log("Away team:", awayTeam);
             console.log("Game ID:", gameId);
 
-
-            // Get current game time and quarter
-            const minutes = document.getElementById('minutes').textContent;
-            const seconds = document.getElementById('seconds').textContent;
-            const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            // Check for custom time format at beginning of input (e.g., "3:45 dark 1 scored")
+            let gameTime;
+            let processedText = inputText;
+            const timePattern = /^(\d+:\d+)\s+(.*)/;
+            const timeMatch = inputText.match(timePattern);
+            
+            if (timeMatch) {
+                // If custom time is specified in input, use that for game time
+                const customTime = timeMatch[1];
+                processedText = timeMatch[2]; // Use the rest of the text
+                const quarter = document.getElementById('currentQuarter').textContent;
+                gameTime = quarter.startsWith('OT') ? `${quarter} ${customTime}` : `Q${quarter} ${customTime}`;
+                console.log("Using custom time:", customTime);
+            } else {
+                // Otherwise use timer display time
+                const minutes = document.getElementById('minutes').textContent;
+                const seconds = document.getElementById('seconds').textContent;
+                const quarter = document.getElementById('currentQuarter').textContent;
+                gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+            }
 
             try {
                 const response = await fetch('/process', {
@@ -733,7 +747,7 @@
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
-                    body: `text=${encodeURIComponent(inputText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
+                    body: `text=${encodeURIComponent(processedText)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=${encodeURIComponent(gameTime)}`
                 });
 
                 if (response.ok) {
