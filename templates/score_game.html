@@ -458,6 +458,16 @@
                         regulationHomeScore = Math.floor(parseFloat(newScore));
                         // Mark that we've scored in shootout mode
                         hasShootoutScore = true;
+                        
+                        // Add shot attempt log entry (only to display)
+                        const attemptEvent = `SO: ${team} team Player ${playerNumber} attempted a shot`;
+                        const attemptEntry = document.createElement('div');
+                        attemptEntry.id = "gameLogEntry";
+                        attemptEntry.innerHTML = attemptEvent;
+                        document.getElementById('gameLog').appendChild(attemptEntry);
+                        
+                        // Add to local game data
+                        game_data[gameId].game_log.push(attemptEvent);
                     } else {
                         shootoutGoalsAway++;
                         const newScore = (regulationAwayScore + (shootoutGoalsAway * 0.1)).toFixed(1);
@@ -466,6 +476,16 @@
                         regulationAwayScore = Math.floor(parseFloat(newScore));
                         // Mark that we've scored in shootout mode
                         hasShootoutScore = true;
+                        
+                        // Add shot attempt log entry (only to display)
+                        const attemptEvent = `SO: ${team} team Player ${playerNumber} attempted a shot`;
+                        const attemptEntry = document.createElement('div');
+                        attemptEntry.id = "gameLogEntry";
+                        attemptEntry.innerHTML = attemptEvent;
+                        document.getElementById('gameLog').appendChild(attemptEntry);
+                        
+                        // Add to local game data
+                        game_data[gameId].game_log.push(attemptEvent);
                     }
 
                     // Disable the quarter selector dropdown after scoring in shootout
@@ -491,27 +511,26 @@
                         game_data[gameId].game_log = [];
                     }
 
-                    // Add shootout event to game log (only once)
-                    addEventToLog(shootoutEvent);
+                    // Add shootout event to visual game log display (only)
+                    const logEntry = document.createElement('div');
+                    logEntry.id = "gameLogEntry";
+                    logEntry.innerHTML = shootoutEvent;
+                    logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
+                    document.getElementById('gameLog').appendChild(logEntry);
+                    
+                    // Auto-scroll to bottom
+                    const gameLog = document.getElementById('gameLog');
+                    gameLog.scrollTop = gameLog.scrollHeight;
 
-                    // Send shootout event to server for game log only
-                    fetch('/process', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: `text=${encodeURIComponent(shootoutEvent)}&home_team=${encodeURIComponent(homeTeam)}&away_team=${encodeURIComponent(awayTeam)}&game_id=${encodeURIComponent(gameId)}&game_time=SO`
-                    }).then(response => {
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        return response.json();
-                    }).then(data => {
-                        if (!game_data[gameId]) {
-                            game_data[gameId] = { game_log: [] };
-                        }
-                        game_data[gameId].game_log.push(shootoutEvent);
-                    }).catch(error => {
-                        console.error('Error:', error);
-                    });
+                    // Store in local game_data but don't send to server yet
+                    // (will be sent when game is finished)
+                    if (!game_data[gameId]) {
+                        game_data[gameId] = { game_log: [] };
+                    }
+                    if (!game_data[gameId].game_log) {
+                        game_data[gameId].game_log = [];
+                    }
+                    game_data[gameId].game_log.push(shootoutEvent);
                 }
                 document.getElementById('inputText').value = '';
                 return false;
