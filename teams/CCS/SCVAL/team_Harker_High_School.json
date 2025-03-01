@@ -177,6 +177,17 @@
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
             "time": null,
+            "date": "2025-03-20",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 20th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
             "date": "2025-03-26",
             "game_type": "Non-League Game",
             "is_scored": true,
