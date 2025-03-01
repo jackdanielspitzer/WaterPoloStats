@@ -786,15 +786,24 @@
         function addEventToLog(eventText) {
             // Check if the last submitted text had a custom time (from the inputText field)
             const inputText = document.getElementById('inputText').value.trim();
-            const timePattern = /^(\d+:\d+)\s+(.*)/;
-            const timeMatch = inputText.match(timePattern);
+            
+            // Match time at beginning of string: "3:45 dark 1 scored"
+            const timePatternStart = /^(\d+:\d+)\s+(.*)/;
+            // Match time at end of string: "dark 1 scored 3:45"
+            const timePatternEnd = /(.*)\s+(\d+:\d+)$/;
+            // Match time after "at" or "At": "At 3:45 dark 1 scored" 
+            const timePatternAt = /\b[Aa]t\s+(\d+:\d+)\s+(.*)/;
+            
+            let timeMatch = inputText.match(timePatternStart) || 
+                           inputText.match(timePatternEnd) || 
+                           inputText.match(timePatternAt);
             
             let gameTime;
             const quarter = document.getElementById('quarterSelect').value;
             
             if (timeMatch) {
                 // Use custom time if specified in input
-                const customTime = timeMatch[1];
+                const customTime = timeMatch[1] || timeMatch[2]; // Different groups based on pattern matched
                 gameTime = `${quarter} ${customTime}`;
             } else {
                 // Set gameTime to "N/A" when no time is provided
