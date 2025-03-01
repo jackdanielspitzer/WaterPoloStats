@@ -72,6 +72,8 @@
             height: 40px;
             margin-right: 15px;
             object-fit: contain;
+            display: inline-block !important;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -81,15 +83,15 @@
         <input type="text" id="searchBar" onkeyup="filterSchools()" placeholder="Search for a high school...">
     </div>
     <ul id="schoolList">
-        <li><a href="/team/palo-alto"><img src="/static/images/Palo Alto High School.png" alt="Palo Alto Logo" class="school-logo">Palo Alto High School</a></li>
-        <li><a href="/team/gunn"><img src="/static/images/Henry M. Gunn High School.png" alt="Gunn Logo" class="school-logo">Henry M. Gunn High School</a></li>
-        <li><a href="/team/harker"><img src="/static/images/Harker High School.png" alt="Harker Logo" class="school-logo">Harker High School</a></li>
-        <li><a href="/team/los-gatos"><img src="/static/images/Los Gatos High School.png" alt="Los Gatos Logo" class="school-logo">Los Gatos High School</a></li>
-        <li><a href="/team/los-altos"><img src="/static/images/Los Altos High School.png" alt="Los Altos Logo" class="school-logo">Los Altos High School</a></li>
-        <li><a href="/team/fremont"><img src="/static/images/Fremont High School.png" alt="Fremont Logo" class="school-logo">Fremont High School</a></li>
-        <li><a href="/team/mountain-view"><img src="/static/images/Mountain View High School.png" alt="Mountain View Logo" class="school-logo">Mountain View High School</a></li>
-        <li><a href="/team/sj-express"><img src="/static/images/sj.jpeg" alt="SJ Express Logo" class="school-logo">SJ Express</a></li>
-        <li><a href="/team/sf-polo"><img src="/static/images/sf.png" alt="SF Polo Logo" class="school-logo">SF Polo</a></li>
+        <li><a href="/team/palo-alto"><img src="/static/images/Palo Alto High School.png" alt="Palo Alto Logo" class="school-logo" style="display: inline-block;">Palo Alto High School</a></li>
+        <li><a href="/team/gunn"><img src="/static/images/Henry M. Gunn High School.png" alt="Gunn Logo" class="school-logo" style="display: inline-block;">Henry M. Gunn High School</a></li>
+        <li><a href="/team/harker"><img src="/static/images/Harker High School.png" alt="Harker Logo" class="school-logo" style="display: inline-block;">Harker High School</a></li>
+        <li><a href="/team/los-gatos"><img src="/static/images/Los Gatos High School.png" alt="Los Gatos Logo" class="school-logo" style="display: inline-block;">Los Gatos High School</a></li>
+        <li><a href="/team/los-altos"><img src="/static/images/Los Altos High School.png" alt="Los Altos Logo" class="school-logo" style="display: inline-block;">Los Altos High School</a></li>
+        <li><a href="/team/fremont"><img src="/static/images/Fremont High School.png" alt="Fremont Logo" class="school-logo" style="display: inline-block;">Fremont High School</a></li>
+        <li><a href="/team/mountain-view"><img src="/static/images/Mountain View High School.png" alt="Mountain View Logo" class="school-logo" style="display: inline-block;">Mountain View High School</a></li>
+        <li><a href="/team/sj-express"><img src="/static/images/sj.jpeg" alt="SJ Express Logo" class="school-logo" style="display: inline-block;">SJ Express</a></li>
+        <li><a href="/team/sf-polo"><img src="/static/images/sf.png" alt="SF Polo Logo" class="school-logo" style="display: inline-block;">SF Polo</a></li>
     </ul>
     <p id="noResults" class="no-results" style="display: none;">No results found.</p>
 
@@ -132,14 +134,20 @@
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('schoolList').style.display = "block";
             
-            // Make sure all logos are visible in the search results
+            // Ensure all logos are visible in the search results
             const schoolLogos = document.querySelectorAll('.school-logo');
             schoolLogos.forEach(logo => {
-                logo.style.display = 'inline-block';
+                logo.style.display = 'inline-block !important';
                 logo.style.width = '40px';
                 logo.style.height = '40px';
                 logo.style.marginRight = '15px';
                 logo.style.objectFit = 'contain';
+                logo.style.verticalAlign = 'middle';
+                
+                // Force image to load/reload
+                const currentSrc = logo.src;
+                logo.src = '';
+                logo.src = currentSrc;
             });
         });
     </script>
