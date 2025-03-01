@@ -978,12 +978,14 @@
                     `${quarter} ${customTime}` : 
                     `Q${quarter} ${customTime}`;
             } else {
-                // Otherwise use timer display time
+                // Set gameTime to "N/A" when no time is provided
+                gameTime = quarter.startsWith('OT') ? 
+                    `${quarter} N/A` : 
+                    `Q${quarter} N/A`;
+                    
+                // Still keep track of the current timer for sorting purposes
                 minutes = parseInt(document.getElementById('minutes').textContent);
                 seconds = parseInt(document.getElementById('seconds').textContent);
-                gameTime = quarter.startsWith('OT') ? 
-                    `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : 
-                    `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
             }
             
             const currentTime = minutes * 60 + seconds;
