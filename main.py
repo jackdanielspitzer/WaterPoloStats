@@ -1860,13 +1860,17 @@ def get_data():
             home_box = game_data[game_id]['dataBlack']
             away_box = game_data[game_id]['dataWhite']
 
-        # Return the current game data with roster cap numbers
-        response = {
-            'home_box': home_box,
-            'away_box': away_box
-        }
-        print("Sending response:", response)
-        return jsonify(response)
+        try:
+            # Return the current game data with roster cap numbers
+            response = {
+                'home_box': home_box,
+                'away_box': away_box
+            }
+            print("Sending response:", response)
+            return jsonify(response)
+        except Exception as e:
+            print("Error in get_data:", str(e))
+            return jsonify({'error': str(e), 'details': 'Error fetching game data'}), 500
     except Exception as e:
         print("Error in get_data:", str(e))
         return jsonify({'error': str(e), 'details': 'Error fetching game data'}), 500
