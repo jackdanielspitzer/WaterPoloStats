@@ -2397,12 +2397,13 @@ def view_scoring(school_slug, game_index):
             team_rosters = json.load(file)
 
         # Fetch school and game data
-        school = schools.get(school_slug)
-        if not school:
-            return "School not found", 404
-
         school_name = school['name']
-        game = open_game(school_name, game_index)
+        team_data = load_team_data(school_name)
+        
+        if game_index >= len(team_data.get("games", [])):
+            return "Game not found", 404
+            
+        game = team_data["games"][game_index]
         if not game:
             return "Game not found", 404
 
@@ -2420,52 +2421,65 @@ def view_scoring(school_slug, game_index):
 
         # Determine which box scores to use based on home/away status
         if game['home_away'] == 'Home':
-            # If home team viewing, use home_box for black team stats
+            # If home team viewing, use home_box for black team stats (dark)
             black_team_stats = game.get('home_box', {})
             white_team_stats = game.get('away_box', {})
             print("viewed from home")
-            print(black_team_stats)
-            print(white_team_stats)
         else:
-            # If away team viewing, use away_box for white team stats
-            white_team_stats = game.get('away_box', {})
-            black_team_stats = game.get('home_box', {})
+            # If away team viewing, use away_box for white team stats (light)
+            white_team_stats = game.get('home_box', {})
+            black_team_stats = game.get('away_box', {})
             print("view from away")
-            print(black_team_stats)
-            print(white_team_stats)
+        
+        print("Black team stats:", black_team_stats)
+        print("White team stats:", white_team_stats)
 
-        # Fill missing stats with empty lists
-        if not white_team_stats or 'Player' not in white_team_stats:
-            white_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
-        if not black_team_stats or 'Player' not in black_team_stats:
-            black_team_stats = {'Player': [], 'Shot': [], 'Blocks': [], 'Steals': [], 'Exclusions': [], 'Exclusions Drawn': [], 'Penalties': [], 'Turnovers': [], 'Sprint Won': [], 'Sprint Attempt': []}
-
-        # Get game log from team data file
-        team_data = load_team_data(team_name)
-        if game_index < len(team_data["games"]):
-            stored_game = team_data["games"][game_index]
-            game = stored_game  # Use the stored game data directly
+        # Ensure the required stats fields exist in both team stats
+        required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
+                          'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
+                          'Sprint Won', 'Sprint Attempt']
+        
+        # Initialize missing fields in white team stats
+        if not white_team_stats or not isinstance(white_team_stats, dict):
+            white_team_stats = {}
+        for field in required_fields:
+            if field not in white_team_stats:
+                if field == 'Player':
+                    white_team_stats[field] = [p['cap_number'] for p in away_players]
+                else:
+                    white_team_stats[field] = [0] * len(away_players)
+        
+        # Initialize missing fields in black team stats
+        if not black_team_stats or not isinstance(black_team_stats, dict):
+            black_team_stats = {}
+        for field in required_fields:
+            if field not in black_team_stats:
+                if field == 'Player':
+                    black_team_stats[field] = [p['cap_number'] for p in home_players]
+                else:
+                    black_team_stats[field] = [0] * len(home_players)
+                    
+        # Ensure game log exists
+        if 'game_log' not in game:
+            game['game_log'] = []
             
-            # Use stored game log if available, otherwise initialize empty
-            if 'game_log' not in game:
-                game['game_log'] = []
-                
-            # Use stored score if available, otherwise calculate
-            if 'score' not in game:
-                game['score'] = {
-                    'white_team_score': sum(white_team_stats.get('Shot', [])),
-                    'black_team_score': sum(black_team_stats.get('Shot', [])),
-                    'game_type': "(SO)" if stored_game.get('is_shootout') else ""
-                }
-                
-            game['is_shootout'] = stored_game.get('is_shootout', False)
-            
-            # Print for debugging
-            print("Game log from stored data:", game['game_log'])
+        # Ensure score exists or calculate it
+        if 'score' not in game:
+            game['score'] = {
+                'white_team_score': sum(white_team_stats.get('Shot', [])),
+                'black_team_score': sum(black_team_stats.get('Shot', [])),
+                'game_type': "(SO)" if game.get('is_shootout') else ""
+            }
+        
+        # Print for debugging
+        print("Game score:", game.get('score'))
+        print("Game log entries:", len(game.get('game_log', [])))
 
         # Check privacy settings for both teams
-        home_manager = User.query.filter_by(managed_team=school_slug, account_type='team_manager').first()
+        home_team_slug = next((slug for slug, s in schools.items() if s['name'] == home_team_name), None)
         away_team_slug = next((slug for slug, s in schools.items() if s['name'] == away_team_name), None)
+        
+        home_manager = User.query.filter_by(managed_team=home_team_slug, account_type='team_manager').first()
         away_manager = User.query.filter_by(managed_team=away_team_slug, account_type='team_manager').first()
 
         home_stats_private = home_manager.stats_private if home_manager else False
@@ -2489,6 +2503,7 @@ def view_scoring(school_slug, game_index):
             away_manager_id=away_manager.id if away_manager else None
         )
     except Exception as e:
+        print(f"Error in view_scoring: {str(e)}")
         return f"Error: {str(e)}", 500
 
 
@@ -2521,330 +2536,135 @@ def end_game():
             
         game_index = int(game_id)
         current_quarter = request.form.get('current_quarter', '')
-
+        
+        # Get scores from the form
+        white_score = float(request.form.get('away_score', '0'))
+        black_score = float(request.form.get('home_score', '0'))
+        
         # Initialize both team files
         initialize_team_file(white_team_name)
         initialize_team_file(black_team_name)
 
-        # Load both teams' data
+        # Load team data for both teams
         white_team_data = load_team_data(white_team_name)
         black_team_data = load_team_data(black_team_name)
-
-        # Find the matching games by date and opponent
-        white_game = None
-        black_game = None
-
-        # Find white team's game
-        if game_index < len(white_team_data.get('games', [])):
-            white_game = white_team_data['games'][game_index]
-            white_game['is_scored'] = True
-            
-            # Get the date to find the matching game in the black team's schedule
-            game_date = white_game.get('date')
-            
-            # Find black team's corresponding game using the date and opponent match
-            for i, game in enumerate(black_team_data.get('games', [])):
-                if (game.get('date') == game_date and 
-                    game.get('opponent') == white_team_name and
-                    white_game.get('opponent') == black_team_name):
-                    black_game = game
-                    black_game['is_scored'] = True
-                    break
-
-        # Initialize both team files
-        initialize_team_file(white_team_name)
-        initialize_team_file(black_team_name)
-
-        # Load both teams' data
-        white_team_data = load_team_data(white_team_name)
-        black_team_data = load_team_data(black_team_name) 
-
+        
         # Find the corresponding games in both teams' data
-        white_game = None
-        black_game = None
         white_game_index = None
         black_game_index = None
-
-        # Find both games using date and opponent matching
+        
+        # First try to find white team's game
         if game_index < len(white_team_data.get("games", [])):
             white_game = white_team_data["games"][game_index]
             white_game_index = game_index
             game_date = white_game["date"]
-
+            
             # Find matching game in black team data
             for i, game in enumerate(black_team_data.get("games", [])):
                 if (game["date"] == game_date and 
                     game["opponent"] == white_team_name and
                     white_game["opponent"] == black_team_name):
-                    black_game = game
                     black_game_index = i
                     break
-
-            if not black_game:
-                # Try searching other direction
-                for i, game in enumerate(white_team_data.get("games", [])):
-                    if (game["date"] == game_date and
-                        game["opponent"] == black_team_name):
-                        white_game = game
-                        white_game_index = i
-                        black_game = black_team_data["games"][game_index]
-                        black_game_index = game_index
-                        break
-
-        # If we found the white game but not the black game, search the other way
-        if not black_game and game_index < len(black_team_data.get("games", [])):
-            black_game = black_team_data["games"][game_index]
-            game_date = black_game["date"]
-
-            # Find matching game in white team data
-            for i, game in enumerate(white_team_data.get("games", [])):
-                if game["date"] == game_date and game["opponent"] == black_team_name:
-                    white_game = game
-                    white_game_index = i
-                    black_game_index = game_index
-                    break
-
-        if not white_game or not black_game:
-            return jsonify({'error': 'Could not find matching games'}), 404
-
-        # Find matching game in other team's schedule
-        white_team_data = load_team_data(white_team_name)
-        black_team_data = load_team_data(black_team_name)
         
-        # Get the date from the current game
-        current_game_date = None
-        if game_index < len(white_team_data.get("games", [])):
-            current_game_date = white_team_data["games"][game_index]["date"]
-        elif game_index < len(black_team_data.get("games", [])):
-            current_game_date = black_team_data["games"][game_index]["date"]
-            
-        if not current_game_date:
-            return jsonify({'error': 'Game not found'}), 404
-
-        # Find corresponding game in opponent's schedule by date and opponent
-        white_game_index = None
-        black_game_index = None
-        
-        # Find matching games by both date and opponent
-        for i, game in enumerate(white_team_data.get("games", [])):
-            if (game["date"] == current_game_date and 
-                game["opponent"] == black_team_name):
-                white_game_index = i
-                break
-                
-        for i, game in enumerate(black_team_data.get("games", [])):
-            if (game["date"] == current_game_date and 
-                game["opponent"] == white_team_name):
-                black_game_index = i
-                break
-
+        # If we couldn't find both games, try searching the other way
         if white_game_index is None or black_game_index is None:
-            return jsonify({'error': 'Corresponding games not found'}), 404
-            
-        # Ensure both games are marked as scored and share the same game log
-        white_team_data["games"][white_game_index]["is_scored"] = True
-        black_team_data["games"][black_game_index]["is_scored"] = True
-
-        # Get scores from the form and convert to float
-        white_score = float(request.form.get('away_score', '0'))
-        black_score = float(request.form.get('home_score', '0'))
-
-        # Get current game log
-        game_log = game_data.get(game_id, {}).get('game_log', [])
-
-        # Update both games with the same game log
-        white_team_data["games"][white_game_index]["game_log"] = game_log
-        black_team_data["games"][black_game_index]["game_log"] = game_log
+            # Try to find black team's game
+            if game_index < len(black_team_data.get("games", [])):
+                black_game = black_team_data["games"][game_index]
+                black_game_index = game_index
+                game_date = black_game["date"]
+                
+                # Find matching game in white team data
+                for i, game in enumerate(white_team_data.get("games", [])):
+                    if (game["date"] == game_date and 
+                        game["opponent"] == black_team_name and
+                        black_game["opponent"] == white_team_name):
+                        white_game_index = i
+                        break
         
-        # Initialize team files if they don't exist
-        initialize_team_file(white_team_name)
-        initialize_team_file(black_team_name)
-
-        # Load team data for both teams
-        white_team_data = load_team_data(white_team_name)
-        black_team_data = load_team_data(black_team_name)
-
-        # Initialize team files if they don't exist
-        initialize_team_file(white_team_name)
-        initialize_team_file(black_team_name)
-
-        # Load team data for both teams
-        white_team_data = load_team_data(white_team_name)
-        black_team_data = load_team_data(black_team_name)
-
-        # Explicitly mark both games as scored
-        if game_index < len(white_team_data["games"]):
-            white_team_data["games"][game_index]["is_scored"] = True
+        if white_game_index is None or black_game_index is None:
+            return jsonify({'error': 'Could not find matching games in both teams\' schedules'}), 404
         
-        # Find corresponding game in black team's data
-        for black_game in black_team_data["games"]:
-            if black_game["opponent"] == white_team_name:
-                black_game["is_scored"] = True
-
-        # Save updated team data
+        # Get the current memory-based game data
+        current_game_data = game_data.get(game_id, {})
+        
+        # Extract stats from the current game
+        white_box = current_game_data.get('dataWhite', {})
+        black_box = current_game_data.get('dataBlack', {})
+        current_game_log = current_game_data.get('game_log', [])
+        
+        # Determine if this was a shootout
+        is_shootout = current_quarter == 'SO'
+        
+        # Prepare score information
+        if is_shootout:
+            # Keep decimal places for shootout
+            white_score = round(white_score, 1)
+            black_score = round(black_score, 1)
+        else:
+            # Convert to integer for regular/OT games
+            white_score = int(white_score)
+            black_score = int(black_score)
+        
+        # Score info for white team's perspective
+        white_score_info = {
+            "white_team_score": white_score,
+            "black_team_score": black_score,
+            "game_type": "(SO)" if is_shootout else f"({current_quarter})" if "OT" in str(current_quarter) else ""
+        }
+        
+        # Score info for black team's perspective (scores are reversed)
+        black_score_info = {
+            "white_team_score": black_score,
+            "black_team_score": white_score,
+            "game_type": white_score_info["game_type"]
+        }
+        
+        # Update white team's game
+        white_team_data["games"][white_game_index].update({
+            "is_scored": True,
+            "is_shootout": is_shootout,
+            "score": white_score_info,
+            "game_log": current_game_log,
+            "away_box": white_box,
+            "home_box": black_box
+        })
+        
+        # Update black team's game
+        black_team_data["games"][black_game_index].update({
+            "is_scored": True,
+            "is_shootout": is_shootout,
+            "score": black_score_info,
+            "game_log": current_game_log,
+            "home_box": black_box,
+            "away_box": white_box
+        })
+        
+        # Ensure box scores have all the necessary fields
+        required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
+                          'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
+                          'Sprint Won', 'Sprint Attempt']
+        
+        for field in required_fields:
+            if field not in white_box:
+                white_box[field] = [0] * len(white_box.get('Player', []))
+            if field not in black_box:
+                black_box[field] = [0] * len(black_box.get('Player', []))
+        
+        # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)
         save_team_data(black_team_name, black_team_data)
-
-        # Convert scores to float to handle shootout decimal points
-        white_score = float(white_score)
-        black_score = float(black_score)
-
-        if not white_team_name or not black_team_name or game_id not in game_data:
-            raise ValueError("Missing required data")
-
-        # Initialize team files
-        initialize_team_file(white_team_name)
-        initialize_team_file(black_team_name)
-
-        # Load team data
-        white_team_data = load_team_data(white_team_name)
-        black_team_data = load_team_data(black_team_name)
-
-        if game_index < len(white_team_data["games"]):
-            white_game = white_team_data["games"][game_index]
-            white_game_date = white_game["date"]
-
-            # Find corresponding black team game
-            black_game_index = next((i for i, g in enumerate(black_team_data["games"]) 
-                                   if g["opponent"] == white_team_name and g["date"] == white_game_date), None)
-
-            if black_game_index is not None:
-                black_game = black_team_data["games"][black_game_index]
-
-                # Mark both teams' games as scored
-                white_game["is_scored"] = True
-                black_game["is_scored"] = True
-
-                # Save current game stats to both teams' files
-                white_game["away_box"] = game_data[game_id]['dataWhite']
-                white_game["home_box"] = game_data[game_id]['dataBlack']
-                white_game["game_log"] = game_data[game_id].get('game_log', [])
-                black_game["home_box"] = game_data[game_id]['dataBlack']
-                black_game["away_box"] = game_data[game_id]['dataWhite']
-                black_game["game_log"] = game_data[game_id].get('game_log', [])
-
-                # Save data for both teams
-                save_team_data(white_team_name, white_team_data)
-                save_team_data(black_team_name, black_team_data)
-
-                # Get game type and handle shootout
-                game_type = request.form.get('current_quarter')
-                is_shootout = game_type == 'SO'
-
-                try:
-                    # Convert scores to float first to handle decimal points
-                    white_score = float(white_score)
-                    black_score = float(black_score)
-                    
-                    # Round appropriately based on game type
-                    if is_shootout:
-                        # Keep decimal places for shootout
-                        white_score = round(white_score, 1)
-                        black_score = round(black_score, 1)
-                        # Ensure is_shootout is set for both teams' games
-                        white_game["is_shootout"] = True
-                        black_game["is_shootout"] = True
-                    else:
-                        # Convert to integer for regular/OT games
-                        white_score = int(white_score)
-                        black_score = int(black_score)
-                        white_game["is_shootout"] = False
-                        black_game["is_shootout"] = False
-                except ValueError as e:
-                    print(f"Error converting scores: {str(e)}")
-                    white_score = 0
-                    black_score = 0
-                # Save game scores with proper type indicators
-                score_info = {
-                    "white_team_score": white_score,
-                    "black_team_score": black_score,
-                    "game_type": "(SO)" if current_quarter == 'SO' else f"({current_quarter})" if "OT" in str(current_quarter) else ""
-                }
-                
-                # Update white team's game
-                white_team_data["games"][white_game_index]["score"] = score_info.copy()
-                white_team_data["games"][white_game_index]["is_scored"] = True
-                white_team_data["games"][white_game_index]["game_log"] = game_data.get(game_id, {}).get('game_log', [])
-                white_team_data["games"][white_game_index]["is_shootout"] = current_quarter == 'SO'
-
-                # Update black team's game with reversed scores
-                black_score_info = {
-                    "white_team_score": black_score,  # Swap scores for black team's perspective
-                    "black_team_score": white_score,
-                    "game_type": score_info["game_type"]
-                }
-                black_team_data["games"][black_game_index]["score"] = black_score_info
-                black_team_data["games"][black_game_index]["is_scored"] = True
-                black_team_data["games"][black_game_index]["game_log"] = game_data.get(game_id, {}).get('game_log', [])
-                black_team_data["games"][black_game_index]["is_shootout"] = current_quarter == 'SO'
-                
-                # Save updated data for both teams
-                save_team_data(white_team_name, white_team_data)
-                save_team_data(black_team_name, black_team_data)
-                
-                # Add shootout flag
-                white_game["is_shootout"] = is_shootout
-                black_game["is_shootout"] = is_shootout
-
-                # Get game log from the current game data
-                current_game_log = game_data.get(game_id, {}).get('game_log', [])
-
-                # Get current game log and metadata
-                current_game_log = game_data.get(game_id, {}).get('game_log', [])
-                is_shootout = request.form.get('current_quarter') == 'SO'
-
-                # Add shootout indicator to relevant game log entries if needed
-                if is_shootout:
-                    for i, log_entry in enumerate(current_game_log):
-                        if 'scored a goal' in log_entry and '[NATURAL GOAL]' in log_entry:
-                            current_game_log[i] = log_entry.replace('[NATURAL GOAL]', '[SHOOTOUT GOAL]')
-
-                # Save identical game log and metadata for both teams
-                white_game.update({
-                    'game_log': current_game_log,
-                    'is_shootout': is_shootout,
-                    'score': score_info
-                })
-                
-                black_game.update({
-                    'game_log': current_game_log,
-                    'is_shootout': is_shootout,
-                    'score': score_info
-                })
-
-                # Save updated data
-                save_team_data(white_team_name, white_team_data)
-                save_team_data(black_team_name, black_team_data)
-
-        # Clear game data
+        
+        # Clear game data from memory
         if game_id in game_data:
             del game_data[game_id]
-
-        # Get the redirect URL from query parameters or form
-        redirect_url = request.args.get('redirect')
-        
-        # If no redirect URL in query params, try to get school_slug from form
-        if not redirect_url:
-            school_slug = request.form.get('school_slug')
-            if not school_slug:
-                # Try to find the white team's slug
-                school_slug = next((slug for slug, school in schools.items() 
-                                if school['name'] == white_team_name), None)
-                # If not found, try the black team
-                if not school_slug:
-                    school_slug = next((slug for slug, school in schools.items() 
-                                    if school['name'] == black_team_name), None)
-            
-            if school_slug:
-                redirect_url = f'/team/{school_slug}'
-            else:
-                redirect_url = '/'  # Fallback to home page
         
         print(f"Redirecting to: {redirect_url}")
         
         # Redirect to the specified URL or team page
         return redirect(redirect_url)
-
+        
     except Exception as e:
         print(f"Error in end_game: {str(e)}")
         
