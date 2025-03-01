@@ -286,8 +286,11 @@
                 
                 // Make sure the form action includes the redirect parameter
                 const form = document.getElementById('endGameForm');
-                form.action = `/end_game?redirect=${encodeURIComponent('/team/' + schoolSlug)}`;
+                // Make sure we include the redirect in the form action URL
+                const redirectPath = `/team/${schoolSlug}`;
+                form.action = `/end_game?redirect=${encodeURIComponent(redirectPath)}`;
                 
+                console.log("Submitting form with action:", form.action);
                 // Submit the form
                 form.submit();
             }

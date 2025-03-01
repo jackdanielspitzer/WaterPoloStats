@@ -2504,16 +2504,18 @@ def end_game():
         print("End game form data:", request.form)
         
         school_slug = request.form.get('school_slug')
-        if not school_slug:
-            return jsonify({'error': 'Missing school_slug'}), 400
-            
         game_id = request.form.get('game_index')
         white_team_name = request.form.get('white_team_name') 
         black_team_name = request.form.get('black_team_name')
+        redirect_url = request.args.get('redirect') or f'/team/{school_slug}'
+        
+        print(f"Game ID: {game_id}, White Team: {white_team_name}, Black Team: {black_team_name}")
         
         if not all([game_id, white_team_name, black_team_name]):
-            # Redirect to team page if we at least have the school slug
-            if school_slug:
+            # Redirect to team page if we have the redirect URL
+            if redirect_url:
+                return redirect(redirect_url)
+            elif school_slug:
                 return redirect(url_for('team_page', school_slug=school_slug))
             return jsonify({'error': 'Missing required game data'}), 400
             
@@ -2533,17 +2535,18 @@ def end_game():
         black_game = None
 
         # Find white team's game
-        for i, game in enumerate(white_team_data.get('games', [])):
-            if i == game_index and game.get('opponent') == black_team_name:
-                white_game = game
-                white_game['is_scored'] = True
-                break
-
-        # Find black team's corresponding game
-        game_date = white_game.get('date') if white_game else None
-        if game_date:
-            for game in black_team_data.get('games', []):
-                if game.get('date') == game_date and game.get('opponent') == white_team_name:
+        if game_index < len(white_team_data.get('games', [])):
+            white_game = white_team_data['games'][game_index]
+            white_game['is_scored'] = True
+            
+            # Get the date to find the matching game in the black team's schedule
+            game_date = white_game.get('date')
+            
+            # Find black team's corresponding game using the date and opponent match
+            for i, game in enumerate(black_team_data.get('games', [])):
+                if (game.get('date') == game_date and 
+                    game.get('opponent') == white_team_name and
+                    white_game.get('opponent') == black_team_name):
                     black_game = game
                     black_game['is_scored'] = True
                     break
@@ -2817,19 +2820,30 @@ def end_game():
         if game_id in game_data:
             del game_data[game_id]
 
-        # Get the school slug from the form or determine it from the team names
-        school_slug = request.form.get('school_slug')
-        if not school_slug:
-            # First try to find the white team's slug
-            school_slug = next((slug for slug, school in schools.items() 
-                              if school['name'] == white_team_name), None)
-            # If not found, try the black team
+        # Get the redirect URL from query parameters or form
+        redirect_url = request.args.get('redirect')
+        
+        # If no redirect URL in query params, try to get school_slug from form
+        if not redirect_url:
+            school_slug = request.form.get('school_slug')
             if not school_slug:
+                # Try to find the white team's slug
                 school_slug = next((slug for slug, school in schools.items() 
-                                  if school['name'] == black_team_name), None)
-
-        # Always redirect to team page when we have the school slug
-        return redirect(url_for('team_page', school_slug=school_slug))
+                                if school['name'] == white_team_name), None)
+                # If not found, try the black team
+                if not school_slug:
+                    school_slug = next((slug for slug, school in schools.items() 
+                                    if school['name'] == black_team_name), None)
+            
+            if school_slug:
+                redirect_url = f'/team/{school_slug}'
+            else:
+                redirect_url = '/'  # Fallback to home page
+        
+        print(f"Redirecting to: {redirect_url}")
+        
+        # Redirect to the specified URL or team page
+        return redirect(redirect_url)
 
     except Exception as e:
         print(f"Error in end_game: {str(e)}")
