@@ -309,7 +309,12 @@
                         {% set opponent_slug = slug %}
                     {% endif %}
                 {% endfor %}
-                {% if opponent_slug %}
+                <!-- Handle Gunn specifically -->
+                {% if 'Gunn' in game.opponent %}
+                    <a href="{{ url_for('team_page', school_slug='gunn') }}">
+                        <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
+                    </a>
+                {% elif opponent_slug %}
                     <a href="{{ url_for('team_page', school_slug=opponent_slug) }}">
                         <img src="{{ url_for('static', filename=game.opponent_logo) }}" alt="{{ game.opponent }} Logo" class="game-logo">
                     </a>
