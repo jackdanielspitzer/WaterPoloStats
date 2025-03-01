@@ -288,54 +288,54 @@
     <script>
         // Initialize game data object
         let game_data = {};
-        
+
         // Get the current quarter from the dropdown
         function getCurrentQuarter() {
             return document.getElementById('quarterSelect').value;
         }
-        
+
         // For handling shootout mode
         let isShootout = false;
         let shootoutGoalsHome = 0;
         let shootoutGoalsAway = 0;
         let regulationHomeScore = 0;
         let regulationAwayScore = 0;
-        
+
         // Initialize quarter dropdown
         document.addEventListener('DOMContentLoaded', function() {
             // Add event listener for quarter change
             document.getElementById('quarterSelect').addEventListener('change', function() {
                 const selectedQuarter = this.value;
-                
+
                 // Update quarter display
                 document.getElementById('result').innerText = `Changed to ${selectedQuarter}`;
-                
+
                 // Check if we're entering shootout mode
                 if (selectedQuarter === 'SO' && !isShootout) {
                     isShootout = true;
                     shootoutGoalsHome = 0;
                     shootoutGoalsAway = 0;
-                    
+
                     // Store regulation scores before shootout begins
                     regulationHomeScore = parseFloat(document.getElementById('homeScore').textContent);
                     regulationAwayScore = parseFloat(document.getElementById('awayScore').textContent);
                 } else if (selectedQuarter !== 'SO') {
                     isShootout = false;
                 }
-                
+
                 // Update stats after quarter change
                 updateTables();
-                
+
                 // Re-sort the game log to reflect the new quarter order
                 sortGameLog();
             });
         });
-        
+
         function showFinishGameConfirm() {
             const form = document.getElementById('endGameForm');
             const schoolSlug = form.querySelector('input[name="school_slug"]').value;
             form.action = `/end_game?redirect=${encodeURIComponent('/team/' + schoolSlug)}`;
-            
+
             // Create modal for confirmation
             const modal = document.createElement('div');
             modal.style.cssText = `
@@ -349,7 +349,7 @@
                 box-shadow: 0 2px 10px rgba(0,0,0,0.2);
                 z-index: 1000;
             `;
-            
+
             modal.innerHTML = `
                 <div style="text-align: center;">
                     <h3>Finish Game</h3>
@@ -358,10 +358,10 @@
                     <button onclick="document.querySelector('div[style*=\\'position: fixed\\']').remove()" style="margin: 5px; padding: 8px 16px;">Cancel</button>
                 </div>
             `;
-            
+
             document.body.appendChild(modal);
         }
-        
+
         function updateShootoutScore() {
             const homeScoreElement = document.getElementById('homeScore');
             const awayScoreElement = document.getElementById('awayScore');
@@ -417,11 +417,13 @@
                     }
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
-                    const resultText = `${team} team scored in shootout`;
+                    const playerNumberMatch = inputText.match(/(\d+)/); // Extract player number
+                    const playerNumber = playerNumberMatch ? playerNumberMatch[0] : "?"; // Use "?" if no number is found
+                    const resultText = `${team} team Player ${playerNumber} scored in shootout`;
                     document.getElementById('result').innerText = resultText;
 
                     // Create shootout event and add to game log
-                    const shootoutEvent = `SO: ${team} team scored in shootout [SHOOTOUT GOAL]`; // Placeholder for player number
+                    const shootoutEvent = `SO: ${team} team Player ${playerNumber} scored in shootout [SHOOTOUT GOAL]`;
 
                     // Initialize game data and game log if needed
                     if (!game_data[gameId]) {
@@ -551,7 +553,7 @@
             let processedText = inputText;
             const timePattern = /^(\d+:\d+)\s+(.*)/;
             const timeMatch = inputText.match(timePattern);
-            
+
             if (timeMatch) {
                 // If custom time is specified in input, use that for game time
                 const customTime = timeMatch[1];
@@ -786,21 +788,21 @@
         function addEventToLog(eventText) {
             // Check if the last submitted text had a custom time (from the inputText field)
             const inputText = document.getElementById('inputText').value.trim();
-            
+
             // Match time at beginning of string: "3:45 dark 1 scored"
             const timePatternStart = /^(\d+:\d+)\s+(.*)/;
             // Match time at end of string: "dark 1 scored 3:45"
             const timePatternEnd = /(.*)\s+(\d+:\d+)$/;
             // Match time after "at" or "At": "At 3:45 dark 1 scored" 
             const timePatternAt = /\b[Aa]t\s+(\d+:\d+)\s+(.*)/;
-            
+
             let timeMatch = inputText.match(timePatternStart) || 
                            inputText.match(timePatternEnd) || 
                            inputText.match(timePatternAt);
-            
+
             let gameTime;
             const quarter = document.getElementById('quarterSelect').value;
-            
+
             if (timeMatch) {
                 // Use custom time if specified in input
                 const customTime = timeMatch[1] || timeMatch[2]; // Different groups based on pattern matched
@@ -810,7 +812,7 @@
                 gameTime = `${quarter} N/A`;
                 console.log("Using N/A time:", gameTime);
             }
-            
+
             // For sorting purposes (we don't have a timer anymore)
             const currentTime = 0; // No longer using timer-based time
 
@@ -838,8 +840,9 @@
                 if (isShootout) {
                     // Create shootout event text
                     const team = eventText.toLowerCase().includes('dark') ? 'dark' : 'light';
-                    const first_event = {player: 'Player #'}; // Placeholder - needs proper logic to get player number.
-                    const shootoutEvent = `SO: ${team} team ${first_event.player || ''} scored in shootout [SHOOTOUT GOAL]`;
+                    const playerNumberMatch = inputText.match(/(\d+)/); // Extract player number
+                    const playerNumber = playerNumberMatch ? playerNumberMatch[0] : "?"; // Use "?" if no number is found
+                    const shootoutEvent = `SO: ${team} team Player ${playerNumber} scored in shootout [SHOOTOUT GOAL]`;
                     const homeTeam = document.querySelector('input[name="home_team"]').value;
                     const awayTeam = document.querySelector('input[name="away_team"]').value;
                     const gameId = document.querySelector('input[name="game_id"]').value;
@@ -895,11 +898,11 @@
             // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
-            
+
             // Ensure gameTime is always displayed (even for N/A)
             const displayTime = gameTime || `${quarter} N/A`;
             logEntry.innerHTML = `<strong>${displayTime}:</strong> ${eventText}`;
-            
+
             // Don't track time sorting data anymore
             logEntry.dataset.quarter = quarter;
 
@@ -916,45 +919,45 @@
 
             // Get the game log container
             const gameLog = document.getElementById('gameLog');
-            
+
             // Add the entry to the game log
             gameLog.appendChild(logEntry);
 
             // Sort the entries by quarter and time
             sortGameLog();
-            
+
             // Auto-scroll to bottom
             gameLog.scrollTop = gameLog.scrollHeight;
         }
-        
+
         // Sort game log entries first by quarter, then by time within quarter
         function sortGameLog() {
             const gameLog = document.getElementById('gameLog');
             const entries = Array.from(gameLog.children);
-            
+
             // Define quarter order for sorting
             const quarterOrder = {
                 'Q1': 1, 'Q2': 2, 'Q3': 3, 'Q4': 4, 
                 'OT1': 5, 'OT2': 6, 'OT3': 7, 'OT4': 8,
                 'SO': 9
             };
-            
+
             entries.sort((a, b) => {
                 // Extract quarters from strong tags
                 const quarterA = a.querySelector('strong').textContent.split(' ')[0];
                 const quarterB = b.querySelector('strong').textContent.split(' ')[0];
-                
+
                 // Compare quarters based on predefined order
                 return quarterOrder[quarterA] - quarterOrder[quarterB];
             });
-            
+
             // Clear and re-append in sorted order
             while (gameLog.firstChild) {
                 gameLog.removeChild(gameLog.firstChild);
             }
-            
+
             entries.forEach(entry => gameLog.appendChild(entry));
-            
+
             // Auto-scroll to bottom after sorting
             gameLog.scrollTop = gameLog.scrollHeight;
         }
