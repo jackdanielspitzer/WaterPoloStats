@@ -257,12 +257,13 @@
         <input type="hidden" name="current_quarter" id="currentQuarterInput">
         <input type="hidden" name="away_score" id="awayScoreInput">
         <input type="hidden" name="home_score" id="homeScoreInput">
-        <button type="submit" onclick="return finishGame()">Finish Game</button>
+        <button type="submit" onclick="finishGame(); return true;">Finish Game</button>
     </form>
 
     <script>
     function finishGame() {
         try {
+            console.log("Finishing game...");
             const currentQuarter = document.getElementById('quarterSelect').value;
             const awayScore = document.getElementById('awayScore').textContent || '0';
             const homeScore = document.getElementById('homeScore').textContent || '0';
@@ -271,7 +272,18 @@
             document.getElementById('awayScoreInput').value = awayScore;
             document.getElementById('homeScoreInput').value = homeScore;
 
-            return confirm('Are you sure you want to finish the game?');
+            console.log("Quarter:", currentQuarter);
+            console.log("Away score:", awayScore);
+            console.log("Home score:", homeScore);
+
+            const confirmResult = confirm('Are you sure you want to finish the game?');
+            if (confirmResult) {
+                console.log("Form submission confirmed");
+                return true;
+            } else {
+                console.log("Form submission cancelled");
+                return false;
+            }
         } catch(err) {
             console.error('Error finishing game:', err);
             alert('Error finishing game. Please try again.');
