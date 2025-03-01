@@ -40,7 +40,7 @@
 
         {% if game %}
             {% if game.score %}
-                <p><strong>Score (Away - Home):</strong> 
+                <p><strong>Score (Home - Away):</strong> 
                 {% if game.score.game_type == "(SO)" or game.is_shootout %}
                     {{ '%.1f'|format(game.score.black_team_score) }} - {{ '%.1f'|format(game.score.white_team_score) }}
                     {{ game.score.game_type }}
