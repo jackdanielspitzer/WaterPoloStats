@@ -2434,17 +2434,14 @@ def view_scoring(school_slug, game_index):
         home_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in home_roster]
         away_players = [{'cap_number': player['cap_number'], 'name': player['name']} for player in away_roster]
 
-        # Determine which box scores to use based on home/away status
-        if game['home_away'] == 'Home':
-            # If home team viewing, use home_box for black team stats (dark)
-            black_team_stats = game.get('home_box', {})
-            white_team_stats = game.get('away_box', {})
-            print("viewed from home")
-        else:
-            # If away team viewing, use away_box for white team stats (light)
-            white_team_stats = game.get('home_box', {})
-            black_team_stats = game.get('away_box', {})
-            print("view from away")
+        # Box scores are stored based on the colors, not the team names
+        # home_box is always the black team (dark), away_box is always the white team (light)
+        black_team_stats = game.get('home_box', {})
+        white_team_stats = game.get('away_box', {})
+        
+        # We don't need to flip the box based on home/away - they're already stored correctly
+        # The view assignment is based on the position in the template (home is always black/dark)
+        print(f"Viewing game: {home_team_name} (home/black) vs {away_team_name} (away/white)")
         
         print("Black team stats:", black_team_stats)
         print("White team stats:", white_team_stats)
