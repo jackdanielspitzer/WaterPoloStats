@@ -2569,7 +2569,7 @@ def end_game():
         black_game_index = None
         
         # First try to find white team's game
-        if game_index < len(white_team_data.get("games", [])):
+        if white_team_data and "games" in white_team_data and game_index < len(white_team_data.get("games", [])):
             white_game = white_team_data["games"][game_index]
             white_game_index = game_index
             game_date = white_game["date"]
@@ -2585,7 +2585,7 @@ def end_game():
         # If we couldn't find both games, try searching the other way
         if white_game_index is None or black_game_index is None:
             # Try to find black team's game
-            if game_index < len(black_team_data.get("games", [])):
+            if black_team_data and "games" in black_team_data and game_index < len(black_team_data.get("games", [])):
                 black_game = black_team_data["games"][game_index]
                 black_game_index = game_index
                 game_date = black_game["date"]
@@ -2599,6 +2599,7 @@ def end_game():
                         break
         
         if white_game_index is None or black_game_index is None:
+            print(f"Corresponding games not found: white_index={white_game_index}, black_index={black_game_index}")
             return jsonify({'error': 'Corresponding games not found'}), 404
         
         # Get the current memory-based game data
@@ -2633,8 +2634,8 @@ def end_game():
         
         # Score info for black team's perspective (home team)
         black_score_info = {
-            "white_team_score": black_score,
-            "black_team_score": white_score,
+            "white_team_score": white_score,
+            "black_team_score": black_score,
             "game_type": white_score_info["game_type"]
         }
         
@@ -2650,26 +2651,20 @@ def end_game():
                 black_box[field] = [0] * len(black_box.get('Player', []))
         
         # Update white team's game (away team)
-        white_team_data["games"][white_game_index] = {
-            **white_team_data["games"][white_game_index],
-            "is_scored": True,
-            "is_shootout": is_shootout,
-            "score": white_score_info,
-            "game_log": current_game_log,
-            "away_box": white_box,
-            "home_box": black_box
-        }
+        white_team_data["games"][white_game_index]["is_scored"] = True
+        white_team_data["games"][white_game_index]["is_shootout"] = is_shootout
+        white_team_data["games"][white_game_index]["score"] = white_score_info
+        white_team_data["games"][white_game_index]["game_log"] = current_game_log
+        white_team_data["games"][white_game_index]["away_box"] = white_box
+        white_team_data["games"][white_game_index]["home_box"] = black_box
         
         # Update black team's game (home team)
-        black_team_data["games"][black_game_index] = {
-            **black_team_data["games"][black_game_index],
-            "is_scored": True,
-            "is_shootout": is_shootout,
-            "score": black_score_info,
-            "game_log": current_game_log,
-            "home_box": black_box,
-            "away_box": white_box
-        }
+        black_team_data["games"][black_game_index]["is_scored"] = True
+        black_team_data["games"][black_game_index]["is_shootout"] = is_shootout
+        black_team_data["games"][black_game_index]["score"] = black_score_info
+        black_team_data["games"][black_game_index]["game_log"] = current_game_log
+        black_team_data["games"][black_game_index]["home_box"] = black_box
+        black_team_data["games"][black_game_index]["away_box"] = white_box
         
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)

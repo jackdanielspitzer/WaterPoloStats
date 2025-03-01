@@ -291,6 +291,28 @@
                 form.action = `/end_game?redirect=${encodeURIComponent(redirectPath)}`;
                 
                 console.log("Submitting form with action:", form.action);
+                
+                // Ensure all necessary inputs are set
+                if (!form.querySelector('input[name="away_score"]')) {
+                    let awayScoreInput = document.createElement('input');
+                    awayScoreInput.type = 'hidden';
+                    awayScoreInput.name = 'away_score';
+                    awayScoreInput.value = awayScore;
+                    form.appendChild(awayScoreInput);
+                } else {
+                    form.querySelector('input[name="away_score"]').value = awayScore;
+                }
+                
+                if (!form.querySelector('input[name="home_score"]')) {
+                    let homeScoreInput = document.createElement('input');
+                    homeScoreInput.type = 'hidden';
+                    homeScoreInput.name = 'home_score';
+                    homeScoreInput.value = homeScore;
+                    form.appendChild(homeScoreInput);
+                } else {
+                    form.querySelector('input[name="home_score"]').value = homeScore;
+                }
+                
                 // Submit the form
                 form.submit();
             }
