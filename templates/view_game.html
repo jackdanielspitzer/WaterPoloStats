@@ -163,29 +163,6 @@
 
         <button onclick="downloadGameLog()" style="margin-right: 10px;">Download Game Log</button>
         <button onclick="window.location.href='/team/{{ school_slug }}'">Back to Main School Page</button>
-        
-        <script>
-            // Add correct navigation for team names in the page
-            document.querySelectorAll('h2, strong').forEach(el => {
-                if (el.textContent.includes('{{ home_team }}') || el.textContent.includes('{{ away_team }}')) {
-                    el.style.cursor = 'pointer';
-                    el.title = 'Click to view team page';
-                    el.addEventListener('click', function() {
-                        const teamName = el.textContent.includes('{{ home_team }}') ? '{{ home_team }}' : '{{ away_team }}';
-                        // Find correct slug from team name
-                        let targetSlug = '';
-                        {% for slug, school in schools.items() %}
-                            if (teamName.includes('{{ school.name }}')) {
-                                targetSlug = '{{ slug }}';
-                            }
-                        {% endfor %}
-                        if (targetSlug) {
-                            window.location.href = '/team/' + targetSlug;
-                        }
-                    });
-                }
-            });
-        </script>
     </div>
 
     <script>
