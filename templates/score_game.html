@@ -186,7 +186,7 @@
         <input type="hidden" name="home_team" value="{{ home_team }}">
         <input type="hidden" name="away_team" value="{{ away_team }}">
         <input type="hidden" name="game_id" value="{{ game_index }}">
-        <textarea id="inputText" rows="4" cols="50" placeholder="Enter or speak your stats..."></textarea><br>
+        <textarea id="inputText" rows="4" cols="50" placeholder="Enter or speak your stats... (Optional: Start with time like '3:45 dark 1 scored')"></textarea><br>
         <!-- Microphone button placed between the text area and submit button -->
         <button type="button" id="microphoneButton" style="background: none; border: none; padding: 0; cursor: pointer;">
             <img src="{{ url_for('static', filename='images/microphone.png') }}" alt="Microphone" style="width: 50px; height: 50px;">

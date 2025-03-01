@@ -1563,11 +1563,27 @@ def process_text():
         return jsonify({'error': f'Error processing text: {str(e)}'}), 500
 
 def run(text, game_id):
+    # Check if there's a time format at the beginning of the text (like "3:45 dark 1 scored")
+    import re
+    time_pattern = re.compile(r'^(\d+:\d+)\s+(.*)')
+    time_match = time_pattern.match(text)
+    
+    custom_time = None
+    if time_match:
+        custom_time = time_match.group(1)
+        text = time_match.group(2)  # Remove time from text for processing
+    
     events = extract_key_phrases(text)
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
     game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
+    
+    # Override time if provided in input text
+    if custom_time:
+        # Keep the quarter part and replace the time part
+        quarter_part = game_time.split(' ')[0]
+        game_time = f"{quarter_part} {custom_time}"
 
     for player, event, team in events:
         if player and event and team:
