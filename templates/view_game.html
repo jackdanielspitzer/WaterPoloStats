@@ -40,7 +40,19 @@
 
         {% if game %}
             {% if game.score %}
-                <p><strong>Score (Away - Home):</strong> 
+                <p><strong>Score:</strong> 
+                {% if game.score.game_type == "(SO)" or game.is_shootout %}
+                    {{ '%.1f'|format(game.score.white_team_score) }} - {{ '%.1f'|format(game.score.black_team_score) }}
+                    {{ game.score.game_type }}
+                {% else %}
+                    {{ game.score.white_team_score }} - {{ game.score.black_team_score }}
+                    {% if game.score.game_type %}
+                        {{ game.score.game_type }}
+                    {% endif %}
+                {% endif %}
+                </p>
+                <!-- Display scores in away - home format for clarity -->
+                <p><strong>Final Score (Away - Home):</strong> 
                 {% if game.score.game_type == "(SO)" or game.is_shootout %}
                     {{ '%.1f'|format(game.score.white_team_score) }} - {{ '%.1f'|format(game.score.black_team_score) }}
                     {{ game.score.game_type }}
@@ -53,6 +65,7 @@
                 </p>
 </old_str>
 <new_str>
+            {% if game.score %}
                 <p><strong>Score (Away - Home):</strong> 
                 {% if game.score.game_type == "(SO)" or game.is_shootout %}
                     {{ '%.1f'|format(game.score.white_team_score) }} - {{ '%.1f'|format(game.score.black_team_score) }}
