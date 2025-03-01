@@ -158,14 +158,23 @@
     </div>
     <h1 style="text-align: center; color: #333; margin-bottom: 30px;">Water Polo Statistics Tracker</h1>
 
-    <!-- Score Display -->
+    <!-- Quarter Selection Dropdown -->
     <div class="timer-container" style="text-align: center; margin-bottom: 20px;">
-        <div class="quarter-display" style="font-size: 1.5em; margin-bottom: 10px;">Quarter: <span id="currentQuarter">1</span></div>
-        <div class="timer-display" style="font-size: 2em; margin-bottom: 10px;"><span id="minutes">7</span>:<span id="seconds">00</span></div>
-        <button id="startPauseTimer" style="padding: 10px 20px; margin-right: 10px;">Start</button>
-        <button id="rewindTimer" style="padding: 10px 20px; margin-right: 10px;">Rewind 10s</button>
-        <button id="endQuarter" style="padding: 10px 20px; margin-right: 10px;">End Quarter</button>
-        <button id="overtime" style="padding: 10px 20px;">Overtime</button>
+        <div style="font-size: 1.5em; margin-bottom: 10px;">
+            <label for="quarterDropdown">Quarter: </label>
+            <select id="quarterDropdown" style="font-size: 0.8em; padding: 5px;">
+                <option value="1">Q1</option>
+                <option value="2">Q2</option>
+                <option value="3">Q3</option>
+                <option value="4">Q4</option>
+                <option value="OT1">OT1</option>
+                <option value="OT2">OT2</option>
+                <option value="OT3">OT3</option>
+                <option value="OT4">OT4</option>
+                <option value="SO">Shootout</option>
+            </select>
+        </div>
+        <input type="hidden" id="currentQuarter" value="1">
     </div>
     <div class="score-container">
         <div class="team-score away-team">
@@ -257,7 +266,7 @@
     <script>
     function finishGame() {
         try {
-            const currentQuarter = document.getElementById('currentQuarter').textContent;
+            const currentQuarter = document.getElementById('quarterDropdown').value;
             const awayScore = document.getElementById('awayScore').textContent || '0';
             const homeScore = document.getElementById('homeScore').textContent || '0';
 
@@ -282,233 +291,25 @@
     <script>
         // Initialize game data object
         let game_data = {};
-        // Timer functionality
-        let timerInterval;
-        let timeRemaining = 420; // 7 minutes in seconds
-        let currentQuarter = 1;
-        let isTimerRunning = false;
-        let isPaused = false; // Flag to track paused state
-
-        function updateTimerDisplay() {
-            const minutes = Math.floor(timeRemaining / 60);
-            const seconds = timeRemaining % 60;
-            document.getElementById('minutes').textContent = minutes;
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            document.getElementById('currentQuarter').textContent = currentQuarter;
-        }
-
-        function startPauseTimer() {
-            const button = document.getElementById('startPauseTimer');
-            if (!isTimerRunning && !isPaused) {
-                // Start timer
-                timerInterval = setInterval(() => {
-                    if (timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        endQuarter();
-                    }
-                }, 1000);
-                isTimerRunning = true;
-                button.textContent = 'Pause';
-            } else if (isTimerRunning) {
-                // Pause timer
-                clearInterval(timerInterval);
-                isTimerRunning = false;
-                isPaused = true; // Set paused flag
-                button.textContent = 'Resume';
-            } else {
-                //Resume timer
-                timerInterval = setInterval(() => {
-                    if (timeRemaining > 0) {
-                        timeRemaining--;
-                        updateTimerDisplay();
-                    } else {
-                        endQuarter();
-                    }
-                }, 1000);
-                isTimerRunning = true;
-                isPaused = false; // Reset paused flag
-                button.textContent = 'Pause';
-            }
-        }
-
-        function endQuarter() {
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            isPaused = false;
-
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                if (currentOTQuarter < overtimeQuarters) {
-                    // Move to next overtime quarter
-                    currentOTQuarter++;
-                    currentQuarter = 'OT' + currentOTQuarter;
-                    // Use the stored overtime minutes value
-                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
-                    timeRemaining = parseInt(otMinutes) * 60;
-                    updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
-                    return; // Return here to prevent showing end game options
-                } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                    // Only show end game options after all OT quarters are complete
-                    showEndGameOptions();
-                }
-            } else if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                if (currentOTQuarter < overtimeQuarters) {
-                    // Continue to next overtime quarter
-                    currentOTQuarter++;
-                    currentQuarter = 'OT' + currentOTQuarter;
-                    const otMinutes = document.getElementById('otMinutes')?.value || 3;
-                    timeRemaining = parseInt(otMinutes) * 60;
-                    updateTimerDisplay();
-                    document.getElementById('startPauseTimer').textContent = 'Start';
-                    return;
-                } else if (currentOTQuarter >= overtimeQuarters) {
-                    // Only show options after all overtime quarters are complete
-                    clearInterval(timerInterval);
-                    isTimerRunning = false;
-                    isPaused = false;
-                    showEndGameOptions();
-                    return;
-                }
-            } else if (currentQuarter < 4) {
-                currentQuarter++;
-                timeRemaining = 420;
-                updateTimerDisplay();
-            } else {
-                showEndGameOptions();
-            }
-
-            document.getElementById('startPauseTimer').textContent = 'Start';
-            document.getElementById('startPauseTimer').disabled = false;
-            document.getElementById('rewindTimer').disabled = false;
-            document.getElementById('endQuarter').disabled = false;
-        }
-
-        function showEndGameOptions() {
-            // Get current OT number if we're in OT
-            let currentOTNum = 0;
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                currentOTNum = parseInt(currentQuarter.substring(2));
-            }
-
-            const modal = document.createElement('div');
-            modal.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        z-index: 1000;
-    `;
-
-            modal.innerHTML = `
-        <div id="mainOptions" style="text-align: center;">
-            <h3>Game Time Complete</h3>
-            <p>What would you like to do?</p>
-            <div style="margin: 20px 0;">
-                <button onclick="showOvertimeSetup()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-                <button onclick="showShootoutConfirm()" style="margin: 5px; padding: 8px 16px;">Start Shootout</button>
-                <button onclick="showFinishGameConfirm()" style="margin: 5px; padding: 8px 16px;">Finish Game</button>
-            </div>
-        </div>
-        <div id="overtimeSetup" style="display: none; text-align: center;">
-            <h3>Overtime Setup</h3>
-            <div style="margin: 20px 0;">
-                <label>Number of Quarters: <input type="number" id="otQuarters" min="1" max="4" value="2" style="width: 50px;"></label><br>
-                <label>Minutes per Quarter: <input type="number" id="otMinutes" min="1" max="5" value="3" style="width: 50px;"></label>
-            </div>
-            <button onclick="startCustomOvertime()" style="margin: 5px; padding: 8px 16px;">Start Overtime</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-        <div id="shootoutConfirm" style="display: none; text-align: center;">
-            <h3>Start Shootout</h3>
-            <p>Are you sure you want to start a shootout?</p>
-            <button onclick="startShootout()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-        <div id="finishGameConfirm" style="display: none; text-align: center;">
-            <h3>Finish Game</h3>
-            <p>Are you sure you want to end the game?</p>
-            <button onclick="finishGame() && document.getElementById('endGameForm').submit()" style="margin: 5px; padding: 8px 16px;">Confirm</button>
-            <button onclick="showMainOptions()" style="margin: 5px; padding: 8px 16px;">Back</button>
-        </div>
-    `;
-
-                document.body.appendChild(modal);
-
-                // Disable timer controls
-                document.getElementById('startPauseTimer').disabled = true;
-                document.getElementById('rewindTimer').disabled = true;
-                document.getElementById('endQuarter').disabled = true;
-            }
-
-        function rewindTimer() {
-            let maxTime = typeof currentQuarter === 'string' && currentQuarter.startsWith('OT') 
-                ? parseInt(document.getElementById('otMinutes').value) * 60 
-                : 420;
-            const newTime = Math.min(maxTime, timeRemaining + 10);
-            if (newTime !== timeRemaining) {
-                timeRemaining = newTime;
-                updateTimerDisplay();
-            }
-        }
-
-        function showMainOptions() {
-            document.getElementById('mainOptions').style.display = 'block';
-            document.getElementById('overtimeSetup').style.display = 'none';
-            document.getElementById('shootoutConfirm').style.display = 'none';
-            document.getElementById('finishGameConfirm').style.display = 'none';
-        }
-
-        function showOvertimeSetup() {
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('overtimeSetup').style.display = 'block';
-        }
-
-        function showShootoutConfirm() {
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('shootoutConfirm').style.display = 'block';
-        }
-
-        function showFinishGameConfirm() {
-            const form = document.getElementById('endGameForm');
-            const schoolSlug = form.querySelector('input[name="school_slug"]').value;
-            form.action = `/end_game?redirect=${encodeURIComponent('/team/' + schoolSlug)}`;
-            document.getElementById('mainOptions').style.display = 'none';
-            document.getElementById('finishGameConfirm').style.display = 'block';
-        }
-
-        function startCustomOvertime() {
-            const quarters = parseInt(document.getElementById('otQuarters').value);
-            const minutes = parseInt(document.getElementById('otMinutes').value);
-
-            clearInterval(timerInterval);
-            isTimerRunning = false;
-            isPaused = false;
-            timeRemaining = minutes * 60;
-
-            // If already in OT, add the new quarters to existing total
-            if (typeof currentQuarter === 'string' && currentQuarter.startsWith('OT')) {
-                overtimeQuarters += quarters;
-                // Keep current OT number
-                currentOTQuarter = parseInt(currentQuarter.substring(2));
-            } else {
-                // Starting fresh OT
-                currentQuarter = 'OT1';
-                overtimeQuarters = quarters;
-                currentOTQuarter = 1;
-            }
-
-            document.getElementById('startPauseTimer').textContent = 'Start';
-            document.getElementById('startPauseTimer').disabled = false;
-            document.querySelector('div[style*="position: fixed"]')?.remove();
-
-            updateTimerDisplay();
-        }
+        let currentQuarter = "1";
+        let isShootout = false;
+        
+        // Handle quarter dropdown change
+        document.addEventListener('DOMContentLoaded', function() {
+            const quarterDropdown = document.getElementById('quarterDropdown');
+            
+            // Update the hidden currentQuarter input when dropdown changes
+            quarterDropdown.addEventListener('change', function() {
+                currentQuarter = this.value;
+                document.getElementById('currentQuarter').value = currentQuarter;
+                
+                // Set shootout mode if "SO" is selected
+                isShootout = currentQuarter === "SO";
+                
+                // Log the change for debugging
+                console.log("Quarter changed to:", currentQuarter, "Shootout mode:", isShootout);
+            });
+        });
 
         let isShootout = false;
         let overtimeQuarters = 2;
@@ -730,15 +531,27 @@
                 // If custom time is specified in input, use that for game time
                 const customTime = timeMatch[1];
                 processedText = timeMatch[2]; // Use the rest of the text
-                const quarter = document.getElementById('currentQuarter').textContent;
-                gameTime = quarter.startsWith('OT') ? `${quarter} ${customTime}` : `Q${quarter} ${customTime}`;
+                const quarter = document.getElementById('quarterDropdown').value;
+                // Format gameTime based on quarter value
+                if (quarter === "SO") {
+                    gameTime = `SO ${customTime}`;
+                } else if (quarter.startsWith('OT')) {
+                    gameTime = `${quarter} ${customTime}`;
+                } else {
+                    gameTime = `Q${quarter} ${customTime}`;
+                }
                 console.log("Using custom time:", customTime);
             } else {
-                // Otherwise use timer display time
-                const minutes = document.getElementById('minutes').textContent;
-                const seconds = document.getElementById('seconds').textContent;
-                const quarter = document.getElementById('currentQuarter').textContent;
-                gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds}` : `Q${quarter} ${minutes}:${seconds}`;
+                // Just use quarter without time
+                const quarter = document.getElementById('quarterDropdown').value;
+                // Format gameTime based on quarter value
+                if (quarter === "SO") {
+                    gameTime = `SO N/A`;
+                } else if (quarter.startsWith('OT')) {
+                    gameTime = `${quarter} N/A`;
+                } else {
+                    gameTime = `Q${quarter} N/A`;
+                }
             }
 
             try {
@@ -966,7 +779,7 @@
             const timeMatch = inputText.match(timePattern);
             
             let minutes, seconds, gameTime;
-            const quarter = document.getElementById('currentQuarter').textContent;
+            const quarter = document.getElementById('quarterDropdown').value;
             
             if (timeMatch) {
                 // Use custom time if specified in input
@@ -974,18 +787,29 @@
                 const timeParts = customTime.split(':');
                 minutes = parseInt(timeParts[0]);
                 seconds = parseInt(timeParts[1]);
-                gameTime = quarter.startsWith('OT') ? 
-                    `${quarter} ${customTime}` : 
-                    `Q${quarter} ${customTime}`;
+                
+                // Format gameTime based on quarter value
+                if (quarter === "SO") {
+                    gameTime = `SO ${customTime}`;
+                } else if (quarter.startsWith('OT')) {
+                    gameTime = `${quarter} ${customTime}`;
+                } else {
+                    gameTime = `Q${quarter} ${customTime}`;
+                }
             } else {
                 // Set gameTime to "N/A" when no time is provided
-                gameTime = quarter.startsWith('OT') ? 
-                    `${quarter} N/A` : 
-                    `Q${quarter} N/A`;
-                    
-                // Still keep track of the current timer for sorting purposes
-                minutes = parseInt(document.getElementById('minutes').textContent);
-                seconds = parseInt(document.getElementById('seconds').textContent);
+                // Format gameTime based on quarter value
+                if (quarter === "SO") {
+                    gameTime = `SO N/A`;
+                } else if (quarter.startsWith('OT')) {
+                    gameTime = `${quarter} N/A`;
+                } else {
+                    gameTime = `Q${quarter} N/A`;
+                }
+                
+                // Default values for minutes and seconds
+                minutes = 0;
+                seconds = 0;
             }
             
             const currentTime = minutes * 60 + seconds;
