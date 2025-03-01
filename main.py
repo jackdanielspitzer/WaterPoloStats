@@ -1615,12 +1615,17 @@ def run(text, game_id):
                     
                     # Check for exclusion advantage first
                     for prev_event in recent_events:
-                        prev_time = datetime.strptime(prev_event.split(' - ')[0].split(' ')[1], '%M:%S')
-                        time_diff = (event_time - prev_time).total_seconds()
-                        
-                        if 'excluded' in prev_event.lower() and time_diff <= 20:
-                            found_advantage = True
-                            break
+                        if ' - ' in prev_event:
+                            try:
+                                prev_time_str = prev_event.split(' - ')[0].split(' ')[1]
+                                prev_time = datetime.strptime(prev_time_str, '%M:%S')
+                                time_diff = (event_time - prev_time).total_seconds()
+                                
+                                if 'excluded' in prev_event.lower() and time_diff <= 20:
+                                    found_advantage = True
+                                    break
+                            except (ValueError, IndexError):
+                                continue
 
                     # Check for correct penalty sequence if no advantage found
                     if not found_advantage and len(recent_events) >= 4:

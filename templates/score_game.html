@@ -960,10 +960,32 @@
         let activeExclusions = [];
 
         function addEventToLog(eventText) {
-            const minutes = parseInt(document.getElementById('minutes').textContent);
-            const seconds = parseInt(document.getElementById('seconds').textContent);
+            // Check if the last submitted text had a custom time (from the inputText field)
+            const inputText = document.getElementById('inputText').value.trim();
+            const timePattern = /^(\d+:\d+)\s+(.*)/;
+            const timeMatch = inputText.match(timePattern);
+            
+            let minutes, seconds, gameTime;
             const quarter = document.getElementById('currentQuarter').textContent;
-            const gameTime = quarter.startsWith('OT') ? `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeMatch) {
+                // Use custom time if specified in input
+                const customTime = timeMatch[1];
+                const timeParts = customTime.split(':');
+                minutes = parseInt(timeParts[0]);
+                seconds = parseInt(timeParts[1]);
+                gameTime = quarter.startsWith('OT') ? 
+                    `${quarter} ${customTime}` : 
+                    `Q${quarter} ${customTime}`;
+            } else {
+                // Otherwise use timer display time
+                minutes = parseInt(document.getElementById('minutes').textContent);
+                seconds = parseInt(document.getElementById('seconds').textContent);
+                gameTime = quarter.startsWith('OT') ? 
+                    `${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}` : 
+                    `Q${quarter} ${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
             const currentTime = minutes * 60 + seconds;
 
             // Update active exclusions - remove expired ones
