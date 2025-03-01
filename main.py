@@ -2501,17 +2501,24 @@ def view_scoring(school_slug, game_index):
 def end_game():
     try:
         # Get required form data with validation
-        required_fields = ['game_index', 'white_team_name', 'black_team_name', 'school_slug']
-        for field in required_fields:
-            if not request.form.get(field):
-                return jsonify({'error': f'Missing {field}'}), 400
-
+        print("End game form data:", request.form)
+        
+        school_slug = request.form.get('school_slug')
+        if not school_slug:
+            return jsonify({'error': 'Missing school_slug'}), 400
+            
         game_id = request.form.get('game_index')
-        white_team_name = request.form.get('white_team_name')
+        white_team_name = request.form.get('white_team_name') 
         black_team_name = request.form.get('black_team_name')
+        
+        if not all([game_id, white_team_name, black_team_name]):
+            # Redirect to team page if we at least have the school slug
+            if school_slug:
+                return redirect(url_for('team_page', school_slug=school_slug))
+            return jsonify({'error': 'Missing required game data'}), 400
+            
         game_index = int(game_id)
         current_quarter = request.form.get('current_quarter', '')
-        school_slug = request.form.get('school_slug')
 
         # Initialize both team files
         initialize_team_file(white_team_name)
@@ -2821,15 +2828,18 @@ def end_game():
                 school_slug = next((slug for slug, school in schools.items() 
                                   if school['name'] == black_team_name), None)
 
-        # Make sure we have a redirect destination
-        if school_slug:
-            return redirect(url_for('team_page', school_slug=school_slug))
-        else:
-            # If all else fails, redirect to home
-            return redirect(url_for('home'))
+        # Always redirect to team page when we have the school slug
+        return redirect(url_for('team_page', school_slug=school_slug))
 
     except Exception as e:
         print(f"Error in end_game: {str(e)}")
+        
+        # Try to extract school_slug even in case of error
+        school_slug = request.form.get('school_slug')
+        if school_slug:
+            print(f"Redirecting to team page for {school_slug} despite error")
+            return redirect(url_for('team_page', school_slug=school_slug))
+        
         return jsonify({'error': str(e)}), 500
 
 # File path for storing rosters
