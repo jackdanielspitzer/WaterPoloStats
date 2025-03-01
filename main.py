@@ -1577,13 +1577,16 @@ def run(text, game_id):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    game_time = request.form.get('game_time', 'Q1 7:00')  # Get game time from request
+    game_time = request.form.get('game_time', 'Q1 N/A')  # Get game time from request
     
     # Override time if provided in input text
     if custom_time:
         # Keep the quarter part and replace the time part
         quarter_part = game_time.split(' ')[0]
         game_time = f"{quarter_part} {custom_time}"
+    elif ' ' not in game_time:
+        # Make sure we have a default N/A if no time part exists
+        game_time = f"{game_time} N/A"
 
     for player, event, team in events:
         if player and event and team:

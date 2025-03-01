@@ -790,6 +790,7 @@
             } else {
                 // Set gameTime to "N/A" when no time is provided
                 gameTime = `${quarter} N/A`;
+                console.log("Using N/A time:", gameTime);
             }
             
             // For sorting purposes (we don't have a timer anymore)
@@ -876,7 +877,11 @@
             // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
-            logEntry.innerHTML = `<strong>${gameTime}:</strong> ${eventText}`;
+            
+            // Ensure gameTime is always displayed (even for N/A)
+            const displayTime = gameTime || `${quarter} N/A`;
+            logEntry.innerHTML = `<strong>${displayTime}:</strong> ${eventText}`;
+            
             // Don't track time sorting data anymore
             logEntry.dataset.quarter = quarter;
 
