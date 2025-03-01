@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -91,7 +90,7 @@
         <li><a href="/team/fremont"><img src="/static/images/Fremont High School.png" alt="Fremont Logo" class="school-logo" style="display: inline-block;">Fremont High School</a></li>
         <li><a href="/team/mountain-view"><img src="/static/images/Mountain View High School.png" alt="Mountain View Logo" class="school-logo" style="display: inline-block;">Mountain View High School</a></li>
         <li><a href="/team/sj-express"><img src="/static/images/sj.jpeg" alt="SJ Express Logo" class="school-logo" style="display: inline-block;">SJ Express</a></li>
-        <li><a href="/team/sf-polo" style="padding-left: 55px;">SF Polo</a></li>
+        <li><a href="/team/sf-polo">SF Polo</a></li>
     </ul>
     <p id="noResults" class="no-results" style="display: none;">No results found.</p>
 
@@ -133,22 +132,6 @@
         // Show the search results by default when the page loads
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('schoolList').style.display = "block";
-            
-            // Ensure all logos are visible in the search results
-            const schoolLogos = document.querySelectorAll('.school-logo');
-            schoolLogos.forEach(logo => {
-                logo.style.display = 'inline-block !important';
-                logo.style.width = '40px';
-                logo.style.height = '40px';
-                logo.style.marginRight = '15px';
-                logo.style.objectFit = 'contain';
-                logo.style.verticalAlign = 'middle';
-                
-                // Force image to load/reload
-                const currentSrc = logo.src;
-                logo.src = '';
-                logo.src = currentSrc;
-            });
         });
     </script>
 </body>
