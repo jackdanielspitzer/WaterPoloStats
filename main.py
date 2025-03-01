@@ -1581,6 +1581,9 @@ def run(text, game_id):
     away_team_name = request.form.get('away_team')
     game_time = request.form.get('game_time', 'Q1 N/A')  # Get game time from request
     
+    # Check if we're in shootout mode
+    is_shootout = game_time.startswith('SO') or 'shootout' in text.lower()
+    
     # Override time if provided in input text
     if custom_time:
         # Keep the quarter part and replace the time part
@@ -1592,11 +1595,20 @@ def run(text, game_id):
 
     for player, event, team in events:
         if player and event and team:
-            if sort_data(player, event, team, home_team_name, away_team_name, game_id):
+            # Only update stats if not in shootout mode
+            if not is_shootout:
+                stat_updated = sort_data(player, event, team, home_team_name, away_team_name, game_id)
+            else:
+                # For shootout, we'll skip updating stats but pretend it worked for the log entry
+                stat_updated = True
+                
+            if stat_updated:
                 log_entry = phrase(player, event, team)
                 responses.append(log_entry)
 
                 # Initialize game logs if needed
+                if game_id not in game_data:
+                    game_data[game_id] = {'game_log': []}
                 if 'game_log' not in game_data[game_id]:
                     game_data[game_id]['game_log'] = []
 
@@ -1609,8 +1621,11 @@ def run(text, game_id):
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
                 
-                # Check if this is a goal event
-                if 'scored' in log_entry.lower():
+                # In shootout mode, add shootout tag
+                if is_shootout and 'scored' in log_entry.lower():
+                    log_entry += " [SHOOTOUT GOAL]"
+                # Otherwise process regular goals
+                elif 'scored' in log_entry.lower() and not is_shootout:
                     # For non-custom time entries, skip the datetime parsing
                     found_advantage = False
                     found_penalty = False
@@ -2589,13 +2604,35 @@ def end_game():
         # Get the current memory-based game data
         current_game_data = game_data.get(game_id, {})
         
-        # Extract stats from the current game
-        white_box = current_game_data.get('dataWhite', {})
-        black_box = current_game_data.get('dataBlack', {})
-        current_game_log = current_game_data.get('game_log', [])
-        
         # Determine if this was a shootout
         is_shootout = current_quarter == 'SO'
+        
+        # Preserve existing game logs if they exist (especially important for shootout mode)
+        white_existing_game_log = white_team_data["games"][white_game_index].get("game_log", [])
+        black_existing_game_log = black_team_data["games"][black_game_index].get("game_log", [])
+        
+        # Get memory game log
+        current_game_log = current_game_data.get('game_log', [])
+        
+        # Use existing game log if available and in shootout mode, otherwise use current memory log
+        if is_shootout:
+            # In shootout mode, we want to preserve existing box scores and only update the score
+            white_box = white_team_data["games"][white_game_index].get("away_box", {})
+            black_box = black_team_data["games"][black_game_index].get("home_box", {})
+            
+            # If we don't have existing box scores but do have current memory data, use that
+            if not white_box and current_game_data.get('dataWhite'):
+                white_box = current_game_data.get('dataWhite', {})
+            if not black_box and current_game_data.get('dataBlack'):
+                black_box = current_game_data.get('dataBlack', {})
+                
+            # Use existing game logs if they exist, otherwise use current memory log
+            final_game_log = white_existing_game_log if white_existing_game_log else current_game_log
+        else:
+            # For regular games, use the current box scores and game log from memory
+            white_box = current_game_data.get('dataWhite', {})
+            black_box = current_game_data.get('dataBlack', {})
+            final_game_log = current_game_log
         
         # Prepare score information
         if is_shootout:
@@ -2626,31 +2663,42 @@ def end_game():
             "is_scored": True,
             "is_shootout": is_shootout,
             "score": white_score_info,
-            "game_log": current_game_log,
-            "away_box": white_box,
-            "home_box": black_box
+            "game_log": final_game_log
         })
+        
+        # Only update box scores if not in shootout mode
+        if not is_shootout:
+            white_team_data["games"][white_game_index].update({
+                "away_box": white_box,
+                "home_box": black_box
+            })
         
         # Update black team's game
         black_team_data["games"][black_game_index].update({
             "is_scored": True,
             "is_shootout": is_shootout,
             "score": black_score_info,
-            "game_log": current_game_log,
-            "home_box": black_box,
-            "away_box": white_box
+            "game_log": final_game_log
         })
         
-        # Ensure box scores have all the necessary fields
-        required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
-                          'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
-                          'Sprint Won', 'Sprint Attempt']
+        # Only update box scores if not in shootout mode
+        if not is_shootout:
+            black_team_data["games"][black_game_index].update({
+                "home_box": black_box,
+                "away_box": white_box
+            })
         
-        for field in required_fields:
-            if field not in white_box:
-                white_box[field] = [0] * len(white_box.get('Player', []))
-            if field not in black_box:
-                black_box[field] = [0] * len(black_box.get('Player', []))
+        # Ensure box scores have all the necessary fields (only for non-shootout games)
+        if not is_shootout:
+            required_fields = ['Player', 'Shot', 'Shot Attempt', 'Assists', 'Blocks', 'Steals', 
+                            'Exclusions', 'Exclusions Drawn', 'Penalties', 'Turnovers', 
+                            'Sprint Won', 'Sprint Attempt']
+            
+            for field in required_fields:
+                if field not in white_box:
+                    white_box[field] = [0] * len(white_box.get('Player', []))
+                if field not in black_box:
+                    black_box[field] = [0] * len(black_box.get('Player', []))
         
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)

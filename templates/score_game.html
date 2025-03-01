@@ -473,7 +473,7 @@
                     // Add shootout event to game log (only once)
                     addEventToLog(shootoutEvent);
 
-                    // Send shootout event to server
+                    // Send shootout event to server for game log only
                     fetch('/process', {
                         method: 'POST',
                         headers: {
@@ -488,7 +488,6 @@
                             game_data[gameId] = { game_log: [] };
                         }
                         game_data[gameId].game_log.push(shootoutEvent);
-                        // Removed the duplicate addEventToLog call here
                     }).catch(error => {
                         console.error('Error:', error);
                     });
@@ -706,6 +705,12 @@
         // Update tables with live data
         async function updateTables() {
             try {
+                // Skip updating tables in shootout mode
+                if (isShootout) {
+                    console.log("In shootout mode - skipping box score updates");
+                    return;
+                }
+                
                 const form = document.getElementById('form');
                 if (!form) {
                     console.error('Form element not found');
@@ -787,22 +792,19 @@
 
                     awayScoreEl.textContent = awayScore;
                     homeScoreEl.textContent = homeScore;
-                }
+                
+                    // Get score elements
+                    if (awayScoreEl && homeScoreEl) {
+                        // Reset classes
+                        awayScoreEl.classList.remove('winning-score');
+                        homeScoreEl.classList.remove('winning-score');
 
-                // Get score elements
-                const awayScoreEl = document.getElementById('awayScore');
-                const homeScoreEl = document.getElementById('homeScore');
-
-                if (awayScoreEl && homeScoreEl) {
-                    // Reset classes
-                    awayScoreEl.classList.remove('winning-score');
-                    homeScoreEl.classList.remove('winning-score');
-
-                    // Add winning-score class to the higher score
-                    if (parseFloat(awayScore) > parseFloat(homeScore)) {
-                        awayScoreEl.classList.add('winning-score');
-                    } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
-                        homeScoreEl.classList.add('winning-score');
+                        // Add winning-score class to the higher score
+                        if (parseFloat(awayScore) > parseFloat(homeScore)) {
+                            awayScoreEl.classList.add('winning-score');
+                        } else if (parseFloat(homeScore) > parseFloat(awayScore)) {
+                            homeScoreEl.classList.add('winning-score');
+                        }
                     }
                 }
 
