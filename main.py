@@ -2567,40 +2567,55 @@ def end_game():
         # Find the corresponding games in both teams' data
         white_game_index = None
         black_game_index = None
+        game_date = None
         
-        # First try to find white team's game
-        if white_team_data and "games" in white_team_data and game_index < len(white_team_data.get("games", [])):
-            white_game = white_team_data["games"][game_index]
-            white_game_index = game_index
-            game_date = white_game["date"]
+        # Try to find the original game that was being scored
+        original_game = None
+        original_team_data = None
+        
+        # First try to find game in the black team's (home team) data if game_index is valid
+        if black_team_data and "games" in black_team_data and game_index < len(black_team_data.get("games", [])):
+            original_game = black_team_data["games"][game_index]
+            original_team_data = black_team_data
+            black_game_index = game_index
+            game_date = original_game.get("date")
             
-            # Find matching game in black team data
+        # If not found in black team, try white team (away team)
+        if original_game is None and white_team_data and "games" in white_team_data and game_index < len(white_team_data.get("games", [])):
+            original_game = white_team_data["games"][game_index]  
+            original_team_data = white_team_data
+            white_game_index = game_index
+            game_date = original_game.get("date")
+        
+        # Exit if we couldn't find the original game
+        if original_game is None or game_date is None:
+            print(f"Original game not found for index {game_index}")
+            return jsonify({'error': 'Original game not found'}), 404
+            
+        # Now find the corresponding games in both teams' data based on date and opponent
+        # If white_game_index is still None, find it in white_team_data
+        if white_game_index is None:
+            for i, game in enumerate(white_team_data.get("games", [])):
+                if (game.get("date") == game_date and 
+                    game.get("opponent") == black_team_name):
+                    white_game_index = i
+                    break
+                    
+        # If black_game_index is still None, find it in black_team_data
+        if black_game_index is None:
             for i, game in enumerate(black_team_data.get("games", [])):
-                if (game["date"] == game_date and 
-                    game["opponent"] == white_team_name and
-                    white_game["opponent"] == black_team_name):
+                if (game.get("date") == game_date and 
+                    game.get("opponent") == white_team_name):
                     black_game_index = i
                     break
         
-        # If we couldn't find both games, try searching the other way
+        # Exit if we still couldn't find both games
         if white_game_index is None or black_game_index is None:
-            # Try to find black team's game
-            if black_team_data and "games" in black_team_data and game_index < len(black_team_data.get("games", [])):
-                black_game = black_team_data["games"][game_index]
-                black_game_index = game_index
-                game_date = black_game["date"]
-                
-                # Find matching game in white team data
-                for i, game in enumerate(white_team_data.get("games", [])):
-                    if (game["date"] == game_date and 
-                        game["opponent"] == black_team_name and
-                        black_game["opponent"] == white_team_name):
-                        white_game_index = i
-                        break
-        
-        if white_game_index is None or black_game_index is None:
-            print(f"Corresponding games not found: white_index={white_game_index}, black_index={black_game_index}")
+            print(f"Couldn't find corresponding games: white_index={white_game_index}, black_index={black_game_index}")
+            print(f"White team: {white_team_name}, Black team: {black_team_name}, Date: {game_date}")
             return jsonify({'error': 'Corresponding games not found'}), 404
+            
+        print(f"Found games - White team index: {white_game_index}, Black team index: {black_game_index}")
         
         # Get the current memory-based game data
         current_game_data = game_data.get(game_id, {})
@@ -2674,7 +2689,7 @@ def end_game():
         if game_id in game_data:
             del game_data[game_id]
         
-        print(f"Game successfully marked as scored. Redirecting to: {redirect_url}")
+        print(f"Game successfully marked as scored for both teams. Redirecting to: {redirect_url}")
         
         # Redirect to the specified URL or team page
         return redirect(redirect_url)
