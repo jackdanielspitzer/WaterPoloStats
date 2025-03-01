@@ -131,6 +131,16 @@
         // Show the search results by default when the page loads
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('schoolList').style.display = "block";
+            
+            // Make sure all logos are visible in the search results
+            const schoolLogos = document.querySelectorAll('.school-logo');
+            schoolLogos.forEach(logo => {
+                logo.style.display = 'inline-block';
+                logo.style.width = '40px';
+                logo.style.height = '40px';
+                logo.style.marginRight = '15px';
+                logo.style.objectFit = 'contain';
+            });
         });
     </script>
 </body>
