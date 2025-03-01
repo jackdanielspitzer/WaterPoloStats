@@ -215,6 +215,17 @@
                 "black_team_score": 1.1,
                 "game_type": "(SO)"
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-03-13",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 13th, 2025",
+            "game_log": []
         }
     ]
 }
