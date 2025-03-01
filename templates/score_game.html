@@ -307,6 +307,9 @@
             document.getElementById('quarterSelect').addEventListener('change', function() {
                 const selectedQuarter = this.value;
                 
+                // Update quarter display
+                document.getElementById('result').innerText = `Changed to ${selectedQuarter}`;
+                
                 // Check if we're entering shootout mode
                 if (selectedQuarter === 'SO' && !isShootout) {
                     isShootout = true;
@@ -319,6 +322,12 @@
                 } else if (selectedQuarter !== 'SO') {
                     isShootout = false;
                 }
+                
+                // Update stats after quarter change
+                updateTables();
+                
+                // Re-sort the game log to reflect the new quarter order
+                sortGameLog();
             });
         });
         
