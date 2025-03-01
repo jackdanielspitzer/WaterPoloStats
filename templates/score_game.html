@@ -300,6 +300,7 @@
         let shootoutGoalsAway = 0;
         let regulationHomeScore = 0;
         let regulationAwayScore = 0;
+        let hasShootoutScore = false; // Flag to track if a shootout goal has been scored
 
         // Initialize quarter dropdown
         document.addEventListener('DOMContentLoaded', function() {
@@ -408,12 +409,22 @@
                         document.getElementById('homeScore').textContent = newScore;
                         // Prevent score from being overwritten
                         regulationHomeScore = Math.floor(parseFloat(newScore));
+                        // Mark that we've scored in shootout mode
+                        hasShootoutScore = true;
                     } else {
                         shootoutGoalsAway++;
                         const newScore = (regulationAwayScore + (shootoutGoalsAway * 0.1)).toFixed(1);
                         document.getElementById('awayScore').textContent = newScore;
                         // Prevent score from being overwritten
                         regulationAwayScore = Math.floor(parseFloat(newScore));
+                        // Mark that we've scored in shootout mode
+                        hasShootoutScore = true;
+                    }
+
+                    // Disable the quarter selector dropdown after scoring in shootout
+                    if (hasShootoutScore) {
+                        const quarterSelect = document.getElementById('quarterSelect');
+                        quarterSelect.disabled = true;
                     }
 
                     const team = isDarkTeam ? 'Dark' : 'Light';
@@ -808,8 +819,7 @@
                 const customTime = timeMatch[1] || timeMatch[2]; // Different groups based on pattern matched
                 gameTime = `${quarter} ${customTime}`;
             } else {
-                // Set gameTime to "N/A" when no time is provided
-                gameTime = `${quarter} N/A`;
+                // Set gameTime to "N/A" when no time is provided                gameTime = `${quarter} N/A`;
                 console.log("Using N/A time:", gameTime);
             }
 
