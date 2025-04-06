@@ -1426,11 +1426,10 @@ def run(text):
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
-    # Only return a joined response if we have valid events
+    # Only return a response if we have valid events
     if has_valid_events:
         return " and ".join(responses)
-    else:
-        return "Could not parse the input."
+    return ""  # Return empty string instead of error message
 
 @app.route('/')
 def home():
