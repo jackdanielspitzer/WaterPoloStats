@@ -1598,6 +1598,9 @@ def run(text, game_id):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
     game_time = request.form.get('game_time', 'Q1 N/A')  # Get game time from request
+
+    # Get the raw result text from the request for game log
+    result_text = request.form.get('result')
     
     # Check if we're in shootout mode
     is_shootout = game_time.startswith('SO') or 'shootout' in text.lower()
@@ -1639,8 +1642,8 @@ def run(text, game_id):
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
 
-                # Generate the phrase that will be stored in memory
-                memory_entry = ' and '.join(responses)
+                # Use the raw result text for the game log
+                memory_entry = result_text if result_text else ' and '.join(responses)
                 
                 # Add goal type tags if needed
                 if is_shootout and 'scored' in memory_entry.lower():
