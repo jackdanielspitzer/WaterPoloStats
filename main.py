@@ -1611,56 +1611,29 @@ def run(text, game_id):
         if player and event and team:
             # Only update stats if not in shootout mode
             if not is_shootout:
-                    stat_updated = sort_data(player, event, team, home_team_name, away_team_name, game_id)
-                else:
-                    # For shootout, we'll skip updating stats but pretend it worked for the log entry
-                    stat_updated = True
-                    
-                if stat_updated:
-                    log_entry = phrase(player, event, team)
-                    responses.append(log_entry)
+                stat_updated = sort_data(player, event, team, home_team_name, away_team_name, game_id)
+            else:
+                # For shootout, we'll skip updating stats but pretend it worked for the log entry
+                stat_updated = True
+                
+            if stat_updated:
+                log_entry = phrase(player, event, team)
+                responses.append(log_entry)
 
-                    # Initialize game logs if needed
-                    if game_id not in game_data:
-                        game_data[game_id] = {'game_log': []}
-                    if 'game_log' not in game_data[game_id]:
-                        game_data[game_id]['game_log'] = []
+                # Initialize game logs if needed
+                if game_id not in game_data:
+                    game_data[game_id] = {'game_log': []}
+                if 'game_log' not in game_data[game_id]:
+                    game_data[game_id]['game_log'] = []
 
-                    # Format quarter display correctly (OT instead of QOT)
-                    quarter_part = game_time.split(' ')[0]
-                    if quarter_part.startswith('Q') and 'OT' in quarter_part:
-                        # Extract OT number if present
-                        ot_num = quarter_part[3:] if len(quarter_part) > 3 else ''
-                        quarter_part = f"OT{ot_num}"
-                    time_part = game_time.split(' ')[1]
-                    formatted_game_time = f"{quarter_part} {time_part}"
-
-                    # Create the full log entry with all tags
-                    full_log_entry = f"{formatted_game_time} - {log_entry}"
-                    if 'scored' in log_entry.lower():
-                        if is_shootout:
-                            full_log_entry += " [SHOOTOUT GOAL]"
-                        else:
-                            # Check for advantage/penalty goals
-                            found_advantage = False
-                            found_penalty = False
-                            for prev_event in game_data[game_id].get('game_log', [])[-4:]:
-                                if 'excluded' in prev_event.lower():
-                                    found_advantage = True
-                                    break
-                                elif 'penalty' in prev_event.lower():
-                                    found_penalty = True
-                                    break
-                            if found_advantage:
-                                full_log_entry += " [ADVANTAGE GOAL]"
-                            elif found_penalty:
-                                full_log_entry += " [PENALTY GOAL]"
-                            else:
-                                full_log_entry += " [NATURAL GOAL]"
-                    elif 'excluded' in log_entry.lower():
-                        full_log_entry += " [20 SEC EXCLUSION]"
-                        
-                    game_data[game_id]['game_log'].append(full_log_entry)
+                # Format quarter display correctly (OT instead of QOT)
+                quarter_part = game_time.split(' ')[0]
+                if quarter_part.startswith('Q') and 'OT' in quarter_part:
+                    # Extract OT number if present
+                    ot_num = quarter_part[3:] if len(quarter_part) > 3 else ''
+                    quarter_part = f"OT{ot_num}"
+                time_part = game_time.split(' ')[1]
+                formatted_game_time = f"{quarter_part} {time_part}"
                 
                 # In shootout mode, add shootout tag
                 if is_shootout and 'scored' in log_entry.lower():
