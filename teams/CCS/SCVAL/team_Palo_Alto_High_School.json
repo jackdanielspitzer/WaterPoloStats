@@ -2,6 +2,17 @@
     "games": [
         {
             "home_away": "Home",
+            "opponent": "Harker High School",
+            "opponent_logo": "images/Harker High School.png",
+            "time": null,
+            "date": "2025-04-18",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "April 18th, 2025",
+            "game_log": []
+        },
+        {
+            "home_away": "Home",
             "opponent": "Los Altos High School",
             "opponent_logo": "images/Los Altos High School.png",
             "time": null,
