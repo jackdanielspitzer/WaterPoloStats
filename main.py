@@ -837,10 +837,8 @@ def extract_key_phrases(text):
                     # Only count as a goal if not missed
                     if not any(word in doc_text.lower() for word in ['missed', 'miss']):
                         first_event['event'] = 'Shot'
-                        # Add shot attempt for goalie
-                        second_event['event'] = 'Shot Attempt'
-                        second_event['player'] = '1'
-                        second_event['team'] = current_team
+                        # Still track the attempt but don't create a separate log entry
+                        events.append((first_event['player'], 'Shot Attempt', current_team))
                     else:
                         # If missed, only count as attempt
                         first_event['event'] = 'Shot Attempt'
@@ -1415,19 +1413,19 @@ def run(text):
     responses = []
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
-    result_text = request.form.get('result')
 
     valid_events = False
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
                 valid_events = True
+                responses.append(phrase(player, event, team))
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
     if not valid_events:
         return ""  # Return empty string instead of None to avoid error message
-    return result_text if result_text else ""
+    return " and ".join(responses) if responses else ""
 
 @app.route('/')
 def home():
@@ -1598,9 +1596,6 @@ def run(text, game_id):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
     game_time = request.form.get('game_time', 'Q1 N/A')  # Get game time from request
-
-    # Get the raw result text from the request for game log
-    result_text = request.form.get('result')
     
     # Check if we're in shootout mode
     is_shootout = game_time.startswith('SO') or 'shootout' in text.lower()
@@ -1625,8 +1620,7 @@ def run(text, game_id):
                 
             if stat_updated:
                 log_entry = phrase(player, event, team)
-                if log_entry not in responses:  # Prevent duplicate entries
-                    responses.append(log_entry)
+                responses.append(log_entry)
 
                 # Initialize game logs if needed
                 if game_id not in game_data:
@@ -1643,8 +1637,8 @@ def run(text, game_id):
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
 
-                # Use the raw result text for the game log
-                memory_entry = result_text if result_text else ' and '.join(responses)
+                # Generate the phrase that will be stored in memory
+                memory_entry = ' and '.join(responses)
                 
                 # Add goal type tags if needed
                 if is_shootout and 'scored' in memory_entry.lower():
