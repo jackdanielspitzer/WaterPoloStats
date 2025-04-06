@@ -396,6 +396,17 @@
                     0
                 ]
             }
+        },
+        {
+            "home_away": "Home",
+            "opponent": "Los Gatos High School",
+            "opponent_logo": "images/Los Gatos High School.png",
+            "time": null,
+            "date": "2025-05-01",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "May 1st, 2025",
+            "game_log": []
         }
     ]
 }
