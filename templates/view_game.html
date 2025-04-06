@@ -145,18 +145,24 @@
         {% endif %}
 
         <h2>Game Log</h2>
-        <div id="gameLog" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: auto; background: #f9f9f9;">
+        <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
                     {% if not "Could not parse the input" in entry and not "N/A: Could not parse the input" in entry and ("drew an exclusion" in entry or "excluded" in entry or "kicked out" in entry or not "not found in roster" in entry) %}
-                        <div id="gameLogEntry" style="margin-bottom: 5px; 
-                            {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
-                            {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
-                            {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
-                            {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
-                            {% elif '[20 SEC EXCLUSION]' in entry %}color: #3498db;
-                            {% endif %}">
-                            {{ entry }}
+                        <div id="gameLogEntry" style="margin-bottom: 5px;">
+                            {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}
+                                <div style="color: #9b59b6;">{{ entry }}</div>
+                            {% elif '[ADVANTAGE GOAL]' in entry %}
+                                <div style="color: #e74c3c;">{{ entry }}</div>
+                            {% elif '[PENALTY GOAL]' in entry %}
+                                <div style="color: #e67e22;">{{ entry }}</div>
+                            {% elif '[NATURAL GOAL]' in entry %}
+                                <div style="color: #2ecc71;">{{ entry }}</div>
+                            {% elif '[20 SEC EXCLUSION]' in entry %}
+                                <div style="color: #3498db;">{{ entry }}</div>
+                            {% else %}
+                                <div>{{ entry }}</div>
+                            {% endif %}
                         </div>
                     {% endif %}
                 {% endfor %}
