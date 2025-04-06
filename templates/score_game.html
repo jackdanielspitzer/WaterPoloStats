@@ -973,10 +973,24 @@
                 }
             }
 
-            // Skip log entry if it's a parse error or roster not found message
+            // Handle parse errors and roster not found messages
             if (eventText.includes("Could not parse the input") || 
-                eventText.includes("N/A: Could not parse the input") ||
-                eventText.includes("not found in roster")) {
+                eventText.includes("N/A: Could not parse the input")) {
+                return;
+            }
+
+            // If this is an exclusion event with a "not found in roster" message
+            if (eventText.includes("not found in roster") && eventText.toLowerCase().includes("excluded")) {
+                // Extract the successful part before "and"
+                const parts = eventText.split(" and ");
+                if (parts.length > 1 && !parts[0].includes("not found in roster")) {
+                    eventText = parts[0];
+                } else if (parts.length > 1 && !parts[1].includes("not found in roster")) {
+                    eventText = parts[1];
+                } else {
+                    return; // Skip if no valid part found
+                }
+            } else if (eventText.includes("not found in roster")) {
                 return;
             }
 
