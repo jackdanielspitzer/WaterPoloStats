@@ -973,24 +973,20 @@
                 }
             }
 
-            // Handle parse errors and roster not found messages
+            // Handle parse errors
             if (eventText.includes("Could not parse the input") || 
                 eventText.includes("N/A: Could not parse the input")) {
                 return;
             }
 
-            // If this is an exclusion event with a "not found in roster" message
-            if (eventText.includes("not found in roster") && eventText.toLowerCase().includes("excluded")) {
-                // Extract the successful part before "and"
-                const parts = eventText.split(" and ");
-                if (parts.length > 1 && !parts[0].includes("not found in roster")) {
-                    eventText = parts[0];
-                } else if (parts.length > 1 && !parts[1].includes("not found in roster")) {
-                    eventText = parts[1];
-                } else {
-                    return; // Skip if no valid part found
-                }
-            } else if (eventText.includes("not found in roster")) {
+            // If this is an exclusion event, keep it regardless of roster status
+            if (eventText.toLowerCase().includes("drew an exclusion") || 
+                eventText.toLowerCase().includes("excluded") || 
+                eventText.toLowerCase().includes("kicked out")) {
+                // Don't filter out anything for exclusion events
+            } 
+            // For non-exclusion events, filter out roster not found messages
+            else if (eventText.includes("not found in roster")) {
                 return;
             }
 
