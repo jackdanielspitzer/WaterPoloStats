@@ -973,6 +973,11 @@
                 }
             }
 
+            // Skip log entry if it's a parse error message
+            if (eventText.includes("Could not parse the input") || eventText.includes("N/A: Could not parse the input")) {
+                return;
+            }
+
             // Create and style the log entry
             const logEntry = document.createElement('div');
             logEntry.id = "gameLogEntry";
