@@ -1622,8 +1622,7 @@ def run(text, game_id):
                 
             if stat_updated:
                 log_entry = phrase(player, event, team)
-                responses.append(log_entry)
-
+                
                 # Initialize game logs if needed
                 if game_id not in game_data:
                     game_data[game_id] = {'game_log': []}
@@ -1638,6 +1637,10 @@ def run(text, game_id):
                     quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
+                
+                # Format the response and log entry consistently
+                formatted_entry = f"{formatted_game_time} - {log_entry}"
+                responses.append(formatted_entry)
                 
                 # In shootout mode, add shootout tag
                 if is_shootout and 'scored' in log_entry.lower():
