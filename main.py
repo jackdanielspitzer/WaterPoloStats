@@ -1713,7 +1713,9 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {memory_entry}")
+                # Get the complete formatted text as shown in the UI
+                formatted_entry = f"{formatted_game_time} - {log_entry}"
+                game_data[game_id]['game_log'].append(formatted_entry)
             else:
                 responses.append(f"Player {player} not found in roster.")
 
