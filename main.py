@@ -1735,15 +1735,31 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                # Store in game data memory only if not already there
-                full_log_entry = f"{formatted_game_time} - {log_entry}"
-                if full_log_entry not in game_data[game_id]['game_log']:
-                    game_data[game_id]['game_log'].append(full_log_entry)
-                    
-                    # Also update the file storage immediately
-                    team_name = request.form.get('home_team')
-                    team_data = load_team_data(team_name)
-                    game_index = int(game_id)
+                # Get the visual elements from the DOM through JavaScript
+                # Get current game log div content
+                game_log_div = document.getElementById('gameLog')
+                visual_log_entries = [entry.textContent for entry in game_log_div.children]
+
+                # Store exactly what's displayed to the user
+                current_entry = f"{formatted_game_time} - {log_entry}"
+                
+                # Initialize game data structure if needed
+                if game_id not in game_data:
+                    game_data[game_id] = {'game_log': []}
+
+                # Add the entry with visual formatting intact
+                game_data[game_id]['game_log'] = visual_log_entries + [current_entry]
+                
+                # Update the file storage immediately
+                team_name = request.form.get('home_team')
+                team_data = load_team_data(team_name)
+                game_index = int(game_id)
+
+                # Ensure game exists in team data
+                if "games" in team_data and game_index < len(team_data["games"]):
+                    # Update game log with complete visual content
+                    team_data["games"][game_index]["game_log"] = game_data[game_id]['game_log']
+                    save_team_data(team_name, team_data)
                     
                     if "games" in team_data and game_index < len(team_data["games"]):
                         if "game_log" not in team_data["games"][game_index]:

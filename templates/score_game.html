@@ -328,8 +328,28 @@
     }
     </script>
 
-    <div id="gameLog">
-        </div>
+    <div id="gameLog" class="game-log-container">
+        <script>
+            function captureGameLog() {
+                // Get all log entries with their styling
+                const logEntries = Array.from(document.querySelectorAll('#gameLog > div')).map(div => {
+                    return {
+                        text: div.textContent,
+                        color: div.style.color,
+                        html: div.outerHTML
+                    };
+                });
+                return logEntries;
+            }
+
+            // Call this whenever the game log updates
+            function onGameLogUpdate() {
+                const currentLog = captureGameLog();
+                // This will be available to the backend when processing form submissions
+                document.getElementById('form').dataset.currentLog = JSON.stringify(currentLog);
+            }
+        </script>
+    </div>
 
 
     <script>
