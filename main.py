@@ -1735,7 +1735,22 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
+                # Store in game data memory only if not already there
+                full_log_entry = f"{formatted_game_time} - {log_entry}"
+                if full_log_entry not in game_data[game_id]['game_log']:
+                    game_data[game_id]['game_log'].append(full_log_entry)
+                    
+                    # Also update the file storage immediately
+                    team_name = request.form.get('home_team')
+                    team_data = load_team_data(team_name)
+                    game_index = int(game_id)
+                    
+                    if "games" in team_data and game_index < len(team_data["games"]):
+                        if "game_log" not in team_data["games"][game_index]:
+                            team_data["games"][game_index]["game_log"] = []
+                        if full_log_entry not in team_data["games"][game_index]["game_log"]:
+                            team_data["games"][game_index]["game_log"].append(full_log_entry)
+                        save_team_data(team_name, team_data)
             else:
                 responses.append(f"Player {player} not found in roster.")
 
