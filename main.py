@@ -1417,15 +1417,17 @@ def run(text):
     away_team_name = request.form.get('away_team')
 
     # Check if any valid events were parsed
+    valid_events = False
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
+                valid_events = True
                 responses.append(phrase(player, event, team))
 
-    # Only return responses if we have any valid events
-    if responses:
+    # Only return response string if we have valid events
+    if valid_events:
         return " and ".join(responses)
-    return None  # Return None instead of empty string to skip game log entry
+    return None  # Return None to skip adding to game log
 
 @app.route('/')
 def home():
