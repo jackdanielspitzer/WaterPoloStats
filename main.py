@@ -1416,22 +1416,14 @@ def run(text):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
 
-    # Skip entirely if no valid events were parsed
-    if not events or events == [(None, None, None)]:
-        return ""  # Return empty string instead of None
-
-    # Process valid events
-    valid_events = False
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                valid_events = True
                 responses.append(phrase(player, event, team))
+            else:
+                responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
-    # Only return response string if we have valid events
-    if valid_events:
-        return " and ".join(responses)
-    return ""  # Return empty string instead of None
+    return " and ".join(responses) if responses else "Could not parse the input."
 
 @app.route('/')
 def home():
@@ -1720,8 +1712,7 @@ def run(text, game_id):
             else:
                 responses.append(f"Player {player} not found in roster.")
 
-    # Only return actual event responses, not error messages
-    return " and ".join(responses) if responses else ""
+    return " and ".join(responses) if responses else "Could not parse the input."
 
 # Helper function to load team rosters
 def load_team_rosters():
