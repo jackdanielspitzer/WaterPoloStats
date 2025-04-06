@@ -1720,7 +1720,8 @@ def run(text, game_id):
             else:
                 responses.append(f"Player {player} not found in roster.")
 
-    return " and ".join(responses) if responses else "Could not parse the input."
+    # Only return actual event responses, not error messages
+    return " and ".join(responses) if responses else ""
 
 # Helper function to load team rosters
 def load_team_rosters():
