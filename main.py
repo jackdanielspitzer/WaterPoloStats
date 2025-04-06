@@ -1643,7 +1643,7 @@ def run(text, game_id):
                 formatted_game_time = f"{quarter_part} {time_part}"
 
                 # Use the raw result text for the game log
-                memory_entry = result_text if result_text else ' and '.join(responses)
+                memory_entry = result_text if result_text else responses[0]
                 
                 # Add goal type tags if needed
                 if is_shootout and 'scored' in memory_entry.lower():
