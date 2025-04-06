@@ -10,10 +10,11 @@
             "is_scored": true,
             "formatted_date": "January 23rd, 2025",
             "game_log": [
+                "Q1 3:45 - The dark team goalie attempted a shot",
                 "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
                 "Q1 3:45 - The dark team goalie attempted a shot",
-                "SO N/A - The dark team goalie attempted a shot",
-                "SO N/A - The light team 1 blocked the shot"
+                "OT1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "OT1 N/A - The dark team goalie attempted a shot"
             ],
             "away_box": {
                 "Player": [
@@ -225,9 +226,229 @@
             "time": null,
             "date": "2025-03-27",
             "game_type": "League Game",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "March 27th, 2025",
-            "game_log": []
+            "game_log": [
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "OT1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "OT1 N/A - The dark team goalie attempted a shot"
+            ],
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 2,
+                "game_type": "(OT1)"
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
         }
     ]
 }
