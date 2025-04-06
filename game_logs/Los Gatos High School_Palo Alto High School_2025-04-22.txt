@@ -1,4 +1,1 @@
-Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]
-Q1 3:45 - The dark team goalie attempted a shot
-Q1 3:15 - The dark team 1 drew an exclusion
-Q1 N/A - Turnover on dark 1
+Q1 3:45 - The dark team 1 drew an exclusion

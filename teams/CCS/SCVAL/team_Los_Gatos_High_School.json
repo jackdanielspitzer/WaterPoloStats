@@ -11,9 +11,7 @@
             "formatted_date": "January 23rd, 2025",
             "game_log": [
                 "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 3:45 - The dark team goalie attempted a shot",
-                "Q1 3:15 - The dark team 1 drew an exclusion",
-                "Q1 N/A - Turnover on dark 1"
+                "Q1 3:45 - The dark team goalie attempted a shot"
             ],
             "away_box": {
                 "Player": [
@@ -223,15 +221,14 @@
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
             "time": null,
-            "date": "2025-04-22",
+            "date": "2025-03-27",
             "game_type": "League Game",
             "is_scored": true,
-            "formatted_date": "April 22nd, 2025",
+            "formatted_date": "March 27th, 2025",
             "game_log": [
                 "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
                 "Q1 3:45 - The dark team goalie attempted a shot",
-                "Q1 3:15 - The dark team 1 drew an exclusion",
-                "Q1 N/A - Turnover on dark 1"
+                "Q1 3:20 - The dark team 1 drew an exclusion"
             ],
             "is_shootout": false,
             "score": {
@@ -239,7 +236,235 @@
                 "black_team_score": 1,
                 "game_type": ""
             },
-            "game_log_file": "game_logs/Los Gatos High School_Palo Alto High School_2025-04-22.txt",
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-04-15",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "April 15th, 2025",
+            "game_log": [
+                "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "Q1 3:20 - The dark team 1 drew an exclusion"
+            ],
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 1,
+                "game_type": ""
+            },
             "away_box": {
                 "Player": [
                     "1",
@@ -424,7 +649,691 @@
                     0
                 ],
                 "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-04-16",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "April 16th, 2025",
+            "game_log": [
+                "Q1 3:45 - The dark team 1 drew an exclusion"
+            ],
+            "is_shootout": true,
+            "score": {
+                "white_team_score": 0.0,
+                "black_team_score": 2.1,
+                "game_type": "(SO)"
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-04-22",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "April 22nd, 2025",
+            "game_log": [
+                "Q1 3:45 - The dark team 1 drew an exclusion"
+            ],
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 0,
+                "game_type": ""
+            },
+            "game_log_file": "game_logs/Los Gatos High School_Palo Alto High School_2025-04-22.txt",
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
                     1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-04-24",
+            "game_type": "League Game",
+            "is_scored": true,
+            "formatted_date": "April 24th, 2025",
+            "game_log": [
+                "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "Q1 3:45 - The dark team 1 was excluded"
+            ],
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 1,
+                "game_type": ""
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "4",
+                    "10",
+                    "12",
+                    "14",
+                    "15",
+                    "16"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    0,
                     0,
                     0,
                     0,
