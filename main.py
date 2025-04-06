@@ -2489,11 +2489,8 @@ def view_scoring(school_slug, game_index):
                 else:
                     black_team_stats[field] = [0] * len(home_players)
                     
-        # Read game log from file if it exists
-        if 'game_log_file' in game and os.path.exists(game['game_log_file']):
-            with open(game['game_log_file'], 'r') as f:
-                game['game_log'] = f.read().splitlines()
-        else:
+        # Ensure game log exists
+        if 'game_log' not in game:
             game['game_log'] = []
             
         # Ensure score exists or calculate it
@@ -2699,22 +2696,6 @@ def end_game():
         black_team_data["games"][black_game_index]["home_box"] = black_box
         black_team_data["games"][black_game_index]["away_box"] = white_box
         
-        # Save game log to text file
-        game_date = white_team_data["games"][white_game_index]["date"]
-        log_filename = f"game_logs/{white_team_name}_{black_team_name}_{game_date}.txt"
-        
-        # Create game_logs directory if it doesn't exist
-        os.makedirs('game_logs', exist_ok=True)
-        
-        # Write game log to file
-        with open(log_filename, 'w') as f:
-            if 'game_log' in current_game_data:
-                f.write('\n'.join(current_game_data['game_log']))
-
-        # Update game data with log file path
-        white_team_data["games"][white_game_index]["game_log_file"] = log_filename
-        black_team_data["games"][black_game_index]["game_log_file"] = log_filename
-
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)
         save_team_data(black_team_name, black_team_data)
