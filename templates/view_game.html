@@ -149,7 +149,21 @@
             {% if game %}
                 {% if game.game_log %}
                     {% for entry in game.game_log %}
-                        <div id="gameLogEntry">{{ entry }}</div>
+                        <div id="gameLogEntry" style="margin-bottom: 5px;">
+                            {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}
+                                <div style="color: #9b59b6;">{{ entry }}</div>
+                            {% elif '[ADVANTAGE GOAL]' in entry %}
+                                <div style="color: #e74c3c;">{{ entry }}</div>
+                            {% elif '[PENALTY GOAL]' in entry %}
+                                <div style="color: #e67e22;">{{ entry }}</div>
+                            {% elif '[NATURAL GOAL]' in entry %}
+                                <div style="color: #2ecc71;">{{ entry }}</div>
+                            {% elif '[20 SEC EXCLUSION]' in entry %}
+                                <div style="color: #3498db;">{{ entry }}</div>
+                            {% else %}
+                                <div>{{ entry }}</div>
+                            {% endif %}
+                        </div>
                     {% endfor %}
                 {% elif game.game_log_file %}
                     {% for entry in game.game_log_file.readlines() %}
