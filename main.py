@@ -1416,7 +1416,11 @@ def run(text):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
 
-    # Check if any valid events were parsed
+    # Skip entirely if no valid events were parsed
+    if not events or events == [(None, None, None)]:
+        return None
+
+    # Process valid events
     valid_events = False
     for player, event, team in events:
         if player and event and team:
