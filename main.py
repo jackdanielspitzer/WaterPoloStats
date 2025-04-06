@@ -1625,7 +1625,8 @@ def run(text, game_id):
                 
             if stat_updated:
                 log_entry = phrase(player, event, team)
-                responses.append(log_entry)
+                if log_entry not in responses:  # Prevent duplicate entries
+                    responses.append(log_entry)
 
                 # Initialize game logs if needed
                 if game_id not in game_data:
