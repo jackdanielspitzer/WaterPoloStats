@@ -2638,9 +2638,17 @@ def end_game():
         # Determine if this was a shootout
         is_shootout = current_quarter == 'SO'
         
-        # Get memory game log
+        # Get the complete game log from memory
         current_game_log = current_game_data.get('game_log', [])
         
+        # Save the game log to text file for backup
+        game_log_dir = 'game_logs'
+        os.makedirs(game_log_dir, exist_ok=True)
+        log_filename = f"{game_log_dir}/{white_team_name}_{black_team_name}_{game_date}.txt"
+        
+        with open(log_filename, 'w') as f:
+            f.write('\n'.join(current_game_log))
+            
         # Set up box scores
         white_box = current_game_data.get('dataWhite', {})
         black_box = current_game_data.get('dataBlack', {})
@@ -2681,20 +2689,26 @@ def end_game():
                 black_box[field] = [0] * len(black_box.get('Player', []))
         
         # Update white team's game (away team)
-        white_team_data["games"][white_game_index]["is_scored"] = True
-        white_team_data["games"][white_game_index]["is_shootout"] = is_shootout
-        white_team_data["games"][white_game_index]["score"] = white_score_info
-        white_team_data["games"][white_game_index]["game_log"] = current_game_log
-        white_team_data["games"][white_game_index]["away_box"] = white_box
-        white_team_data["games"][white_game_index]["home_box"] = black_box
+        white_team_data["games"][white_game_index].update({
+            "is_scored": True,
+            "is_shootout": is_shootout,
+            "score": white_score_info,
+            "game_log": current_game_log.copy(),  # Make a copy to ensure independence
+            "game_log_file": log_filename,
+            "away_box": white_box,
+            "home_box": black_box
+        })
         
-        # Update black team's game (home team)
-        black_team_data["games"][black_game_index]["is_scored"] = True
-        black_team_data["games"][black_game_index]["is_shootout"] = is_shootout
-        black_team_data["games"][black_game_index]["score"] = black_score_info
-        black_team_data["games"][black_game_index]["game_log"] = current_game_log
-        black_team_data["games"][black_game_index]["home_box"] = black_box
-        black_team_data["games"][black_game_index]["away_box"] = white_box
+        # Update black team's game (home team) 
+        black_team_data["games"][black_game_index].update({
+            "is_scored": True,
+            "is_shootout": is_shootout,
+            "score": black_score_info,
+            "game_log": current_game_log.copy(),  # Make a copy to ensure independence
+            "game_log_file": log_filename,
+            "home_box": black_box,
+            "away_box": white_box
+        })
         
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)
