@@ -973,8 +973,10 @@
                 }
             }
 
-            // Skip log entry if it's a parse error message
-            if (eventText.includes("Could not parse the input") || eventText.includes("N/A: Could not parse the input")) {
+            // Skip log entry if it's a parse error or roster not found message
+            if (eventText.includes("Could not parse the input") || 
+                eventText.includes("N/A: Could not parse the input") ||
+                eventText.includes("not found in roster")) {
                 return;
             }
 
