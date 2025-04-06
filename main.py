@@ -1634,6 +1634,33 @@ def run(text, game_id):
                     quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
+
+                # Create the full log entry with all tags
+                full_log_entry = f"{formatted_game_time} - {log_entry}"
+                if 'scored' in log_entry.lower():
+                    if is_shootout:
+                        full_log_entry += " [SHOOTOUT GOAL]"
+                    else:
+                        # Check for advantage/penalty goals
+                        found_advantage = False
+                        found_penalty = False
+                        for prev_event in game_data[game_id].get('game_log', [])[-4:]:
+                            if 'excluded' in prev_event.lower():
+                                found_advantage = True
+                                break
+                            elif 'penalty' in prev_event.lower():
+                                found_penalty = True
+                                break
+                        if found_advantage:
+                            full_log_entry += " [ADVANTAGE GOAL]"
+                        elif found_penalty:
+                            full_log_entry += " [PENALTY GOAL]"
+                        else:
+                            full_log_entry += " [NATURAL GOAL]"
+                elif 'excluded' in log_entry.lower():
+                    full_log_entry += " [20 SEC EXCLUSION]"
+                        
+                game_data[game_id]['game_log'].append(full_log_entry)
                 
                 # In shootout mode, add shootout tag
                 if is_shootout and 'scored' in log_entry.lower():
