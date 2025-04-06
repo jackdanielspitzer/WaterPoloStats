@@ -1418,7 +1418,7 @@ def run(text):
 
     # Skip entirely if no valid events were parsed
     if not events or events == [(None, None, None)]:
-        return None
+        return ""  # Return empty string instead of None
 
     # Process valid events
     valid_events = False
@@ -1431,7 +1431,7 @@ def run(text):
     # Only return response string if we have valid events
     if valid_events:
         return " and ".join(responses)
-    return None  # Return None to skip adding to game log
+    return ""  # Return empty string instead of None
 
 @app.route('/')
 def home():
