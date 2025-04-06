@@ -201,7 +201,42 @@
             "game_type": "Non-League Game",
             "is_scored": true,
             "formatted_date": "January 22nd, 2025",
-            "game_log": [],
+            "game_log": [
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The light team 1 was excluded [20 SEC EXCLUSION]",
+                "Q1 N/A - The light team 1 was excluded",
+                "Q1 N/A - The light team 1 performed Sprint Won",
+                "Q1 N/A - The light team 1 performed Sprint Won",
+                "Q1 N/A - The light team 1 performed Sprint Attempt",
+                "Q1 N/A - The light team 1 performed Sprint Attempt",
+                "Q1 N/A - The dark team 1 performed Sprint Attempt",
+                "Q1 N/A - The dark team 1 performed Sprint Attempt",
+                "Q1 N/A - Turnover on dark 1",
+                "Q1 N/A - Turnover on dark 1",
+                "Q1 N/A - Steal by dark 1",
+                "Q1 N/A - Steal by dark 1",
+                "Q1 N/A - Turnover on light 1",
+                "Q1 N/A - Turnover on light 1",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The light team 1 was excluded [20 SEC EXCLUSION]",
+                "Q1 N/A - The light team 1 was excluded",
+                "Q1 N/A - The light team 1 performed Penalties Drawn",
+                "Q1 N/A - The light team 1 performed Penalties Drawn"
+            ],
             "home_box": {
                 "Player": [
                     "1",
@@ -604,9 +639,241 @@
             "time": null,
             "date": "2025-05-01",
             "game_type": "League Game",
-            "is_scored": false,
+            "is_scored": true,
             "formatted_date": "May 1st, 2025",
-            "game_log": []
+            "game_log": [
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The light team 1 was excluded [20 SEC EXCLUSION]",
+                "Q1 N/A - The light team 1 was excluded",
+                "Q1 N/A - The light team 1 performed Sprint Won",
+                "Q1 N/A - The light team 1 performed Sprint Won",
+                "Q1 N/A - The light team 1 performed Sprint Attempt",
+                "Q1 N/A - The light team 1 performed Sprint Attempt",
+                "Q1 N/A - The dark team 1 performed Sprint Attempt",
+                "Q1 N/A - The dark team 1 performed Sprint Attempt",
+                "Q1 N/A - Turnover on dark 1",
+                "Q1 N/A - Turnover on dark 1",
+                "Q1 N/A - Steal by dark 1",
+                "Q1 N/A - Steal by dark 1",
+                "Q1 N/A - Turnover on light 1",
+                "Q1 N/A - Turnover on light 1",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The dark team 1 drew an exclusion",
+                "Q1 N/A - The light team 1 was excluded [20 SEC EXCLUSION]",
+                "Q1 N/A - The light team 1 was excluded",
+                "Q1 N/A - The light team 1 performed Penalties Drawn",
+                "Q1 N/A - The light team 1 performed Penalties Drawn"
+            ],
+            "is_shootout": false,
+            "score": {
+                "white_team_score": 0,
+                "black_team_score": 3,
+                "game_type": ""
+            },
+            "away_box": {
+                "Player": [
+                    "1",
+                    "2",
+                    "3",
+                    "7",
+                    "8"
+                ],
+                "Shot": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    2,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties Drawn": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            },
+            "home_box": {
+                "Player": [
+                    "1",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "10"
+                ],
+                "Shot": [
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Shot Attempt": [
+                    3,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Assists": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Blocks": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Steals": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Exclusions Drawn": [
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Penalties": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Turnovers": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Won": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ],
+                "Sprint Attempt": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
         }
     ]
 }
