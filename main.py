@@ -1424,12 +1424,13 @@ def run(text):
                 has_valid_events = True
                 responses.append(phrase(player, event, team))
             else:
-                responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
+                # Skip roster errors without adding to responses
+                continue
 
     # Only return a response if we have valid events
     if has_valid_events:
         return " and ".join(responses)
-    return ""  # Return empty string instead of error message
+    return ""  # Return empty string for no valid events
 
 @app.route('/')
 def home():
