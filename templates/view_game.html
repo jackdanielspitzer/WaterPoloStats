@@ -148,7 +148,7 @@
         <div id="gameLog">
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
-                    <div>{{ entry }}</div>
+                    {{ entry }}{% if not loop.last %}<br>{% endif %}
                 {% endfor %}
             {% endif %}
         </div>
