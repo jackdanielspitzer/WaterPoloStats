@@ -147,8 +147,12 @@
         <h2>Game Log</h2>
         <div id="gameLog">
             {% if game and game.game_log %}
+                {% set seen = set() %}
                 {% for entry in game.game_log %}
-                    {{ entry }}{% if not loop.last %}<br>{% endif %}
+                    {% if entry not in seen %}
+                        {{ entry }}{% if not loop.last %}<br>{% endif %}
+                        {% set _ = seen.add(entry) %}
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>
