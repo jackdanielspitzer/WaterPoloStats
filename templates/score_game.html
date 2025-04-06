@@ -283,15 +283,15 @@
             const confirmResult = confirm('Are you sure you want to finish the game?');
             if (confirmResult) {
                 console.log("Form submission confirmed");
-
+                
                 // Make sure the form action includes the redirect parameter
                 const form = document.getElementById('endGameForm');
                 // Make sure we include the redirect in the form action URL
                 const redirectPath = `/team/${schoolSlug}`;
                 form.action = `/end_game?redirect=${encodeURIComponent(redirectPath)}`;
-
+                
                 console.log("Submitting form with action:", form.action);
-
+                
                 // Ensure all necessary inputs are set
                 if (!form.querySelector('input[name="away_score"]')) {
                     let awayScoreInput = document.createElement('input');
@@ -302,7 +302,7 @@
                 } else {
                     form.querySelector('input[name="away_score"]').value = awayScore;
                 }
-
+                
                 if (!form.querySelector('input[name="home_score"]')) {
                     let homeScoreInput = document.createElement('input');
                     homeScoreInput.type = 'hidden';
@@ -312,7 +312,7 @@
                 } else {
                     form.querySelector('input[name="home_score"]').value = homeScore;
                 }
-
+                
                 // Submit the form
                 form.submit();
             }
@@ -320,7 +320,7 @@
         } catch(err) {
             console.error('Error finishing game:', err);
             alert('Error finishing game. Please try again.');
-
+            
             // Redirect to team page even on error
             window.location.href = '/team/{{ school_slug }}';
             return false;
@@ -458,14 +458,14 @@
                         regulationHomeScore = Math.floor(parseFloat(newScore));
                         // Mark that we've scored in shootout mode
                         hasShootoutScore = true;
-
+                        
                         // Add shot attempt log entry (only to display)
                         const attemptEvent = `SO: ${team} team Player ${playerNumber} attempted a shot`;
                         const attemptEntry = document.createElement('div');
                         attemptEntry.id = "gameLogEntry";
                         attemptEntry.innerHTML = attemptEvent;
                         document.getElementById('gameLog').appendChild(attemptEntry);
-
+                        
                         // Add to local game data
                         game_data[gameId].game_log.push(attemptEvent);
                     } else {
@@ -476,14 +476,14 @@
                         regulationAwayScore = Math.floor(parseFloat(newScore));
                         // Mark that we've scored in shootout mode
                         hasShootoutScore = true;
-
+                        
                         // Add shot attempt log entry (only to display)
                         const attemptEvent = `SO: ${team} team Player ${playerNumber} attempted a shot`;
                         const attemptEntry = document.createElement('div');
                         attemptEntry.id = "gameLogEntry";
                         attemptEntry.innerHTML = attemptEvent;
                         document.getElementById('gameLog').appendChild(attemptEntry);
-
+                        
                         // Add to local game data
                         game_data[gameId].game_log.push(attemptEvent);
                     }
@@ -517,7 +517,7 @@
                     logEntry.innerHTML = shootoutEvent;
                     logEntry.style.color = '#9b59b6'; // Purple color for shootout goals
                     document.getElementById('gameLog').appendChild(logEntry);
-
+                    
                     // Auto-scroll to bottom
                     const gameLog = document.getElementById('gameLog');
                     gameLog.scrollTop = gameLog.scrollHeight;
@@ -750,7 +750,7 @@
                     console.log("In shootout mode - skipping box score updates");
                     return;
                 }
-
+                
                 const form = document.getElementById('form');
                 if (!form) {
                     console.error('Form element not found');
@@ -832,7 +832,7 @@
 
                     awayScoreEl.textContent = awayScore;
                     homeScoreEl.textContent = homeScore;
-
+                
                     // Get score elements
                     if (awayScoreEl && homeScoreEl) {
                         // Reset classes
@@ -972,13 +972,6 @@
                     }
                 }
             }
-
-            // Skip only parse error messages
-            if (eventText.includes("Could not parse the input") || 
-                eventText.includes("N/A: Could not parse the input")) {
-                return;
-            }
-
 
             // Create and style the log entry
             const logEntry = document.createElement('div');

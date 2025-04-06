@@ -11,7 +11,9 @@
             "formatted_date": "January 23rd, 2025",
             "game_log": [
                 "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 3:45 - The dark team goalie attempted a shot"
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "SO N/A - The dark team goalie attempted a shot",
+                "SO N/A - The light team 1 blocked the shot"
             ],
             "away_box": {
                 "Player": [
@@ -215,6 +217,17 @@
                 "black_team_score": 1.1,
                 "game_type": "(SO)"
             }
+        },
+        {
+            "home_away": "Away",
+            "opponent": "Palo Alto High School",
+            "opponent_logo": "images/Palo Alto High School.png",
+            "time": null,
+            "date": "2025-03-27",
+            "game_type": "League Game",
+            "is_scored": false,
+            "formatted_date": "March 27th, 2025",
+            "game_log": []
         }
     ]
 }

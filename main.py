@@ -1,4 +1,4 @@
-oimport os
+import os
 import json
 import spacy
 from datetime import datetime, timedelta
@@ -837,8 +837,10 @@ def extract_key_phrases(text):
                     # Only count as a goal if not missed
                     if not any(word in doc_text.lower() for word in ['missed', 'miss']):
                         first_event['event'] = 'Shot'
-                        # Still track the attempt but don't create a separate log entry
-                        events.append((first_event['player'], 'Shot Attempt', current_team))
+                        # Add shot attempt for goalie
+                        second_event['event'] = 'Shot Attempt'
+                        second_event['player'] = '1'
+                        second_event['team'] = current_team
                     else:
                         # If missed, only count as attempt
                         first_event['event'] = 'Shot Attempt'
@@ -1414,18 +1416,14 @@ def run(text):
     home_team_name = request.form.get('home_team')
     away_team_name = request.form.get('away_team')
 
-    valid_events = False
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                valid_events = True
                 responses.append(phrase(player, event, team))
             else:
                 responses.append(f"Error: Player #{player} not found in {team} team ({home_team_name if team == 'dark' else away_team_name}) roster.")
 
-    if not valid_events:
-        return ""  # Return empty string instead of None to avoid error message
-    return " and ".join(responses) if responses else ""
+    return " and ".join(responses) if responses else "Could not parse the input."
 
 @app.route('/')
 def home():
@@ -1636,14 +1634,13 @@ def run(text, game_id):
                     quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
-
-                # Generate the phrase that will be stored in memory
-                memory_entry = ' and '.join(responses)
                 
-                # Add goal type tags if needed
-                if is_shootout and 'scored' in memory_entry.lower():
-                    memory_entry += " [SHOOTOUT GOAL]"
-                elif 'scored' in memory_entry.lower() and not is_shootout:
+                # In shootout mode, add shootout tag
+                if is_shootout and 'scored' in log_entry.lower():
+                    log_entry += " [SHOOTOUT GOAL]"
+                # Otherwise process regular goals
+                elif 'scored' in log_entry.lower() and not is_shootout:
+                    # For non-custom time entries, skip the datetime parsing
                     found_advantage = False
                     found_penalty = False
                     
@@ -1711,7 +1708,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {memory_entry}")
+                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 
@@ -2637,17 +2634,9 @@ def end_game():
         # Determine if this was a shootout
         is_shootout = current_quarter == 'SO'
         
-        # Get the complete game log from memory
+        # Get memory game log
         current_game_log = current_game_data.get('game_log', [])
         
-        # Save the game log to text file for backup
-        game_log_dir = 'game_logs'
-        os.makedirs(game_log_dir, exist_ok=True)
-        log_filename = f"{game_log_dir}/{white_team_name}_{black_team_name}_{game_date}.txt"
-        
-        with open(log_filename, 'w') as f:
-            f.write('\n'.join(current_game_log))
-            
         # Set up box scores
         white_box = current_game_data.get('dataWhite', {})
         black_box = current_game_data.get('dataBlack', {})
@@ -2688,26 +2677,20 @@ def end_game():
                 black_box[field] = [0] * len(black_box.get('Player', []))
         
         # Update white team's game (away team)
-        white_team_data["games"][white_game_index].update({
-            "is_scored": True,
-            "is_shootout": is_shootout,
-            "score": white_score_info,
-            "game_log": current_game_log.copy(),  # Make a copy to ensure independence
-            "game_log_file": log_filename,
-            "away_box": white_box,
-            "home_box": black_box
-        })
+        white_team_data["games"][white_game_index]["is_scored"] = True
+        white_team_data["games"][white_game_index]["is_shootout"] = is_shootout
+        white_team_data["games"][white_game_index]["score"] = white_score_info
+        white_team_data["games"][white_game_index]["game_log"] = current_game_log
+        white_team_data["games"][white_game_index]["away_box"] = white_box
+        white_team_data["games"][white_game_index]["home_box"] = black_box
         
-        # Update black team's game (home team) 
-        black_team_data["games"][black_game_index].update({
-            "is_scored": True,
-            "is_shootout": is_shootout,
-            "score": black_score_info,
-            "game_log": current_game_log.copy(),  # Make a copy to ensure independence
-            "game_log_file": log_filename,
-            "home_box": black_box,
-            "away_box": white_box
-        })
+        # Update black team's game (home team)
+        black_team_data["games"][black_game_index]["is_scored"] = True
+        black_team_data["games"][black_game_index]["is_shootout"] = is_shootout
+        black_team_data["games"][black_game_index]["score"] = black_score_info
+        black_team_data["games"][black_game_index]["game_log"] = current_game_log
+        black_team_data["games"][black_game_index]["home_box"] = black_box
+        black_team_data["games"][black_game_index]["away_box"] = white_box
         
         # Save updated data for both teams
         save_team_data(white_team_name, white_team_data)
