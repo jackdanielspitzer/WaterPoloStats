@@ -1638,13 +1638,14 @@ def run(text, game_id):
                     quarter_part = f"OT{ot_num}"
                 time_part = game_time.split(' ')[1]
                 formatted_game_time = f"{quarter_part} {time_part}"
+
+                # Generate the phrase that will be stored in memory
+                memory_entry = ' and '.join(responses)
                 
-                # In shootout mode, add shootout tag
-                if is_shootout and 'scored' in log_entry.lower():
-                    log_entry += " [SHOOTOUT GOAL]"
-                # Otherwise process regular goals
-                elif 'scored' in log_entry.lower() and not is_shootout:
-                    # For non-custom time entries, skip the datetime parsing
+                # Add goal type tags if needed
+                if is_shootout and 'scored' in memory_entry.lower():
+                    memory_entry += " [SHOOTOUT GOAL]"
+                elif 'scored' in memory_entry.lower() and not is_shootout:
                     found_advantage = False
                     found_penalty = False
                     
@@ -1712,7 +1713,7 @@ def run(text, game_id):
                     else:
                         log_entry += " [NATURAL GOAL]"
                 
-                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {log_entry}")
+                game_data[game_id]['game_log'].append(f"{formatted_game_time} - {memory_entry}")
             else:
                 responses.append(f"Player {player} not found in roster.")
 
