@@ -148,7 +148,7 @@
         <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
-                    {% if not "Could not parse the input" in entry and not "N/A: Could not parse the input" in entry and ("drew an exclusion" in entry or "excluded" in entry or "kicked out" in entry or not "not found in roster" in entry) %}
+                    {% if not "Could not parse the input" in entry and not "N/A: Could not parse the input" in entry %}
                         <div id="gameLogEntry" style="margin-bottom: 5px;">
                             {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}
                                 <div style="color: #9b59b6;">{{ entry }}</div>
