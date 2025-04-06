@@ -1417,20 +1417,15 @@ def run(text):
     away_team_name = request.form.get('away_team')
 
     # Check if any valid events were parsed
-    has_valid_events = False
     for player, event, team in events:
         if player and event and team:
             if sort_data(player, event, team, home_team_name, away_team_name):
-                has_valid_events = True
                 responses.append(phrase(player, event, team))
-            else:
-                # Skip roster errors without adding to responses
-                continue
 
-    # Only return a response if we have valid events
-    if has_valid_events:
+    # Only return responses if we have any valid events
+    if responses:
         return " and ".join(responses)
-    return ""  # Return empty string for no valid events
+    return None  # Return None instead of empty string to skip game log entry
 
 @app.route('/')
 def home():
