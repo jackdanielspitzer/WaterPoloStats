@@ -145,33 +145,31 @@
         {% endif %}
 
         <h2>Game Log</h2>
-        <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px;">
-            {% if game %}
-                {% if game.game_log %}
-                    {% for entry in game.game_log %}
-                        {% if not "Could not parse the input" in entry %}
-                            <div id="gameLogEntry" style="margin-bottom: 5px;">
-                                {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}
-                                    <div style="color: #9b59b6;">{{ entry }}</div>
-                                {% elif '[ADVANTAGE GOAL]' in entry %}
-                                    <div style="color: #e74c3c;">{{ entry }}</div>
-                                {% elif '[PENALTY GOAL]' in entry %}
-                                    <div style="color: #e67e22;">{{ entry }}</div>
-                                {% elif '[NATURAL GOAL]' in entry %}
-                                    <div style="color: #2ecc71;">{{ entry }}</div>
-                                {% elif '[20 SEC EXCLUSION]' in entry %}
-                                    <div style="color: #3498db;">{{ entry }}</div>
-                                {% else %}
-                                    <div>{{ entry }}</div>
-                                {% endif %}
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% elif game.game_log_file %}
-                    {% for entry in game.game_log_file.readlines() %}
-                        <div id="gameLogEntry" style="margin-bottom: 5px;">{{ entry }}</div>
-                    {% endfor %}
-                {% endif %}
+        <div id="gameLog" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc; background-color: #fff; overflow-y: auto; height: 200px; white-space: pre-wrap;">
+            {% if game and game.game_log %}
+                {% for entry in game.game_log %}
+                    {% if "not found" not in entry %}
+                        <div id="gameLogEntry" style="margin-bottom: 5px;">
+                            {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}
+                                <div style="color: #9b59b6;">{{ entry }}</div>
+                            {% elif '[ADVANTAGE GOAL]' in entry %}
+                                <div style="color: #e74c3c;">{{ entry }}</div>
+                            {% elif '[PENALTY GOAL]' in entry %}
+                                <div style="color: #e67e22;">{{ entry }}</div>
+                            {% elif '[NATURAL GOAL]' in entry %}
+                                <div style="color: #2ecc71;">{{ entry }}</div>
+                            {% elif '[20 SEC EXCLUSION]' in entry %}
+                                <div style="color: #3498db;">{{ entry }}</div>
+                            {% else %}
+                                <div>{{ entry }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% elif game and game.game_log_file %}
+                {% for entry in game.game_log_file.readlines() %}
+                    <div id="gameLogEntry" style="margin-bottom: 5px;">{{ entry }}</div>
+                {% endfor %}
             {% endif %}
         </div>
 
