@@ -5,202 +5,20 @@
             "opponent": "Palo Alto High School",
             "opponent_logo": "images/Palo Alto High School.png",
             "time": null,
-            "date": "2025-04-22",
-            "game_type": "Non-League Game",
-            "is_scored": true,
-            "formatted_date": "April 22nd, 2025",
-            "game_log": [
-                "Q1 7:00 - The light team 1 performed Sprint Attempt",
-                "Q1 7:00 - The dark team 1 performed Sprint Won",
-                "Q1 7:00 - The dark team 1 performed Sprint Attempt"
-            ],
-            "is_shootout": false,
-            "score": {
-                "white_team_score": 0,
-                "black_team_score": 0,
-                "game_type": ""
-            },
-            "away_box": {
-                "Player": [
-                    "1",
-                    "6"
-                ],
-                "Shot": [
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0
-                ],
-                "Sprint Won": [
-                    0,
-                    0
-                ],
-                "Sprint Attempt": [
-                    1,
-                    0
-                ]
-            },
-            "home_box": {
-                "Player": [
-                    "1",
-                    "5",
-                    "6",
-                    "7",
-                    "8",
-                    "10"
-                ],
-                "Shot": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Shot Attempt": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Assists": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Blocks": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Steals": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Exclusions Drawn": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Turnovers": [
-                    0,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Won": [
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Sprint Attempt": [
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            }
-        },
-        {
-            "home_away": "Away",
-            "opponent": "Palo Alto High School",
-            "opponent_logo": "images/Palo Alto High School.png",
-            "time": null,
-            "date": "2025-04-23",
+            "date": "2025-04-24",
             "game_type": "League Game",
             "is_scored": true,
-            "formatted_date": "April 23rd, 2025",
+            "formatted_date": "April 24th, 2025",
             "game_log": [
-                "Q1 7:00 - The light team 1 performed Sprint Attempt",
-                "Q1 7:00 - The dark team 1 performed Sprint Won",
-                "Q1 7:00 - The dark team 1 performed Sprint Attempt",
-                "Q1 6:30 - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 6:30 - The dark team goalie attempted a shot",
-                "Q1 6:25 - Steal by light 1",
-                "Q1 6:25 - Turnover on dark 1",
-                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 N/A - The dark team goalie attempted a shot",
-                "Q1 N/A - The dark team 1 performed Assists",
-                "Q1 N/A - Steal by dark 1",
-                "Q1 N/A - Turnover on light 1",
-                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 N/A - The dark team goalie attempted a shot",
-                "Q1 3:45 - The dark team 1 performed Penalties Drawn",
-                "Q1 3:45 - The light team 1 was excluded [20 SEC EXCLUSION]",
-                "Q1 3:45 - The light team 1 was excluded"
+                "Q1 3:00 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:00 - The dark team goalie attempted a shot",
+                "Q1 2:00 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 2:00 - The dark team goalie attempted a shot"
             ],
             "is_shootout": false,
             "score": {
                 "white_team_score": 0,
-                "black_team_score": 3,
+                "black_team_score": 2,
                 "game_type": ""
             },
             "away_box": {
@@ -225,11 +43,11 @@
                     0
                 ],
                 "Steals": [
-                    1,
+                    0,
                     0
                 ],
                 "Exclusions": [
-                    1,
+                    0,
                     0
                 ],
                 "Exclusions Drawn": [
@@ -241,7 +59,7 @@
                     0
                 ],
                 "Turnovers": [
-                    1,
+                    0,
                     0
                 ],
                 "Sprint Won": [
@@ -249,7 +67,7 @@
                     0
                 ],
                 "Sprint Attempt": [
-                    1,
+                    0,
                     0
                 ]
             },
@@ -263,7 +81,7 @@
                     "10"
                 ],
                 "Shot": [
-                    3,
+                    2,
                     0,
                     0,
                     0,
@@ -271,7 +89,7 @@
                     0
                 ],
                 "Shot Attempt": [
-                    3,
+                    2,
                     0,
                     0,
                     0,
@@ -279,7 +97,7 @@
                     0
                 ],
                 "Assists": [
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -295,7 +113,7 @@
                     0
                 ],
                 "Steals": [
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -327,7 +145,7 @@
                     0
                 ],
                 "Turnovers": [
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -335,7 +153,7 @@
                     0
                 ],
                 "Sprint Won": [
-                    1,
+                    0,
                     0,
                     0,
                     0,
@@ -343,15 +161,7 @@
                     0
                 ],
                 "Sprint Attempt": [
-                    1,
                     0,
-                    0,
-                    0,
-                    0,
-                    0
-                ],
-                "Penalties Drawn": [
-                    1,
                     0,
                     0,
                     0,
