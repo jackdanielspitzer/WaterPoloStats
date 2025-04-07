@@ -147,51 +147,31 @@
         <h2>Game Log</h2>
         <div id="gameLog" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: auto; background: #f9f9f9;">
             {% if game and game.game_log %}
-                {% set sorted_timed_events = [] %}
-                {% set event_mapping = {} %}
-                
-                {# First pass - collect timed events and create position mapping #}
+                {# Create ordered list of events with their indices #}
+                {% set event_data = [] %}
                 {% for entry in game.game_log %}
                     {% set time_key = entry.split(' - ')[0] %}
-                    {% if 'N/A' not in time_key %}
-                        {% set _ = sorted_timed_events.append(entry) %}
+                    {% if 'N/A' in time_key %}
+                        {% set _ = event_data.append({'entry': entry, 'index': loop.index0, 'is_timed': false}) %}
+                    {% else %}
+                        {% set _ = event_data.append({'entry': entry, 'index': loop.index0, 'is_timed': true}) %}
                     {% endif %}
-                    {% set _ = event_mapping.update({loop.index0: entry}) %}
                 {% endfor %}
+
+                {# Sort only timed events while preserving N/A positions #}
+                {% set timed_events = event_data|selectattr('is_timed', 'equalto', true)|list %}
+                {% set sorted_timed = timed_events|sort(attribute='entry') %}
                 
-                {# Sort timed events #}
-                {% set _ = sorted_timed_events.sort(reverse=true) %}
+                {# Merge sorted timed events back with N/A events #}
                 {% set timed_index = 0 %}
-                
-                {# Display events in original order, replacing timed events with sorted versions #}
-                {% for i in range(game.game_log|length) %}
-                    {% set entry = event_mapping[i] %}
-                    {% set time_key = entry.split(' - ')[0] %}
-                    
+                {% for event in event_data %}
                     <div id="gameLogEntry" style="margin-bottom: 5px;">
-                        {% if 'N/A' not in time_key %}
-                            {# Use next sorted timed event #}
-                            {% set entry = sorted_timed_events[timed_index] %}
+                        {% if event.is_timed %}
+                            {% set entry = sorted_timed[timed_index].entry %}
                             {% set _ = timed_index.__setitem__(0, timed_index + 1) %}
+                        {% else %}
+                            {% set entry = event.entry %}
                         {% endif %}
-                        
-                        <strong>{{ entry.split(' - ')[0] }}:</strong>
-                        <span style="
-                        {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
-                            {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
-                            {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
-                            {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
-                            {% elif '[20 SEC EXCLUSION]' in event %}color: #3498db;
-                            {% endif %}">
-                                {{ event }}{% if not loop.last %} and {% endif %}
-                            </span>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-                
-                {# Display N/A events in original order #}
-                {% for entry in na_events %}
-                    <div id="gameLogEntry" style="margin-bottom: 5px;">
                         <strong>{{ entry.split(' - ')[0] }}:</strong>
                         <span style="
                         {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
