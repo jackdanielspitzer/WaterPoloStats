@@ -158,7 +158,7 @@
                 {% endfor %}
                 
                 {# Display sorted timed events first #}
-                {% for time_key in timed_grouped.keys()|sort(reverse=true) %}
+                {% for time_key in timed_grouped.keys() %}
                     {% if 'N/A' not in time_key %}
                     <div id="gameLogEntry" style="margin-bottom: 5px;">
                         <strong>{{ time_key }}:</strong>
