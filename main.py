@@ -1668,7 +1668,7 @@ def run(text, game_id):
                     game_data[game_id]['game_log'] = []
                 
                 # Check for duplicates before adding to game log
-                # Check recent entries for duplicates with same timestamp
+                # Check recent entries for duplicates with same timestamp and event
                 is_duplicate = False
                 recent_entries = game_data[game_id]['game_log'][-3:]  # Look at last 3 entries
                 for existing_entry in recent_entries:
@@ -1680,12 +1680,21 @@ def run(text, game_id):
                     if existing_time == new_time:
                         existing_content = existing_entry.split(' - ', 1)[1] if ' - ' in existing_entry else existing_entry
                         new_content = full_log_entry.split(' - ', 1)[1] if ' - ' in full_log_entry else full_log_entry
-                        # Compare the core event content without tags
-                        base_existing = existing_content.split('[')[0].strip()
-                        base_new = new_content.split('[')[0].strip()
-                        if base_existing == base_new:
-                            is_duplicate = True
-                            break
+                        
+                        # For exclusions, compare the base event ignoring the [20 SEC EXCLUSION] tag
+                        if 'excluded' in new_content.lower():
+                            base_existing = ' '.join([p for p in existing_content.split() if '[' not in p and ']' not in p])
+                            base_new = ' '.join([p for p in new_content.split() if '[' not in p and ']' not in p])
+                            if base_existing.strip() == base_new.strip():
+                                is_duplicate = True
+                                break
+                        else:
+                            # For other events, compare without any tags
+                            base_existing = existing_content.split('[')[0].strip()
+                            base_new = new_content.split('[')[0].strip()
+                            if base_existing == base_new:
+                                is_duplicate = True
+                                break
                 
                 # Only add if not a duplicate
                 if not is_duplicate:
