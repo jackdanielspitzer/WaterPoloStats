@@ -230,6 +230,22 @@
         },
         {
             "home_away": "Home",
+            "opponent": "Henry M. Gunn High School",
+            "opponent_logo": "images/Henry M. Gunn High School.png",
+            "time": null,
+            "date": "2025-04-14",
+            "game_type": "Non-League Game",
+            "is_scored": false,
+            "formatted_date": "April 14th, 2025",
+            "game_log": [
+                "Q1 3:45 - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 3:45 - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot"
+            ]
+        },
+        {
+            "home_away": "Home",
             "opponent": "Harker High School",
             "opponent_logo": "images/Harker High School.png",
             "time": null,
