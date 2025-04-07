@@ -1681,12 +1681,21 @@ def run(text, game_id):
                         existing_content = existing_entry.split(' - ', 1)[1] if ' - ' in existing_entry else existing_entry
                         new_content = full_log_entry.split(' - ', 1)[1] if ' - ' in full_log_entry else full_log_entry
                         
-                        # For exclusions, compare the base event ignoring the [20 SEC EXCLUSION] tag
+                        # For exclusions, check if either entry has [20 SEC EXCLUSION] tag
                         if 'excluded' in new_content.lower():
                             base_existing = ' '.join([p for p in existing_content.split() if '[' not in p and ']' not in p])
                             base_new = ' '.join([p for p in new_content.split() if '[' not in p and ']' not in p])
+                            has_tag = '[20 SEC EXCLUSION]' in existing_content or '[20 SEC EXCLUSION]' in new_content
+                            
+                            # If base content matches and either has tag, mark as duplicate
                             if base_existing.strip() == base_new.strip():
-                                is_duplicate = True
+                                if '[20 SEC EXCLUSION]' in new_content:
+                                    # Keep the new entry with tag, remove old one
+                                    game_data[game_id]['game_log'].remove(existing_entry)
+                                    is_duplicate = False
+                                else:
+                                    # Keep existing entry if it has tag
+                                    is_duplicate = True
                                 break
                         else:
                             # For other events, compare without any tags
