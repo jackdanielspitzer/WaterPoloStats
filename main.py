@@ -498,9 +498,36 @@ dataBlack = {
 }
 
 
+def convert_time_words(text):
+    # Dictionary for numbers as words
+    number_words = {
+        'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
+        'six': '6', 'seven': '7', 'eight': '8', 'nine': '9', 'zero': '0',
+        'ten': '10', 'eleven': '11', 'twelve': '12', 'thirteen': '13',
+        'fourteen': '14', 'fifteen': '15', 'sixteen': '16', 'seventeen': '17',
+        'eighteen': '18', 'nineteen': '19', 'twenty': '20', 'thirty': '30',
+        'forty': '40', 'fifty': '50'
+    }
+    
+    # First handle compound numbers like "forty five"
+    for tens in ['twenty', 'thirty', 'forty', 'fifty']:
+        if tens in text:
+            for i in range(1, 10):
+                old = f"{tens} {number_words[w2n.num_word(i)]}"
+                new = f"{int(number_words[tens]) + i}"
+                text = text.replace(old, new)
+    
+    # Then replace remaining number words
+    for word, num in number_words.items():
+        text = text.replace(word, num)
+    
+    return text
+
 def extract_key_phrases(text):
+    # Convert number words to digits
+    text = convert_time_words(text.lower())
     # Convert 'goalie' to '1' and standardize penalty terms
-    text = text.lower().replace('goalie', '1')
+    text = text.replace('goalie', '1')
     
     # Replace various 5 meter/5 m variations with 'penalty'
     import re
