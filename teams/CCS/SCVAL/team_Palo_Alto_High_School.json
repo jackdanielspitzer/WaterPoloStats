@@ -254,10 +254,10 @@
             "is_scored": true,
             "formatted_date": "April 24th, 2025",
             "game_log": [
-                "Q1 3:00 - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 3:00 - The dark team goalie attempted a shot",
-                "Q1 2:00 - The dark team goalie scored a goal [NATURAL GOAL]",
-                "Q1 2:00 - The dark team goalie attempted a shot"
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot",
+                "Q1 N/A - The dark team goalie scored a goal [NATURAL GOAL]",
+                "Q1 N/A - The dark team goalie attempted a shot"
             ],
             "is_shootout": false,
             "score": {
