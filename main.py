@@ -1668,16 +1668,18 @@ def run(text, game_id):
                     game_data[game_id]['game_log'] = []
                 
                 # Check for duplicates before adding to game log
-                # For OT and SO periods, check the last few entries to avoid duplicates
+                # Check all entries for duplicates regardless of period
                 is_duplicate = False
-                if 'OT' in formatted_game_time or 'SO' in formatted_game_time:
-                    for existing_entry in game_data[game_id]['game_log'][-5:]:  # Check last 5 entries
-                        # Strip timestamps for comparison since they might vary
-                        existing_content = existing_entry.split(' - ', 1)[1] if ' - ' in existing_entry else existing_entry
-                        new_content = full_log_entry.split(' - ', 1)[1] if ' - ' in full_log_entry else full_log_entry
-                        if existing_content == new_content:
-                            is_duplicate = True
-                            break
+                for existing_entry in game_data[game_id]['game_log']:
+                    # Strip timestamps for comparison since they might vary
+                    existing_content = existing_entry.split(' - ', 1)[1] if ' - ' in existing_entry else existing_entry
+                    new_content = full_log_entry.split(' - ', 1)[1] if ' - ' in full_log_entry else full_log_entry
+                    # Compare the core event content without timestamps and tags
+                    base_existing = existing_content.split('[')[0].strip()
+                    base_new = new_content.split('[')[0].strip()
+                    if base_existing == base_new:
+                        is_duplicate = True
+                        break
                 
                 # Only add if not a duplicate
                 if not is_duplicate:
