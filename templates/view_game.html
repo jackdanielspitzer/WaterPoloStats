@@ -187,17 +187,6 @@
                         </span>
                     </div>
                 {% endfor %}
-                
-                {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
-                            {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
-                            {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
-                            {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
-                            {% elif '[20 SEC EXCLUSION]' in entry %}color: #3498db;
-                            {% endif %}">
-                            {{ entry.split(' - ')[1] }}
-                        </span>
-                    </div>
-                {% endfor %}
             {% endif %}
         </div>
 
