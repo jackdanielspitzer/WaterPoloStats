@@ -177,15 +177,14 @@
                         
                         <strong>{{ entry.split(' - ')[0] }}:</strong>
                         <span style="
-                            {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
-                            {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
-                            {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
-                            {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
-                            {% elif '[20 SEC EXCLUSION]' in event %}color: #3498db;
+                            {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
+                            {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
+                            {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
+                            {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
+                            {% elif '[20 SEC EXCLUSION]' in entry %}color: #3498db;
                             {% endif %}">
-                                {{ event }}{% if not loop.last %} and {% endif %}
-                            </span>
-                        {% endfor %}
+                            {{ entry.split(' - ')[1] }}
+                        </span>
                     </div>
                 {% endfor %}
                 
