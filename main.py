@@ -499,6 +499,13 @@ dataBlack = {
 
 
 def convert_time_words(text):
+    # First check if text already contains a time format (H:MM)
+    import re
+    time_pattern = re.compile(r'^\s*(\d{1,2}):(\d{2})\s+')
+    time_match = time_pattern.match(text)
+    if time_match:
+        return text  # Return unchanged if it's already in time format
+
     # Dictionary for numbers as words
     number_words = {
         'one': '1', 'two': '2', 'three': '3', 'four': '4', 'five': '5',
