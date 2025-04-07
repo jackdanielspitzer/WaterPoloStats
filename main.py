@@ -1681,22 +1681,22 @@ def run(text, game_id):
                         existing_content = existing_entry.split(' - ', 1)[1] if ' - ' in existing_entry else existing_entry
                         new_content = full_log_entry.split(' - ', 1)[1] if ' - ' in full_log_entry else full_log_entry
                         
-                        # For exclusions, check if either entry has [20 SEC EXCLUSION] tag
+                        # For exclusions, always keep only the entry with [20 SEC EXCLUSION] tag
                         if 'excluded' in new_content.lower():
                             base_existing = ' '.join([p for p in existing_content.split() if '[' not in p and ']' not in p])
                             base_new = ' '.join([p for p in new_content.split() if '[' not in p and ']' not in p])
                             
-                            # If base content matches (same player/team), handle tag logic
+                            # If base content matches (same player/team)
                             if base_existing.strip() == base_new.strip():
-                                # If new entry has tag, remove old entry without tag
+                                # If new entry has tag, remove old entry (whether it has tag or not)
                                 if '[20 SEC EXCLUSION]' in new_content:
-                                    if '[20 SEC EXCLUSION]' not in existing_content:
-                                        game_data[game_id]['game_log'].remove(existing_entry)
-                                        is_duplicate = False
-                                    else:
-                                        is_duplicate = True
+                                    game_data[game_id]['game_log'].remove(existing_entry)
+                                    is_duplicate = False
                                 # If new entry doesn't have tag but existing does, skip new entry
                                 elif '[20 SEC EXCLUSION]' in existing_content:
+                                    is_duplicate = True
+                                # If neither has tag, treat as duplicate
+                                else:
                                     is_duplicate = True
                                 break
                         else:
