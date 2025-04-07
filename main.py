@@ -254,45 +254,14 @@ def save_team_data(team_name, data):
         for game in data["games"]:
             if "game_log" not in game:
                 game["game_log"] = []
-                
+            
             # Get the game index
             game_id = str(data["games"].index(game))
             
             # If there's corresponding game data in memory, use its game log
             if game_id in game_data and "game_log" in game_data[game_id]:
-                # Remove duplicates while preserving order and tagged entries
-                unique_logs = []
-                seen_events = set()
-                
-                for entry in game_data[game_id]["game_log"]:
-                    # Split time and content
-                    parts = entry.split(' - ', 1)
-                    if len(parts) < 2:
-                        continue
-                        
-                    time, content = parts
-                    # Remove tags for comparison
-                    base_content = ' '.join([p for p in content.split() if '[' not in p and ']' not in p])
-                    
-                    # Create unique key from time and base content
-                    event_key = f"{time}:{base_content}"
-                    
-                    # For exclusions, keep entry with [20 SEC EXCLUSION] tag
-                    if 'excluded' in content.lower():
-                        if event_key not in seen_events or '[20 SEC EXCLUSION]' in content:
-                            if event_key in seen_events:
-                                # Remove previous entry without tag
-                                unique_logs = [log for log in unique_logs 
-                                            if not (log.split(' - ', 1)[0] == time and 
-                                                  base_content in log.split(' - ', 1)[1])]
-                            unique_logs.append(entry)
-                            seen_events.add(event_key)
-                    else:
-                        if event_key not in seen_events:
-                            unique_logs.append(entry)
-                            seen_events.add(event_key)
-                
-                game["game_log"] = unique_logs
+                # Make a deep copy of the game log to preserve all entries exactly
+                game["game_log"] = list(game_data[game_id]["game_log"])
     
     with open(team_file_path, 'w') as file:
         json.dump(data, file, indent=4)
