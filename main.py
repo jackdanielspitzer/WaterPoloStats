@@ -501,6 +501,18 @@ dataBlack = {
 def convert_time_words(text):
     # First check if text already contains a time format (H:MM)
     import re
+    
+    # Check for 3-digit time format (e.g., 300 -> 3:00)
+    three_digit_pattern = re.compile(r'^\s*(\d{3})\s+')
+    three_digit_match = three_digit_pattern.match(text)
+    if three_digit_match:
+        digits = three_digit_match.group(1)
+        minutes = digits[0]
+        seconds = digits[1:]
+        new_time = f"{minutes}:{seconds}"
+        return text.replace(digits, new_time)
+    
+    # Check for standard time format
     time_pattern = re.compile(r'^\s*(\d{1,2}):(\d{2})\s+')
     time_match = time_pattern.match(text)
     if time_match:
