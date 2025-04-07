@@ -170,7 +170,8 @@
                 {% endfor %}
                 
                 {# Display sorted timed events first #}
-                {% for time_key in timed_grouped|sort(reverse=true) %}
+                {% for time_key in timed_grouped.keys()|sort(reverse=true) %}
+                    {% if 'N/A' not in time_key %}
                     <div id="gameLogEntry" style="margin-bottom: 5px;">
                         <strong>{{ time_key }}:</strong>
                         {% set unique_events = {} %}
@@ -195,6 +196,37 @@
                             </span>
                         {% endfor %}
                     </div>
+                    {% endif %}
+                {% endfor %}
+                
+                {# Display N/A entries in original order #}
+                {% for time_key in timed_grouped.keys() %}
+                    {% if 'N/A' in time_key %}
+                    <div id="gameLogEntry" style="margin-bottom: 5px;">
+                        <strong>{{ time_key }}:</strong>
+                        {% set unique_events = {} %}
+                        {% for event in timed_grouped[time_key] %}
+                            {% set event_base = event|replace('[20 SEC EXCLUSION]', '')|trim %}
+                            {% if event_base not in unique_events or '[20 SEC EXCLUSION]' in event %}
+                                {% if '[20 SEC EXCLUSION]' in event %}
+                                    {% set _ = unique_events.update({event_base: event}) %}
+                                {% elif event_base not in unique_events %}
+                                    {% set _ = unique_events.update({event_base: event}) %}
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                        {% for event in unique_events.values() %}
+                            <span style="
+                            {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
+                            {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
+                            {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
+                            {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
+                            {% endif %}">
+                                {{ event|replace('[20 SEC EXCLUSION]', '') }}{% if not loop.last %} and {% endif %}
+                            </span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 {% endfor %}
                 
                 {# Display N/A events in original order #}
