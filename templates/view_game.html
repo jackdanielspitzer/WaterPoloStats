@@ -156,27 +156,7 @@
                     {% set _ = time_grouped[time_key].append(entry.split(' - ')[1]) %}
                 {% endfor %}
                 
-                {% set timed_events = time_grouped.keys()|select('match', '^Q[1-4] \\d+:\\d+$')|list %}
-                {% set other_events = time_grouped.keys()|reject('match', '^Q[1-4] \\d+:\\d+$')|list %}
-                
-                {% for time_key in timed_events|sort(reverse=true) %}
-                    <div id="gameLogEntry" style="margin-bottom: 5px;">
-                        <strong>{{ time_key }}:</strong>
-                        {% for event in time_grouped[time_key] %}
-                            <span style="
-                            {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
-                            {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
-                            {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
-                            {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
-                            {% elif '[20 SEC EXCLUSION]' in event %}color: #3498db;
-                            {% endif %}">
-                                {{ event }}{% if not loop.last %} and {% endif %}
-                            </span>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-
-                {% for time_key in other_events %}
+                {% for time_key in time_grouped|sort(reverse=true) %}
                     <div id="gameLogEntry" style="margin-bottom: 5px;">
                         <strong>{{ time_key }}:</strong>
                         {% for event in time_grouped[time_key] %}
