@@ -147,34 +147,36 @@
         <h2>Game Log</h2>
         <div id="gameLog" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: auto; background: #f9f9f9;">
             {% if game and game.game_log %}
-                {% set timed_events = [] %}
-                {% set na_events = [] %}
+                {% set sorted_timed_events = [] %}
+                {% set event_mapping = {} %}
                 
+                {# First pass - collect timed events and create position mapping #}
                 {% for entry in game.game_log %}
                     {% set time_key = entry.split(' - ')[0] %}
-                    {% if 'N/A' in time_key %}
-                        {% set _ = na_events.append(entry) %}
-                    {% else %}
-                        {% set _ = timed_events.append(entry) %}
+                    {% if 'N/A' not in time_key %}
+                        {% set _ = sorted_timed_events.append(entry) %}
                     {% endif %}
+                    {% set _ = event_mapping.update({loop.index0: entry}) %}
                 {% endfor %}
                 
                 {# Sort timed events #}
-                {% set timed_grouped = {} %}
-                {% for entry in timed_events %}
-                    {% set time_key = entry.split(' - ')[0] %}
-                    {% if time_key not in timed_grouped %}
-                        {% set _ = timed_grouped.update({time_key: []}) %}
-                    {% endif %}
-                    {% set _ = timed_grouped[time_key].append(entry.split(' - ')[1]) %}
-                {% endfor %}
+                {% set _ = sorted_timed_events.sort(reverse=true) %}
+                {% set timed_index = 0 %}
                 
-                {# Display sorted timed events first #}
-                {% for time_key in timed_grouped|sort(reverse=true) %}
+                {# Display events in original order, replacing timed events with sorted versions #}
+                {% for i in range(game.game_log|length) %}
+                    {% set entry = event_mapping[i] %}
+                    {% set time_key = entry.split(' - ')[0] %}
+                    
                     <div id="gameLogEntry" style="margin-bottom: 5px;">
-                        <strong>{{ time_key }}:</strong>
-                        {% for event in timed_grouped[time_key] %}
-                            <span style="
+                        {% if 'N/A' not in time_key %}
+                            {# Use next sorted timed event #}
+                            {% set entry = sorted_timed_events[timed_index] %}
+                            {% set _ = timed_index.__setitem__(0, timed_index + 1) %}
+                        {% endif %}
+                        
+                        <strong>{{ entry.split(' - ')[0] }}:</strong>
+                        <span style="
                             {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
                             {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
                             {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
@@ -187,17 +189,12 @@
                     </div>
                 {% endfor %}
                 
-                {# Display N/A events in original order #}
-                {% for entry in na_events %}
-                    <div id="gameLogEntry" style="margin-bottom: 5px;">
-                        <strong>{{ entry.split(' - ')[0] }}:</strong>
-                        <span style="
-                        {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
-                        {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
-                        {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
-                        {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
-                        {% elif '[20 SEC EXCLUSION]' in entry %}color: #3498db;
-                        {% endif %}">
+                {% if '[SHOOTOUT GOAL]' in entry or 'SO:' in entry %}color: #9b59b6;
+                            {% elif '[ADVANTAGE GOAL]' in entry %}color: #e74c3c;
+                            {% elif '[PENALTY GOAL]' in entry %}color: #e67e22;
+                            {% elif '[NATURAL GOAL]' in entry %}color: #2ecc71;
+                            {% elif '[20 SEC EXCLUSION]' in entry %}color: #3498db;
+                            {% endif %}">
                             {{ entry.split(' - ')[1] }}
                         </span>
                     </div>
