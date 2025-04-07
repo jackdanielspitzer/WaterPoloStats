@@ -148,20 +148,22 @@
         <div id="gameLog" style="margin: 20px 0; padding: 15px; border: 1px solid #ddd; height: 300px; overflow-y: auto; background: #f9f9f9;">
             {% if game and game.game_log %}
                 {% for entry in game.game_log %}
-                    {% set parts = entry.split(' - ') %}
-                    {% set time_key = parts[0] %}
-                    {% set event = parts[1] %}
-                    <div id="gameLogEntry" style="margin-bottom: 5px;">
-                        <strong>{{ time_key }}:</strong>
-                        <span style="
-                        {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
-                        {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
-                        {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
-                        {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
-                        {% endif %}">
-                            {{ event|replace('[20 SEC EXCLUSION]', '') }}
-                        </span>
-                    </div>
+                    {% set parts = entry.split(' - ', 1) %}
+                    {% if parts|length >= 2 %}
+                        {% set time_key = parts[0] %}
+                        {% set event = parts[1] %}
+                        <div id="gameLogEntry" style="margin-bottom: 5px;">
+                            <strong>{{ time_key }}:</strong>
+                            <span style="
+                            {% if '[SHOOTOUT GOAL]' in event or 'SO:' in event %}color: #9b59b6;
+                            {% elif '[ADVANTAGE GOAL]' in event %}color: #e74c3c;
+                            {% elif '[PENALTY GOAL]' in event %}color: #e67e22;
+                            {% elif '[NATURAL GOAL]' in event %}color: #2ecc71;
+                            {% endif %}">
+                                {{ event|replace('[20 SEC EXCLUSION]', '') }}
+                            </span>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
         </div>
