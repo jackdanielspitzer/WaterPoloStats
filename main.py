@@ -1644,13 +1644,14 @@ def run(text, game_id):
                         # Check for advantage/penalty goals
                         found_advantage = False
                         found_penalty = False
-                        for prev_event in game_data[game_id].get('game_log', [])[-4:]:
-                            if 'excluded' in prev_event.lower():
-                                found_advantage = True
-                                break
-                            elif 'penalty' in prev_event.lower():
-                                found_penalty = True
-                                break
+                        if game_id in game_data and 'game_log' in game_data[game_id]:
+                            for prev_event in game_data[game_id]['game_log'][-4:]:
+                                if 'excluded' in prev_event.lower():
+                                    found_advantage = True
+                                    break
+                                elif 'penalty' in prev_event.lower():
+                                    found_penalty = True
+                                    break
                         if found_advantage:
                             full_log_entry += " [ADVANTAGE GOAL]"
                         elif found_penalty:
@@ -1660,7 +1661,25 @@ def run(text, game_id):
                 elif 'excluded' in log_entry.lower():
                     full_log_entry += " [20 SEC EXCLUSION]"
                         
+                # Initialize game_data structure if needed
+                if game_id not in game_data:
+                    game_data[game_id] = {'game_log': []}
+                if 'game_log' not in game_data[game_id]:
+                    game_data[game_id]['game_log'] = []
+                
+                # Add to memory game log
                 game_data[game_id]['game_log'].append(full_log_entry)
+                
+                # Immediately update the file storage
+                team_name = request.form.get('home_team')
+                team_data = load_team_data(team_name)
+                game_index = int(game_id)
+                
+                if "games" in team_data and game_index < len(team_data["games"]):
+                    if "game_log" not in team_data["games"][game_index]:
+                        team_data["games"][game_index]["game_log"] = []
+                    team_data["games"][game_index]["game_log"] = game_data[game_id]['game_log']
+                    save_team_data(team_name, team_data)
                 
                 # In shootout mode, add shootout tag
                 if is_shootout and 'scored' in log_entry.lower():
