@@ -1685,16 +1685,18 @@ def run(text, game_id):
                         if 'excluded' in new_content.lower():
                             base_existing = ' '.join([p for p in existing_content.split() if '[' not in p and ']' not in p])
                             base_new = ' '.join([p for p in new_content.split() if '[' not in p and ']' not in p])
-                            has_tag = '[20 SEC EXCLUSION]' in existing_content or '[20 SEC EXCLUSION]' in new_content
                             
-                            # If base content matches and either has tag, mark as duplicate
+                            # If base content matches (same player/team), handle tag logic
                             if base_existing.strip() == base_new.strip():
+                                # If new entry has tag, remove old entry without tag
                                 if '[20 SEC EXCLUSION]' in new_content:
-                                    # Keep the new entry with tag, remove old one
-                                    game_data[game_id]['game_log'].remove(existing_entry)
-                                    is_duplicate = False
-                                else:
-                                    # Keep existing entry if it has tag
+                                    if '[20 SEC EXCLUSION]' not in existing_content:
+                                        game_data[game_id]['game_log'].remove(existing_entry)
+                                        is_duplicate = False
+                                    else:
+                                        is_duplicate = True
+                                # If new entry doesn't have tag but existing does, skip new entry
+                                elif '[20 SEC EXCLUSION]' in existing_content:
                                     is_duplicate = True
                                 break
                         else:
