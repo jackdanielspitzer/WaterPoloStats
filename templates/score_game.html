@@ -865,10 +865,6 @@
         let activeExclusions = [];
 
         function addEventToLog(eventText) {
-            // Skip logging if the text is an error message
-            if (eventText === "Could not parse the input.") {
-                return;
-            }
             // Check if the last submitted text had a custom time (from the inputText field)
             const inputText = document.getElementById('inputText').value.trim();
 
